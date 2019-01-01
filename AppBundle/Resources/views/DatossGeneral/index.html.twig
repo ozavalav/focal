@@ -1,0 +1,705 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{asset('bundles/app/css/jquery.dataTables_themeroller.css')}}" />
+    <link rel="stylesheet" href="{{asset('bundles/app/css/focal.css')}}" />
+{% endblock %}      
+{% block header -%}
+    B. Datos Salud
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Ingresar la información de salud
+    </small>
+{% endblock %}
+{% block content -%}
+    <div class="row">
+        <div class="col-sm-6" style="float:left">
+            <h4>No. Boleta: {{ numboleta }}</h4>
+            <h4>Id Encuesta: {{ idenc }}</h4>
+        </div>
+        <div class="col-sm-6" style="text-align:right">
+            <ul style="list-style: none; margin-left: 0; padding-top: 10px; display:inline">
+                <li style="display:inline">
+                    <a id="btnAnterior" class="btn btn-md btn-primary" href="{{ path('datosdfamilia',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-left align-top bigger-120"></i> Anterior
+                    </a> 
+                </li>
+                <li style="display:inline">
+                    <a id="btnSiguiente" class="btn btn-md btn-primary" href="{{ path('datosseguridadpar',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-right align-top bigger-120"></i> Siguiente
+                    </a> 
+                </li>
+            </ul> 
+        </div>    
+    </div>
+    {% for type, flash_messages in app.session.flashBag.all %}
+        {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endfor %}                          
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#familiar">Datos Generales</a></li>
+        <li><a id="tab-enfer" data-toggle="tab" href="#enfermedades">Enfermedades</a></li>
+        <li><a data-toggle="tab" href="#rvacunas">Rango edad de Vacunas</a></li>
+    </ul>
+    <!-- INICIO TAB CONTENT -->
+    <div class="tab-content">     
+        <!-- PRIMER TAB GENERAL -->
+        <div id="familiar" class="tab-pane fade in active">
+            {% for type, flash_messages in app.session.flashBag.all %}
+                {% for flash_message in flash_messages %}
+                <div id="msgbox" class="alert alert-{{ type }}">
+                    {{ flash_message }}
+                </div>
+                {% endfor %}
+            {% endfor %}
+            {{ form_start(form) }} 
+                <div class="col-sm-12 ">
+                    {{ form_row(form.embarazos) }}
+                </div>
+                <div id="infoemb" style="display:none">
+                <div class="col-sm-3">
+                    {{ form_row(form.cantEmbarazos) }}
+                </div>
+                <div class="col-sm-3 ">
+                    {{ form_row(form.edad1) }}
+                </div>
+                <div class="col-sm-3 ">
+                    {{ form_row(form.edad2) }}
+                </div>
+                <div class="col-sm-3 ">
+                    {{ form_row(form.edad3) }}
+                </div>
+                </div>
+                <hr class="linea-hoz">
+                <div class="col-sm-12">
+                    <label>18 En el último año ¿Donde nació el último niño(a)</label>
+                </div>
+                <table class="table-responsive" style="width: 100%">
+                <tr> 
+                    <td>
+                        <div class="col-sm-12">
+                        <table class="table">
+                            <tr>
+                                <td>{{ form_widget(form.lugarCasa) }}</td>  
+                                <td>{{ form_widget(form.cantCasa) }}</td>   
+                                <td>{{ form_widget(form.lugarHospital) }}</td>    
+                                <td>{{ form_widget(form.cantHospital) }}</td>    
+                            </tr>        
+                            <tr>
+                                <td>{{ form_widget(form.lugarCentros) }}</td>    
+                                <td>{{ form_widget(form.cantCentros) }}</td>    
+                                <td>{{ form_widget(form.lugarClinica) }}</td>    
+                                <td>{{ form_widget(form.cantClinica) }}</td>    
+                            </tr>        
+                            <tr>
+                                <td>{{ form_widget(form.lugarMaterno) }}</td>    
+                                <td>{{ form_widget(form.cantMaterno) }}</td>    
+                                <td>{{ form_widget(form.lugarOtros) }}</td>    
+                                <td>{{ form_widget(form.cantOtros) }}</td>    
+                            </tr>        
+                        </table>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="col-sm-6">
+                            {{ form_row(form.muerteMat) }}
+                        </div>
+                        <div id="infomxemb" style="display:none">
+                            <div class="col-sm-2">
+                                {{ form_row(form.cantMuertem) }}
+                            </div>
+                            <div class="col-sm-4">
+                                {{ form_row(form.momentoMuertem) }}
+                            </div>
+                            <div class="col-sm-12">
+                                {{ form_row(form.causaMuertem) }}
+                            </div>
+                        </div>
+                    </td>    
+                </tr> 
+                <tr>
+                    <td>
+                        <div class="col-sm-4">
+                            {{ form_row(form.planifican) }}
+                        </div>
+                        <div id="metodoplan" style="display:none" class="col-sm-3">
+                            {{ form_row(form.metodo) }}
+                        </div>
+                        <div id="sexooper" style="display:none" class="col-sm-4">
+                            {{ form_row(form.sexoOperacion) }}
+                        </div>                        
+                    </td>
+                </tr>   
+                <tr>
+                    <td>
+                        <div class="col-sm-12">
+                            {{ form_row(form.semurionino) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(form.cantMuerteNinos) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(form.cantMuerteNinas) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(form.causaMuerte) }}
+                        </div>                        
+                    </td>
+                </tr>                
+                </table>
+            {{ form_widget(form.idEnc,{'value': idenc,'type':'hidden'})}}          
+            {{ form_rest(form) }}    
+            {{ form_end(form) }}
+        </div> <!-- FIN TAB GENERAL --> 
+        <!-- SEGUNDO TAB ENFERMEDADES -->
+        <div id="enfermedades" class="tab-pane fade">
+        <ul style="list-style: none; margin-left: 0; padding-top: 10px;">
+            <li>
+                <a id="btnNuevaef" class="btn btn-md btn-success" href="#">
+                    <i class="ace-icon fa fa-plus-square align-top bigger-120"></i> Nueva enfermedad
+                </a> 
+            </li>
+        </ul>    
+        <div class="table-header">
+            23. Efermedades manifestadas por la familia
+        </div>                 
+        <table id="tabla-enfermedades" style="width: 100%" class="table table-hover">
+            <thead>
+                <tr>
+                    <!--th>Id</th -->
+                    <th>Enfermedad</th>
+                    <th>Cantidad Manifestarón</th>
+                    <th>Hombres</th>
+                    <th>Mujeres</th>
+                    <th>Asistencia Publica</th>
+                    <th>Asistencia Privada</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for entitye in entenf %}
+                <tr>
+                    <!--td><a href="#">{#{ entitye.id }#}</a></td -->
+                    <td>{{ entitye.descripcion }}</td>
+                    <td>{{ entitye.cantManifestaron }}</td>
+                    <td>{{ entitye.cantHombres }}</td>
+                    <td>{{ entitye.cantMujeres }}</td>
+                    <td>{{ entitye.cantPublica }}</td>
+                    <td>{{ entitye.cantPrivada }}</td>
+                    <td>
+                    <ul>
+                        <!--li>
+                            <a href="{#{ path('datosdrangos_show', { 'id': entitye.id }) }#}">show</a>
+                        </li -->
+                        <li class="lista-horizontal-action">
+                            <a href="{{ path('datossenfermedades_edit', { 'id': entitye.id }) }}"><i class="fa fa-pencil" ></i></a>
+                        </li>
+                        <li class="lista-horizontal-action">
+                            <a id="btnBorrarenf" data-id="{{ entitye.id }}" href="#" title="borrar"><i class="fa fa-trash"></i></a>
+                        </li>
+                    </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+            
+        </div> <!-- FINAL TAB ENFERMEDADES -->
+        <!-- TERCER TAB RANGOS -->
+        <div id="rvacunas" class="tab-pane fade">
+        <form id="frm-rvacunas" action="{{ path('datossedadvacunas_create')}}" method="post">    
+        <ul style="list-style: none; margin-left: 0; padding-top: 10px;">
+            <li>
+                <button id="btnGuardar" class="btn-default btn btn-success" style="color: white" type="submit">    
+                    <i class="ace-icon fa fa-save align-top bigger-120"></i> Guardar
+                </button>
+            </li>
+        </ul>    
+        <div class="table-header">
+            24. Clasificación de personas por rango de edad y vacunas
+        </div>
+        <div id="msgerror-rvac" style="color:red"></div>
+        <table id="tabla-rvacunas" style="width: 100%" class="table table-striped table-condensed">
+            <thead>
+                <tr>
+                    <th>Num</th>
+                    <th>Rango edad</th>
+                    <th>Cantidad personas</th>
+                    <th>Hombres</th>
+                    <th>Mujeres</th>
+                    <th>Vacunas completas</th>
+                    <th>Vacunas imcompletas</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            {% for entityv in entrvac %}
+                <tr>
+                    <td style="width: 5%" ><input class="form-control" readonly name="num_{{ entityv.num}}" value="{{entityv.num}}" type="text"/></td>
+                    <td>{{ entityv.rango }}</td>
+                    <td style="text-align: center; width: 10%"><input class="form-control" readonly id="cantp_{{ entityv.num }}" name="cantp_{{ entityv.num }}" value="{{entityv.cantpersonas}}" type="text"/></td>
+                    <td style="text-align: center; width: 10%"><input class="form-control" readonly id="canth_{{ entityv.num }}" name="canth_{{ entityv.num }}" value="{{entityv.canthombres}}" type="text"/></td>
+                    <td style="text-align: center; width: 10%"><input class="form-control" readonly id="cantm_{{ entityv.num }}" name="cantm_{{ entityv.num }}" value="{{entityv.cantmujeres}}" type="text"/></td>
+                    <td>
+                        <div class="">
+                            <div>
+                                <input name="cvac_{{ entityv.num }}" data-num="{{ entityv.num }}" type="text" value="{{ entityv.cantcompleta }}" id="cantcv_{{ entityv.num }}" maxlength="2" class="form-control" placeholder="Cantidad c/vacunas" onkeypress="return validanum(event);" />
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="">
+                            <div>
+                                <input name="sinv_{{ entityv.num }}" type="text" value="{{ entityv.cantincompleta }}" id="cantsv_{{ entityv.num }}" maxlength="2" class="form-control" placeholder="Cantidad sin/vacunas" onkeypress="return validanum(event);"/>
+                            </div>
+                        </div>
+                    </td>    
+                </tr>
+                <input type="hidden" value="{{ entityv.id }}" name="idrv_{{ entityv.num }}" >
+            {% endfor %}
+            <input id="idencrv" type="hidden" value="{{ idenc }}" name="idencrv" >
+            </form>
+            </tbody>
+        </table>
+
+        </div> <!-- FINAL TAB RANGOS -->
+    </div> <!-- FINAL TAB CONTENT -->  
+    <div id="msgboxval" style="color:red; display: none"></div>  
+    <ul>
+        <li>
+            <a href="{{ path('datosgenerales') }}">
+                Regresar al listado
+            </a>
+        </li>
+    </ul> 
+
+<!-- MODAL FORMULARIO ENFERMEDADES -->
+<div id="modal-enfermedades" class="modal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="btnCerrarMEnf1" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="blue bigger">Ingresar información según las enfermedades 
+                    <label class="bigger" id="modal-nombrep"></label>
+                </h4>
+            </div>
+            <div id="msgerror-enfer" style="color:red"></div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="modal-enfermedad">Enfermedad</label>
+                            <div>
+                                <select id="modal-enfermedad" class="form-control">
+                                    <option value="0">-- Selecionar --</option>
+                                    {% for enf in catenf %}
+                                        <option value="{{ enf.id}}">{{ enf.descripcion }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label for="modal-cantm">Cantidad Manifestarón</label>
+                            <div>
+                                <input type="text" id="modal-cantma" maxlength="2" value="0" class="form-control" placeholder="Cantidad manifestaron" onkeypress="return validanum(event);" />
+                            </div>
+                        </div>   
+                        <div class="form-group">
+                            <label for="modal-canth">Cantidad Hombres</label>
+                            <div>
+                                <input type="text" id="modal-canth" maxlength="2" value="0" class="form-control" placeholder="Cantidad hombres " onkeypress="return validanum(event);" />
+                            </div>
+                        </div> 
+                        <div class="form-group">
+                            <label for="modal-cantm">Cantidad Mujeres</label>
+                            <div>
+                                <input type="text" id="modal-cantm" maxlength="2" value="0" class="form-control" placeholder="Cantidad mujeres" onkeypress="return validanum(event);"/>
+                            </div>
+                        </div>                         
+                        <div class="form-group">
+                            <label for="modal-canthap">Cantidad asistencia pública</label>
+                            <div>
+                                <input type="text" id="modal-cantpu" maxlength="2" value="0" class="form-control" placeholder="Cantidad hombres" onkeypress="return validanum(event);"/>
+                            </div>
+                        </div> 
+                        <div class="form-group">
+                            <label for="modal-cantml">Cantidad asistencia privada</label>
+                            <div>
+                                <input type="text" id="modal-cantpr" maxlength="2" value="0" class="form-control" placeholder="Cantidad mujeres" onkeypress="return validanum(event);"/>
+                            </div>
+                        </div>
+                        <input id="modal-idencef" type="hidden" value="{{ idenc }}" name="modal-idencef" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="btnCerrarMEnf2" class="btn btn-sm btn-primary" data-dismiss="modal">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancel
+                </button>
+
+                <button id="btnSalvaref" class="btn btn-sm btn-primary" >
+                        <i class="ace-icon fa fa-check"></i>
+                        Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div><!-- PAGE CONTENT ENDS -->
+<!-- TERMINA FORMULARIO MODAL -->
+                
+    {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/app/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{ asset('bundles/app/js/jquery.dataTables.bootstrap.min.js')}}"></script> 
+
+    <script type="text/javascript">
+        var table;
+        var tablaf;
+        $(document).ready(function() {
+            $('#btnGuardar').prop('disabled',true);
+            //$(document).ready(function() {
+                tablaf = $('#tabla-enfermedades').DataTable({
+                language:{
+                    search: "Buscar",
+                    lengthMenu: "Mostrar _MENU_ registros",
+                    emptyTable: "No hay datos...",
+                    info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    infoFiltered: "(Filtrando de un total de _MAX_ registros)",
+                    paginate: {
+                        first: "Primero",
+                        previous: "Anterior",
+                        next: "Siguiente",
+                        last: "Ultimo"
+                    }
+                }
+            });
+            
+            $('[name=focal_appbundle_datossgeneral]').submit(function(e){
+                $('#focal_appbundle_datossgeneral_submit').prop('disabled',true);
+            });
+            
+            $('#btnSalvaref').prop('disabled',true);
+            
+            //});
+            $("#btnNuevaef").click(function(e){
+                e.preventDefault(); 
+                $("#msgerrorre").hide();
+                $('#modal-enfermedades').modal();
+            });
+            
+            $("#btnCerrarMEnf1, #btnCerrarMEnf2").click(function(e){
+                window.location.reload();
+            }); 
+            
+            /* Deshabilito los campos que de vacunas donde las cantidades de personas estan en cero */
+            for(i=1;i<=4;i++) {
+                var valor = $('#cantp_'+i).val();
+                if(valor === '0') {
+                    $('#cantcv_'+i).prop('disabled', true);
+                    $('#cantsv_'+i).prop('disabled', true);
+                }
+            }
+            
+            /* Validar la pregunta 19 conforme a los valores que vienes de la pregunta 16 */
+            var cantnac = {{ cantNac|default('0') }} ; //este valor viene de la pregunta 16.
+            if(cantnac == '0') {
+                $('#focal_appbundle_datossgeneral_cantCasa').val(0).prop('readonly',true);
+                $('#focal_appbundle_datossgeneral_cantCentros').val(0).prop('readonly',true);
+                $('#focal_appbundle_datossgeneral_cantMaterno').val(0).prop('readonly',true);
+                $('#focal_appbundle_datossgeneral_cantHospital').val(0).prop('readonly',true);
+                $('#focal_appbundle_datossgeneral_cantClinica').val(0).prop('readonly',true);
+                $('#focal_appbundle_datossgeneral_cantOtros').val(0).prop('readonly',true);
+            }
+            
+            $('#focal_appbundle_datossgeneral_submit').on('click', function(e){
+                var cantca = $('#focal_appbundle_datossgeneral_cantCasa').val();
+                var cantcs = $('#focal_appbundle_datossgeneral_cantCentros').val();
+                var cantcm = $('#focal_appbundle_datossgeneral_cantMaterno').val();
+                var cantho = $('#focal_appbundle_datossgeneral_cantHospital').val();
+                var cantcp = $('#focal_appbundle_datossgeneral_cantClinica').val();
+                var cantoe = $('#focal_appbundle_datossgeneral_cantOtros').val();
+
+                cantca = parseInt((cantca === ''?0:cantca));
+                cantcs = parseInt((cantcs === ''?0:cantcs));
+                cantcm = parseInt((cantcm === ''?0:cantcm));
+                cantho = parseInt((cantho === ''?0:cantho));
+                cantcp = parseInt((cantcp === ''?0:cantcp));
+                cantoe = parseInt((cantoe === ''?0:cantoe));
+                var suma = cantca + cantcs + cantcm + cantho + cantcp + cantoe;
+                if ( suma !== cantnac ) {
+                    $('#msgboxval').text('Cantidades de lugar nacimiento no pueden ser diferente a cantidad nacimientos (Pregunta 16).');
+                    $('#msgboxval').show();
+                    e.preventDefault();                 
+                } else {
+                    $('#msgboxval').hide();
+                }
+            });
+            
+            /* Validar los campos de la pregunta No. 18 Lungar de nacimiento */
+            $('#focal_appbundle_datossgeneral_cantCasa, \n\
+               #focal_appbundle_datossgeneral_cantHospital, \n\
+                #focal_appbundle_datossgeneral_cantCentros, \n\
+                #focal_appbundle_datossgeneral_cantClinica, \n\
+                #focal_appbundle_datossgeneral_cantMaterno, \n\
+                #focal_appbundle_datossgeneral_cantOtros').on('change', function(){
+                var valor = $(this).val();
+                var campo = $(this).attr('id').substring(34);
+                if(valor === '0' || valor === '') { 
+                    $('#focal_appbundle_datossgeneral_lugar'+campo).prop('checked', false);
+                    $('#focal_appbundle_datossgeneral_lugar'+campo).prop('readonly', true);
+                } else {
+                    $('#focal_appbundle_datossgeneral_lugar'+campo).prop('checked', true);
+                    $('#focal_appbundle_datossgeneral_lugar'+campo).prop('readonly', false);
+                }
+            });
+            
+            var valor  = $("input:radio[name='focal_appbundle_datossgeneral[semurionino]']:checked").val();
+            if( valor === '1' ) {
+                $('#focal_appbundle_datossgeneral_cantMuerteNinos').prop('disabled', false);
+                $('#focal_appbundle_datossgeneral_cantMuerteNinas').prop('disabled', false);
+                $('#focal_appbundle_datossgeneral_causaMuerte').prop('disabled', false);
+            } else {    
+                $('#focal_appbundle_datossgeneral_cantMuerteNinos').val(0).prop('disabled', true);
+                $('#focal_appbundle_datossgeneral_cantMuerteNinas').val(0).prop('disabled', true);
+                $('#focal_appbundle_datossgeneral_causaMuerte').val('').prop('disabled', true);
+            }  
+            
+            var emb  = $("input:radio[name='focal_appbundle_datossgeneral[embarazos]']:checked").val();
+            var mxemb  = $("input:radio[name='focal_appbundle_datossgeneral[muerteMat]']:checked").val();
+            var plan  = $("input:radio[name='focal_appbundle_datossgeneral[planifican]']:checked").val();
+            if(emb==='1') {
+                $('#infoemb').show();
+            }
+            if(mxemb==='1') {
+                $('#infomxemb').show();
+            }
+            if(plan==='1') {
+                $('#metodoplan').show();
+                $('#focal_appbundle_datossgeneral_metodo').val('{{mtdsel|default('')}}');
+                if($('#focal_appbundle_datossgeneral_metodo option:selected').val() === '6') {
+                    $('#sexooper').show();
+                }  
+            }
+        
+        $("a[id*='btnBorrarenf']").click(function(e){
+               e.preventDefault();
+                var idreg = $(this).data("id");
+
+                var param = idreg;
+
+                var url = '/FocalAB/web/app_dev.php/datossgeneral/borrarregistroenf/'+ param;
+
+                if(confirm('¿Quiere borrar este registro?')) { 
+                    $.ajax({
+                        type:'POST',
+                        url:url,
+                        beforeSend: function(){
+                            $("#lblError").hide();
+                        },
+                        dataType: 'json',
+                        success:function(data){
+                            if(data.message == 'false'){
+                                alert(data.razon);
+                            }else{
+                                alert("Registro borrado con exito");
+                                window.location.reload();
+                            }
+                        }
+                    });
+                }
+            }); 
+
+            $("input:radio[name='focal_appbundle_datossgeneral[semurionino]']").on('change', function(){
+                var valor = $(this).val();
+                if( valor === '1' ) {
+                    $('#focal_appbundle_datossgeneral_cantMuerteNinos').prop('disabled', false);
+                    $('#focal_appbundle_datossgeneral_cantMuerteNinas').prop('disabled', false);
+                    $('#focal_appbundle_datossgeneral_causaMuerte').prop('disabled', false);
+                } else {    
+                    $('#focal_appbundle_datossgeneral_cantMuerteNinos').val(0).prop('disabled', true);
+                    $('#focal_appbundle_datossgeneral_cantMuerteNinas').val(0).prop('disabled', true);
+                    $('#focal_appbundle_datossgeneral_causaMuerte').val('').prop('disabled', true);
+                } 
+            });
+            
+            $("input:radio[name='focal_appbundle_datossgeneral[embarazos]']").on('change', function(){
+                var val = $(this).val();
+                if(val === '1') {
+                    $('#infoemb').show();
+                    $('#focal_appbundle_datossgeneral_cantEmbarazos').prop('required',true);
+                } else {
+                    $('#focal_appbundle_datossgeneral_cantEmbarazos').val('');
+                    $('#focal_appbundle_datossgeneral_cantEmbarazos').prop('required',false);
+                    $('#focal_appbundle_datossgeneral_edad1').val('');
+                    $('#focal_appbundle_datossgeneral_edad2').val('');
+                    $('#focal_appbundle_datossgeneral_edad3').val('');
+                    $('#infoemb').hide();
+                }
+            });
+            $("input:radio[name='focal_appbundle_datossgeneral[muerteMat]']").on('change', function(){
+                var val = $(this).val();
+                if(val === '1') {
+                    $('#infomxemb').show();
+                    $('#focal_appbundle_datossgeneral_momentoMuertem').prop('required',true);
+                    $('#focal_appbundle_datossgeneral_cantMuertem').prop('required',true);
+                } else {
+                    $('#focal_appbundle_datossgeneral_cantMuertem').val('');
+                    $('#focal_appbundle_datossgeneral_momentoMuertem').val('');
+                    $('#focal_appbundle_datossgeneral_causaMuertem').val('');
+                    $('#focal_appbundle_datossgeneral_cantMuertem').prop('required',false);
+                    $('#focal_appbundle_datossgeneral_momentoMuertem').prop('required',false);
+                    $("input:radio[name='focal_appbundle_datossgeneral[momentoMuertem]']").prop('checked',false);
+                    $('#infomxemb').hide();
+                }
+            });
+            $("input:radio[name='focal_appbundle_datossgeneral[planifican]']").on('change', function(){
+                var val = $(this).val();
+                if(val === '1') {
+                    $('#metodoplan').show();
+                    $('#focal_appbundle_datossgeneral_metodo').prop('required',true);
+                } else {
+                    $("input:radio[name='focal_appbundle_datossgeneral[sexoOperacion]']").prop('checked',false);
+                    $('#focal_appbundle_datossgeneral_metodo').prop('required',false);
+                    $('#focal_appbundle_datossgeneral_metodo').val('');
+                    $('#metodoplan').hide();
+                    $('#sexooper').hide();
+                }
+            });
+            $('#focal_appbundle_datossgeneral_metodo').on('change',function(){
+                var val = $(this).val();
+                if(val === '6') {
+                    $('#sexooper').show();
+                    $("input:radio[name='focal_appbundle_datossgeneral[sexoOperacion]']").prop('required', true);                    
+                } else {
+                    $('#sexooper').hide();
+                    $("input:radio[name='focal_appbundle_datossgeneral[sexoOperacion]']").prop('required', false);                    
+                }
+            });
+            
+    $('#modal-cantma, #modal-canth, #modal-cantm, #modal-cantpr, #modal-cantpu, #modal-enfermedades').on('change',function(){
+        $('#btnSalvaref').prop('disabled',true);
+        $('#msgerror-rango').hide();
+        
+        var cantma  = $('#modal-cantma').val();
+        var canth  = $('#modal-canth').val();
+        var cantm  = $('#modal-cantm').val();
+        var cantpr  = $('#modal-cantpr').val();
+        var cantpu  = $('#modal-cantpu').val();
+        var enfer = $('#modal-enfermedades option:selected').val();
+        var totmani = parseInt(canth) + parseInt(cantm);
+        
+        if ( (parseInt(totmani) > parseInt(cantma)) && (parseInt(enfer) > 0) ){
+            $('#msgerror-enfer').text('Cantidad de Hombres y Mujeres deber ser igual a la cantidad de manifestaciones.');
+            $('#msgerror-enfer').show();          
+        } else {            
+            $('#msg_cant').hide();
+            $('#btnSalvaref').prop('disabled',false);
+        }    
+    });
+    
+    $('#btnSalvaref').click(function(e) {
+        e.preventDefault();
+        $("#msgerror-enfer").hide();
+        var enfer = $('#modal-enfermedad option:selected').val();
+        var cantma  = $('#modal-cantma').val();
+        var canth  = $('#modal-canth').val();
+        var cantm  = $('#modal-cantm').val();
+        var cantpr  = $('#modal-cantpr').val();
+        var cantpu  = $('#modal-cantpu').val();
+        var idencef = $('#modal-idencef').val();
+        
+        var param = enfer + "&&" + cantma + "&&" + canth + "&&" + cantm + "&&" + cantpr + "&&" + cantpu + "&&" + idencef ;
+        var url = '/FocalAB/web/app_dev.php/datossgeneral/agregarenfermedad/'+ param; 
+        var ok = true;
+        var msg = '';
+        
+        if(enfer === '0' || enfer === '') {
+            ok = false;
+            msg='Debe selecionar una enfermedad';
+        } else if(cantma === ''||cantma === '0') {
+            ok = false;
+            msg='Los campos del formulario no pueden estar vacios';
+        } else if(parseInt(cantma) !== (parseInt(canth) + parseInt(cantm))) {
+            ok = false;
+            msg='Las cantidades de hombres mas mujeres no son iguales a manifestaciones ';
+        } else if(parseInt(cantma) < (parseInt(cantpr) + parseInt(cantpu))) {
+            ok = false;
+            msg='Las cantidades asistencias no puede ser mayor que las manifestaciones ';
+        }
+        
+        
+        if (ok) {
+            $.ajax({
+                type:'POST',
+                url:url,
+                beforeSend: function(){
+                    $("#msgerror-rango").hide();
+                },
+                dataType: 'json',
+                success:function(data){
+                    if(data.message == 'false'){
+                        $("#msgerror-enfer").show();
+                        $('#msgerror-enfer').text(data.razon);
+                        alert(data.razon);
+                    }else{
+                        alert('Cambios guardados con exito.');        
+                        $('#modal-form').modal('hide');
+                        $('#modal-enfermedad option:selected').val(0);
+                        $('#modal-cantma').val(0);
+                        $('#modal-canth').val(0);
+                        $('#modal-cantm').val(0);
+                        $('#modal-cantpr').val(0);
+                        $('#modal-cantpu').val(0);
+
+                        //window.location.reload();
+                        $('#tab-enfer').trigger("click");
+                    }
+                }
+            });
+        } else {
+            $("#msgerror-enfer").show();
+            $('#msgerror-enfer').text(msg);
+        }
+    });
+    //$("input:radio[name='focal_appbundle_datossgeneral[planifican]']")
+    $("input:text[id^='cantcv'], input:text[id^='cantsv'] ").on('change',function(){
+
+        $('#btnGuardar').prop('disabled',true);
+        $('#msgerror-rvac').hide();
+              
+        var error = false;
+        for(i=1; i<=4; i++) {
+            cantp  = $('#cantp_'+i).val();
+            cantcv  = $("input[name=cvac_"+i+"]").val();
+            cantsv  = $("input[name=sinv_"+i+"]").val();
+            totvac = parseInt(cantcv) + parseInt(cantsv);
+            if ( (parseInt(totvac) !== parseInt(cantp)) ){
+               error = true;
+            }
+        }
+        
+        if (error){
+            $('#msgerror-rvac').text('Cantidad de Hombres y Mujeres vacunadas deber ser igual a la cantidad de personas en el rango de edad.');
+            $('#msgerror-rvac').show();          
+        } else {            
+            $('#msgerror_rvac').hide();
+            $('#btnGuardar').prop('disabled',false);
+        }            
+    });
+});
+        
+        
+    </script>      
+{% endblock %}

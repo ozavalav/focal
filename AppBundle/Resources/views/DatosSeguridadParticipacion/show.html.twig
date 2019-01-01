@@ -1,0 +1,112 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>DatosSeguridadParticipacion</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Idenc</th>
+                <td>{{ entity.idEnc }}</td>
+            </tr>
+            <tr>
+                <th>Coddepartamento</th>
+                <td>{{ entity.codDepartamento }}</td>
+            </tr>
+            <tr>
+                <th>Codmunicipio</th>
+                <td>{{ entity.codMunicipio }}</td>
+            </tr>
+            <tr>
+                <th>Codcomunidad</th>
+                <td>{{ entity.codComunidad }}</td>
+            </tr>
+            <tr>
+                <th>Casosviolencia</th>
+                <td>{{ entity.casosViolencia }}</td>
+            </tr>
+            <tr>
+                <th>Cantcasosviolencia</th>
+                <td>{{ entity.cantCasosViolencia }}</td>
+            </tr>
+            <tr>
+                <th>Victimaviolencia</th>
+                <td>{{ entity.victimaViolencia }}</td>
+            </tr>
+            <tr>
+                <th>Cantvictimaviolencia</th>
+                <td>{{ entity.cantVictimaViolencia }}</td>
+            </tr>
+            <tr>
+                <th>Consideraseguro</th>
+                <td>{{ entity.consideraSeguro }}</td>
+            </tr>
+            <tr>
+                <th>Ordenrobo</th>
+                <td>{{ entity.ordenRobo }}</td>
+            </tr>
+            <tr>
+                <th>Ordenmaras</th>
+                <td>{{ entity.ordenMaras }}</td>
+            </tr>
+            <tr>
+                <th>Ordendrogas</th>
+                <td>{{ entity.ordenDrogas }}</td>
+            </tr>
+            <tr>
+                <th>Ordencantinas</th>
+                <td>{{ entity.ordenCantinas }}</td>
+            </tr>
+            <tr>
+                <th>Ordenpelas</th>
+                <td>{{ entity.ordenPelas }}</td>
+            </tr>
+            <tr>
+                <th>Ordenviolaciones</th>
+                <td>{{ entity.ordenViolaciones }}</td>
+            </tr>
+            <tr>
+                <th>Canthombresmiembros</th>
+                <td>{{ entity.cantHombresMiembros }}</td>
+            </tr>
+            <tr>
+                <th>Cantmujeresmiembros</th>
+                <td>{{ entity.cantMujeresMiembros }}</td>
+            </tr>
+            <tr>
+                <th>Fechacreacion</th>
+                <td>{{ entity.fechaCreacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Usuariocreacion</th>
+                <td>{{ entity.usuarioCreacion }}</td>
+            </tr>
+            <tr>
+                <th>Usuarioultimamodificacion</th>
+                <td>{{ entity.usuarioUltimaModificacion }}</td>
+            </tr>
+            <tr>
+                <th>Fechaultimamodificacion</th>
+                <td>{{ entity.fechaUltimaModificacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('datosseguridadpar') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('datosseguridadpar_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

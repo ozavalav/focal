@@ -1,0 +1,178 @@
+{% extends '::basemenu.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{asset('bundles/app/css/focal.css')}}" />
+{% endblock %}      
+{% block header -%}
+    E. Servicios Públicos
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Ingresar la información de los servicios públicos con que cuenta
+    </small>
+{% endblock %}
+{% block content -%}
+    <div class="row">
+        <div class="col-sm-6" style="float:left">
+            <h4>No. Boleta: {{ numboleta }}</h4>
+            <h4>Id Encuesta: {{ idenc }}</h4>
+        </div>
+        <div class="col-sm-6" style="text-align:right">
+            <ul style="list-style: none; margin-left: 0; padding-top: 10px; display:inline">
+                <li style="display:inline">
+                    <a id="btnAnterior" class="btn btn-md btn-primary" href="{{ path('datosseguridadpar',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-left align-top bigger-120"></i> Anterior
+                    </a> 
+                </li>
+                <li style="display:inline">
+                    <a id="btnSiguiente" class="btn btn-md btn-primary" href="{{ path('datossegalimentaria',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-right align-top bigger-120"></i> Siguiente
+                    </a> 
+                </li>
+            </ul> 
+        </div>    
+    </div>
+    {% for type, flash_messages in app.session.flashBag.all %}
+        {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endfor %}
+    <form id="frm-servpub" action="{{ path('datosserviciospub_create')}}" method="post">    
+            
+        <div class="table-header">
+            30. En la casa que habita existen los siguientes servicios públicos
+        </div>
+        <div id="msgerror-rvac" style="color:red"></div>
+        <table id="tabla-rvacunas" style="width: 100%" class="table table-striped table-condensed">
+            <thead>
+                <tr>
+                    <th>Num</th>
+                    <th>Servicio Público</th>
+                    <th>Los recibe</th>
+                    <th style="text-align: center">Estado</th>
+                    <th>Días a la semana</th>   
+                </tr>
+            </thead>
+            <tbody>
+                
+            {% for entity in entservp %}
+                <tr>
+                    <td style="width: 6%" ><input class="form-control" readonly name="num_{{ entity.num}}" value="{{entity.num}}" type="text"/></td>
+                    <td>{{ entity.descripcion }}</td>
+                    <td style="text-align: center; width: 10%">
+                        
+                        <label style="font-weight: 300">Si <input class="radio-inline" id="reciben_{{ entity.num }}_1" value="1" name="reciben_{{ entity.num }}" type="radio" {{ entity.reciben == 1 ?'checked':'' }} /></label>
+                        <label style="font-weight: 300">No <input class="radio-inline" id="reciben_{{ entity.num }}_2" value="2" name="reciben_{{ entity.num }}" type="radio" {{ entity.reciben == 2 ?'checked':'' }} /></label>
+                        
+                    </td>
+                    <td style="text-align: center; width: 20%">
+                        {% if entity.num not in [3,10,11,12,14,15] %}
+                        <label style="font-weight: 300">B <input class="radio-inline" id="estado_{{ entity.num }}_1" value="1" name="estado_{{ entity.num }}" type="radio" {{ entity.estado == 1 ?'checked':'' }} {{ entity.num in [3,10,11,12,14,15]?'disabled':'' }} /></label>
+                        <label style="font-weight: 300">R <input class="radio-inline" id="estado_{{ entity.num }}_2" value="2" name="estado_{{ entity.num }}" type="radio" {{ entity.estado == 2 ?'checked':'' }} {{ entity.num in [3,10,11,12,14,15]?'disabled':'' }} /></label>
+                        <label style="font-weight: 300">M <input class="radio-inline" id="estado_{{ entity.num }}_3" value="3" name="estado_{{ entity.num }}" type="radio" {{ entity.estado == 3 ?'checked':'' }} {{ entity.num in [3,10,11,12,14,15]?'disabled':'' }} /></label>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if entity.num not in [7,8,9,10,13,14,15,16,17] %}
+                        <div class="col-lg-6">
+                            <div>
+                                <input name="cantDias_{{ entity.num }}" data-num="{{ entity.num }}" type="number" min="0" max="7" value="{{ entity.cantDias }}" id="cantDias_{{ entity.num }}" maxlength="2" {{ entity.num in [7,8,9,10,13,14,15,16,17]?"style='background-color: lightcoral; color: lightcoral; '":'' }}  class="form-control" onkeypress="return validanum(event);" {{ entity.num in [7,8,9,10,13,14,15,16,17]?'disabled':'' }} />
+                            </div>
+                        </div>
+                        {% endif %}    
+                    </td>   
+                </tr>
+                <input type="hidden" value="{{ entity.id }}" name="idsrv_{{ entity.num }}" >
+            {% endfor %}
+            <input id="idencrv" type="hidden" value="{{ idenc }}" name="idencsp" >
+            </form>
+            </tbody>
+        </table>
+<ul style="list-style: none; margin-left: 0; padding-top: 10px;">
+            <li>
+                <button id="btnGuardar" class="btn-default btn btn-success" style="color: white" type="submit">    
+                    <i class="ace-icon fa fa-save align-top bigger-120"></i> Guardar
+                </button>
+            </li>
+        </ul>            
+    </form>
+
+    <div id="msgboxval" style="color:red; display: none"></div> 
+    <ul>
+        <li>
+            <a href="{{ path('datosgenerales') }}">
+                Regresar al listado
+            </a>
+        </li>
+    </ul> 
+                
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            /* valida */
+            for(i=1; i<=17; i++) {
+                var valor = $("input:radio[name='reciben_"+i+"']:checked").val(); 
+                if(valor === '2') {
+                    switch (i) {
+                        case 1: case 2: case 3: case 4: case 5: case 6: case 11: case 12:
+                            $('#cantDias_'+i).prop('disabled', true);
+                            break;
+                    }
+                    switch (i) {
+                        case 1: case 2: case 4: case 5: case 6: case 7: case 8: case 9: case 13: case 16: case 17:
+                            $("input:radio[name='estado_"+i+"']").prop('disabled', true);
+                            break;
+                    }
+                }
+            }
+        });
+        
+        $("input:radio[name^='reciben_']").on('change',function(){
+            var valor=$(this).val();
+            var ctmp = $(this).attr('name');
+            var acmp = ctmp.split("_");
+            var cmp = acmp[1];
+
+            if(valor === '2') {  
+                //$("input:radio[name^='estado_"+cmp+"']").removeAttr('checked');
+                $("input:radio[name='estado_"+cmp+"']").prop('checked', false).prop('disabled', true).prop('required', false);
+                $('#cantDias_'+cmp).val('0').prop('disabled', true);
+            } else if(valor === '1') {
+                switch (cmp) {
+                    case '1': case '2': case '3': case '4': case '5': case '6': case '11': case '12':
+                        $('#cantDias_'+cmp).val('0').prop('disabled', false);
+                        break;
+                }
+                switch (cmp) {
+                    case '1': case '2': case '4': case '5': case '6': case '7': case '8': case '9': case '13': case '16': case '17':
+                        $("input:radio[name='estado_"+cmp+"']").prop('checked', false).prop('disabled', false).prop('required', true);
+                        break;
+                }
+            }
+        });
+        
+        $('#btnGuardar').on('click', function(e){
+           /* Valida que los campos esten seleccionados */
+           var ok = false;
+            for(i=1; i<=17; i++) {
+                if(!$("input:radio[name='reciben_"+i+"']").is(':checked')) {
+                    ok = true;
+                } 
+            } 
+            
+            if(ok) {
+                $('#msgboxval').text('Debera contestar cada una de las preguntas anteriores');
+                $('#msgboxval').show();
+                e.preventDefault();
+            } else {
+                $('#msgboxval').hide();
+            }
+            
+        });
+    </script>    
+{% endblock %}        

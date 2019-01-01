@@ -1,0 +1,35 @@
+{% extends '::basemenu.html.twig' %}
+
+{% block header -%}
+    Validación de los datos 
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Valida la información ingresada en la encuesta
+    </small>
+{% endblock %} 
+   
+{% block content -%}
+    <h4>No. Boleta: {{ numboleta }}</h4>
+    <h4>Id Encuesta: {{ idenc }}</h4> 
+    {% for type, flash_messages in app.session.flashBag.all %}
+        {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert-box alert-{% if(type starts with 'warning') %}warning{% else %}success{% endif %}">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endfor %}
+ 
+    <div class="col-sm-12 form-group form-row" style="text-align: center">
+     <form method="get" action="{{ path('datosgenerales_guardar',{'id': idenc}) }}">       
+        <input class="btn-success btn" type="submit" value="Guardar Encuesta" {{ enccompleta }}/>
+     </form>
+     </div>
+<ul class="">
+    <li>
+        <a href="{{ path('datosgenerales') }}">
+            Regresar al listado
+        </a>
+    </li>
+</ul>       
+
+{% endblock %}

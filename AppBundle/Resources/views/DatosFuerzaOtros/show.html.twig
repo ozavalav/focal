@@ -1,0 +1,140 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>DatosFuerzaOtros</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Idenc</th>
+                <td>{{ entity.idEnc }}</td>
+            </tr>
+            <tr>
+                <th>Coddepartamento</th>
+                <td>{{ entity.codDepartamento }}</td>
+            </tr>
+            <tr>
+                <th>Codmunicipio</th>
+                <td>{{ entity.codMunicipio }}</td>
+            </tr>
+            <tr>
+                <th>Codcomunidad</th>
+                <td>{{ entity.codComunidad }}</td>
+            </tr>
+            <tr>
+                <th>Ocupacion</th>
+                <td>{{ entity.ocupacion }}</td>
+            </tr>
+            <tr>
+                <th>Sectore</th>
+                <td>{{ entity.sectore }}</td>
+            </tr>
+            <tr>
+                <th>Sectorp</th>
+                <td>{{ entity.sectorp }}</td>
+            </tr>
+            <tr>
+                <th>Generaemp</th>
+                <td>{{ entity.generaemp }}</td>
+            </tr>
+            <tr>
+                <th>Cant15</th>
+                <td>{{ entity.cant15 }}</td>
+            </tr>
+            <tr>
+                <th>Cant610</th>
+                <td>{{ entity.cant610 }}</td>
+            </tr>
+            <tr>
+                <th>Cant1115</th>
+                <td>{{ entity.cant1115 }}</td>
+            </tr>
+            <tr>
+                <th>Cant1620</th>
+                <td>{{ entity.cant1620 }}</td>
+            </tr>
+            <tr>
+                <th>Cant21mas</th>
+                <td>{{ entity.cant21mas }}</td>
+            </tr>
+            <tr>
+                <th>Miembroorg</th>
+                <td>{{ entity.miembroorg }}</td>
+            </tr>
+            <tr>
+                <th>Nombreorg</th>
+                <td>{{ entity.nombreorg }}</td>
+            </tr>
+            <tr>
+                <th>Inst1</th>
+                <td>{{ entity.inst1 }}</td>
+            </tr>
+            <tr>
+                <th>Inst2</th>
+                <td>{{ entity.inst2 }}</td>
+            </tr>
+            <tr>
+                <th>Inst3</th>
+                <td>{{ entity.inst3 }}</td>
+            </tr>
+            <tr>
+                <th>Prestamofam</th>
+                <td>{{ entity.prestamofam }}</td>
+            </tr>
+            <tr>
+                <th>Prestamosexo</th>
+                <td>{{ entity.prestamosexo }}</td>
+            </tr>
+            <tr>
+                <th>Remesas</th>
+                <td>{{ entity.remesas }}</td>
+            </tr>
+            <tr>
+                <th>Rangoremesas</th>
+                <td>{{ entity.rangoRemesas }}</td>
+            </tr>
+            <tr>
+                <th>Rangoingresofam</th>
+                <td>{{ entity.rangoIngresofam }}</td>
+            </tr>
+            <tr>
+                <th>Ingresoajusta</th>
+                <td>{{ entity.ingresoAjusta }}</td>
+            </tr>
+            <tr>
+                <th>Fechacreacion</th>
+                <td>{{ entity.fechaCreacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Usuariocreacion</th>
+                <td>{{ entity.usuarioCreacion }}</td>
+            </tr>
+            <tr>
+                <th>Usuarioultimamodificacion</th>
+                <td>{{ entity.usuarioUltimaModificacion }}</td>
+            </tr>
+            <tr>
+                <th>Fechaultimamodificacion</th>
+                <td>{{ entity.fechaUltimaModificacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('datosfuerzaotros') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('datosfuerzaotros_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

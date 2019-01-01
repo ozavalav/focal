@@ -1,0 +1,537 @@
+
+{% block stylesheets %}
+<style type="text/Css">
+<!--
+#body{
+	font-family:Verdana, Calibri, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	font-weight:400;
+	color:#000;
+}
+.small_font{
+	font-size:8px;
+	color:#666;
+}
+.bg_img{
+	background-color:#F5ECCE;
+	border-radius:5px;
+	height:50px;
+}
+.linea{
+	border-width:1px;
+	border-bottom:solid;
+	border-color:#666;
+}
+.txt_title{
+	font-size:16px;
+	font-weight:bold;
+}
+.txt_titleheader{
+	font-size:12px;
+	font-weight:bold;
+	color:#333;
+}
+.txt_titleheader_cotenido{
+	font-size:7px;
+}
+.celda {
+    text-align: center;
+}
+.celdad {
+    text-align: right;
+}
+.borde-arriba td {
+    border-top: 1px solid #000; 
+}
+.borde-abajo th {
+    border-bottom: 1px solid #000; 
+} 
+.titulo-grupo {
+    background-color: lightskyblue;
+    text-align: center;
+}
+.titulo-tabla {
+    background-color: lightgreen;
+}
+.piede-tabla {
+    background-color: lightgrey;
+}
+-->
+</style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+<page backtop="20mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 14px;" footer="page">
+<page_header>
+  <table cellspacing="0" border='0' align="center"  style="width: 100%; font-size: 12pt;">
+        <tbody>
+        <tr>
+            <th colspan='5' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                <label  class="txt_title">REPORTE - FRECUENCIA SIMPLE</label><br/>
+            </th> 
+        </tr> 
+        <tr style="width: 100%;"> 
+            <th class="txt_titleheader">Fecha Inicio: {{ fin == '00' ? "" : fin|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Fecha Final: {{ fin2 == '00' ? "" : fin2|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }} </th>
+            <th class="txt_titleheader">Municipio: {{ codmun }} - {{ nommun }}  </th>
+        </tr>  
+        <tr style="width: 100%;">    
+            <th colspan="4" class="txt_titleheader">
+                Comunidad: 
+                {% if cantcom <= 5 %}
+                    {% for ncom in dtnomcom %}
+                        {{ ncom.nombre }} / 
+                    {% endfor %} 
+                {% else %}
+                    Varias
+                {% endif %}
+            </th>
+        </tr>  
+   </tbody>
+    </table>
+</page_header>   
+    <table>
+        <tr>
+            <td colspan="4" class="titulo-grupo"><b>=== F. Seguridad Alimentaria ===</b></td>
+        </tr> 
+        <tr>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="3"><b>P.31 Trabajan la tierra</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totaltt = 0 %}
+                        {% for datostt in datostrat %}
+                            <tr>
+                                <td>{{ datostt.trabajatierra }}</td>
+                                <td class="celda">{{ datostt.cantidad }}</td>
+                                <td class="celdad">{{ datostt.portot|round(2) }}</td>
+                            </tr>
+                            {% set totaltt = totaltt + datostt.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totaltt }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="3"><b>P.31.1 Trabajan la tierra sexo</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Sexo</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Hombres</td>
+                            <td class="celda">{{ datosttx.canth }}</td>
+                            <td class="celdad">{{ datosttx.porhom|round(2)}}</td>
+                        </tr>    
+                        <tr>
+                            <td>Mujeres</td>
+                            <td class="celda">{{ datosttx.cantm }}</td>
+                            <td class="celdad">{{ datosttx.pormuj|round(2)}}</td>
+                        </tr>    
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ datosttx.canth + datosttx.cantm }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table> 
+            </td>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="3"><b>P.31.2 Personas que trabajan la tierra</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Numero</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totalptt = 0 %}
+                        {% for datosptt in datospertt %}
+                            <tr>
+                                <td>{{ datosptt.personas }}</td>
+                                <td class="celda">{{ datosptt.cantidad }}</td>
+                                <td class="celdad">{{ datosptt.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalptt = totalptt + (datosptt.personas *datosptt.cantidad) %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalptt }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table> 
+            </td>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="3"><b>P.32 Tipo de tenencia de la tierra</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Tipo</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totalttt = 0 %}
+                        {% for datosttt in datostipott %}
+                            <tr>
+                                <td>{{ datosttt.tipotenencia }}</td>
+                                <td class="celda">{{ datosttt.cantidad }}</td>
+                                <td class="celdad">{{ datosttt.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalttt = totalttt + datosttt.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalttt }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table> 
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="3"><b>P.32.1 Tipo Dominio</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Tipo</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totalttd = 0 %}
+                        {% for datosttd in datosttdom %}
+                            <tr>
+                                <td>{{ datosttd.tipodominio }}</td>
+                                <td class="celda">{{ datosttd.cantidad }}</td>
+                                <td class="celdad">{{ datosttd.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalttd = totalttd + datosttd.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalttd }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table> 
+            </td>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                        <tr><td colspan="3"><b>P.33 Producen alimentos en la familia</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totalpa = 0 %}
+                        {% for datospa in datosproa %}
+                            <tr>
+                                <td>{{ datospa.producealimento }}</td>
+                                <td class="celda">{{ datospa.cantidad }}</td>
+                                <td class="celdad">{{ datospa.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalpa = totalpa + datospa.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalpa }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="3"><b>P.34 Producen para autoconsumo</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totalpaa = 0 %}
+                        {% for datospaa in datospaauto %}
+                            <tr>
+                                <td>{{ datospaa.producesuficiente }}</td>
+                                <td class="celda">{{ datospaa.cantidad }}</td>
+                                <td class="celdad">{{ datospaa.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalpaa = totalpaa + datospaa.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalpaa }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="3"><b>P.37 Obtiene excedentes para la venta</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totaloe = 0 %}
+                        {% for datosoe in datosobte %}
+                            <tr>
+                                <td>{{ datosoe.produceexcedente }}</td>
+                                <td class="celda">{{ datosoe.cantidad }}</td>
+                                <td class="celdad">{{ datosoe.portot|round(2) }}</td>
+                            </tr>
+                            {% set totaloe = totaloe + datosoe.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totaloe }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+        </tr>
+<!-- *** Seguridad alimentaria *** -->
+        <tr>
+            <td colspan="4">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="7"><b>P.35 Que se sembro y cuanto se produjo durante el año pasado.</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td></td>
+                        <td>Maiz</td>
+                        <td>Frijol</td>
+                        <td>Maicillo</td>
+                        <td>Café</td>
+                        <td>Caña</td>
+                        <td>Otro</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Quintales</td>
+                            <td class="celda">{{ datostie.cmaiz }}</td>
+                            <td class="celda">{{ datostie.cfrijol }}</td>
+                            <td class="celda">{{ datostie.cmaicillo }}</td>
+                            <td class="celda">{{ datostie.ccafe }}</td>
+                            <td class="celda">{{ datostie.ccana }}</td>
+                            <td class="celda">{{ datostie.cotro }}</td>
+                        </tr>
+                         <tr>
+                            <td>Tareas</td>
+                            <td class="celda">{{ datostie.amaiz }}</td>
+                            <td class="celda">{{ datostie.afrijol }}</td>
+                            <td class="celda">{{ datostie.amaicillo }}</td>
+                            <td class="celda">{{ datostie.acafe }}</td>
+                            <td class="celda">{{ datostie.acana }}</td>
+                            <td class="celda">{{ datostie.aotro }}</td>
+                        </tr>
+                    </tbody>  
+                </table>     
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="5"><b>P.36 Área en tareas con sistema de riego</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td></td>
+                        <td>Goteo</td>
+                        <td>Aspersión</td>
+                        <td>Ninguno</td>
+                        <td>Otro</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tareas</td>
+                            <td class="celda">{{ datostie.agoteo }}</td>
+                            <td class="celda">{{ datostie.aaspersion }}</td>
+                            <td class="celda">{{ datostie.aninguno }}</td>
+                            <td class="celda">{{ datostie.ariego }}</td>
+                        </tr>
+                    </tbody>    
+                </table>     
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="3"><b>P.38 Huertos familiares</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Si</td>
+                            <td class="celda">{{ datostie.huertosi }}</td>
+                            <td class="celdad">{{ datostie.porhsi|round(2) }}</td>
+                        </tr>
+                        <tr>
+                            <td>No</td>
+                            <td class="celda">{{ datostie.huertono }}</td>
+                            <td class="celdad">{{ datostie.porhno|round(2) }}</td>
+                        </tr>
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ datostie.huertosi + datostie.huertono }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="3"><b>P.39 Tienen animales domesticos</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Si</td>
+                            <td class="celda">{{ datostie.animalessi }}</td>
+                            <td class="celda">{{ datostie.porasi }}</td>
+                        </tr>
+                        <tr>
+                            <td>No</td>
+                            <td class="celda">{{ datostie.animalesno }}</td>
+                            <td class="celda">{{ datostie.porano }}</td>
+                        </tr>
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ datostie.animalessi + datostie.animalesno }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="4"><b>P.39.1 Cantidad de animales domesticos</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Tipo</td>
+                        <td>Cantidad</td>
+                        <td>Hogares</td>
+                        <td class="celda">%</td>
+                        
+                    </tr>
+                    </thead>
+                     <tbody>
+                        <tr>
+                            <td>Aves</td>
+                            <td class="celda">{{ datostie.caves }}</td>
+                            <td class="celda">{{ datostie.ccaves }}</td>
+                            <td class="celdad">{{ datostie.pcaves|round(2) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Bovino</td>
+                            <td class="celda">{{ datostie.cbovino }}</td>
+                            <td class="celda">{{ datostie.ccbovino }}</td>
+                            <td class="celdad">{{ datostie.pcbovino|round(2) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Caprino</td>
+                            <td class="celda">{{ datostie.ccaprino }}</td>
+                            <td class="celda">{{ datostie.cccaprino }}</td>
+                            <td class="celdad">{{ datostie.pccaprino|round(2) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Equino</td>
+                            <td class="celda">{{ datostie.cequino }}</td>
+                            <td class="celda">{{ datostie.ccequino }}</td>
+                            <td class="celdad">{{ datostie.pcequino|round(2) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Porcino</td>
+                            <td class="celda">{{ datostie.cporcino }}</td>
+                            <td class="celda">{{ datostie.ccporcino }}</td>
+                            <td class="celdad">{{ datostie.pcporcino|round(2) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Piscicultura</td>
+                            <td class="celda">{{ datostie.cpiscicultura }}</td>
+                            <td class="celda">{{ datostie.ccpiscicultura }}</td>
+                            <td class="celdad">{{ datostie.pcpiscicultura|round(2) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Apicultura</td>
+                            <td class="celda">{{ datostie.capicultura }}</td>
+                            <td class="celda">{{ datostie.ccapicultura }}</td>
+                            <td class="celdad">{{ datostie.pcapicultura|round(2) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Domésticos</td>
+                            <td class="celda">{{ datostie.cdomesticos }}</td>
+                            <td class="celda">{{ datostie.ccdomesticos }}</td>
+                            <td class="celdad">{{ datostie.pcdomesticos|round(2) }}</td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+            <td></td>
+        </tr>
+    </table>   
+</page>                  
+<page_footer>    
+<br/>  
+    <br/>
+     <table cellspacing="0" style="width: 100%; font-size: 6pt;">
+        <tbody>
+         <tr>
+            <th  align="center" style="width: 100%;" border="0" class="txt_titleheader">
+                <label class="txt_titleheader"></label>
+            </th>
+        </tr>
+        </tbody>
+    </table>
+</page_footer>
+{% endblock %}

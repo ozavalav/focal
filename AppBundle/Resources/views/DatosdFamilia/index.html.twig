@@ -1,0 +1,792 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{asset('bundles/app/css/jquery.dataTables_themeroller.css')}}" />
+    <link rel="stylesheet" href="{{asset('bundles/app/css/focal.css')}}" />
+{% endblock %}      
+{% block header -%}
+    A.Datos Demográficos
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Ingresar la información demográfica de la familia
+    </small>
+{% endblock %}
+{% block content -%}
+    <div class="row">
+        <div class="col-sm-6" style="float:left">
+            <h4>No. Boleta: {{ numboleta }}</h4>
+            <h4>Id Encuesta: {{ idenc }}</h4>
+        </div>
+        <div class="col-sm-6" style="text-align:right">
+            <ul style="list-style: none; margin-left: 0; padding-top: 10px; display:inline">
+                <li style="display:inline">
+                    <a id="btnAnterior" class="btn btn-md btn-primary" href="{{ path('datosgenerales') }}">
+                        <i class="ace-icon fa fa-chevron-circle-left align-top bigger-120"></i> Anterior
+                    </a> 
+                </li>
+                <li style="display:inline">
+                    <a id="btnSiguiente" class="btn btn-md btn-primary" href="{{ path('datossgeneral',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-right align-top bigger-120"></i> Siguiente
+                    </a> 
+                </li>
+            </ul> 
+        </div>    
+    </div>
+    {% for type, flash_messages in app.session.flashBag.all %}
+        {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endfor %}                        
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#familiar">Datos Familiares</a></li>
+        <li><a data-toggle="tab" href="#rangos">Rangos Edades</a></li>
+        <li><a data-toggle="tab" href="#otros">Otra información</a></li>
+    </ul>
+    <!-- INICIO TAB CONTENT -->
+    <div class="tab-content"> 
+    
+        <!-- PRIMER TAB FAMILIA -->
+        <div id="familiar" class="tab-pane fade in active">    
+        <ul style="list-style: none; margin-left: 0; padding-top: 10px;">
+            <li>
+                <a id="btnNuevo" class="btn btn-md btn-success" href="#">
+                    <i class="ace-icon fa fa-plus-square align-top bigger-120"></i> Nuevo
+                </a> 
+            </li>
+        </ul>    
+        <div class="table-header">
+            12.Integrantes de la Familia
+        </div> 
+        <table id="tabla-familia" class="table table-hover">
+            <thead>
+                <tr>
+                    <!--th>Id</th -->
+                    <th>Nombre</th>
+                    <th>Sexo</th>
+                    <th>Edad</th>
+                    <th>Parentesco</th>
+                    <th>Etnia</th>
+                    <th>Partida Nac.?</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for entity in entities %}
+                <tr>
+                    <!--td><a href="{#{ path('datosdfamilia_show', { 'id': entity.id, 'boleta': idenc }) }}">{{ entity.id }#}</a></td -->
+                    <td>{{ entity.nombre }}</td>                
+                    <td>{% if entity.sexo == 1 %} Masculino {% else %} Femenino {% endif %}</td>
+                    <td>{% if entity.edad > 1 %} {{ entity.edad | number_format }} {% else %} {{ entity.edad | number_format(2) }}{% endif %}</td>
+                    <td>{{ entity.desParentesco }}</td>
+                    <td>{{ entity.desEtnia }}</td>
+                    <td>{% if entity.tienePn == 1 %} Si {% else %} No {% endif %}</td>
+                    <td>
+                    <ul>
+                        <li class="lista-horizontal-action">
+                            <a href="{{ path('datosdfamilia_show', { 'id': entity.id, 'boleta': idenc }) }}" title="ver"><i class="fa fa-search-plus"></i></a>
+                        </li>
+                        <li class="lista-horizontal-action">
+                            <a href="{{ path('datosdfamilia_edit', { 'id': entity.id }) }}" title="editar"><i class="fa fa-pencil"></i></a>
+                        </li>
+                        <li class="lista-horizontal-action">
+                            <a id="btnBorrar" data-id="{{ entity.id }}" data-dep="{{ coddep }}" data-mun="{{ codmun }}" href="#" title="borrar"><i class="fa fa-trash"></i></a>
+                        </li>
+                    </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div> <!-- FIN TAB FAMILIAR --> 
+        <!-- SEGUNDO TAB RANGOS -->
+        <div id="rangos" class="tab-pane fade">
+        <ul style="list-style: none; margin-left: 0; padding-top: 10px;">
+            <li>
+                <a id="btnNuevore" class="btn btn-md btn-success" href="#">
+                    <i class="ace-icon fa fa-plus-square align-top bigger-120"></i> Nuevo rango
+                </a> 
+            </li>
+        </ul>    
+        <div class="table-header">
+            13.Rango de edad dentro de la familia
+        </div>                 
+        <table id="tabla-rangos" style="width: 100%" class="table table-hover">
+            <thead>
+                <tr>
+                    <!--th>Id</th -->
+                    <th>Rango Edad</th>
+                    <th>Cant Personas</th>
+                    <th>Hombres</th>
+                    <th>Mujeres</th>
+                    <th>Hombres (L/E)</th>
+                    <th>Mujeres (L/E)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for entityr in entitiesr %}
+                <tr>
+                    <!--td><a href="#">{#{ entityr.id }#}</a></td -->
+                    <td>{{ entityr.descripcion }}</td>
+                    <td>{{ entityr.cantPersonas }}</td>
+                    <td>{{ entityr.cantHombres }}</td>
+                    <td>{{ entityr.cantMujeres }}</td>
+                    <td>{{ entityr.cantHombresLeen }}</td>
+                    <td>{{ entityr.cantMujeresLeen }}</td>
+                    <td>
+                    <ul>
+                        <!--li>
+                            <a href="{#{ path('datosdrangos_show', { 'id': entityr.id }) }#}">show</a>
+                        </li -->
+                        <li class="lista-horizontal-action">
+                            <a href="{{ path('datosdrangos_edit', { 'id': entityr.id }) }}" title="Editar"><i class="fa fa-pencil"></i></a>
+                        </li>
+                        <li class="lista-horizontal-action">
+                            <a id="btnBorrarrng" data-id="{{ entityr.id }}" href="#" title="borrar"><i class="fa fa-trash"></i></a>
+                        </li>
+                    </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div> <!-- FINAL TAB RANGOS -->
+        <!-- TERCER TAB OTROS -->
+        <div id="otros" class="tab-pane fade">
+            
+            {% for type, flash_messages in app.session.flashBag.all %}
+                {% for flash_message in flash_messages %}
+                <div id="msgbox" class="alert alert-{{ type }}">
+                    {{ flash_message }}
+                </div>
+                {% endfor %}
+            {% endfor %}
+            {{ form_start(form,{'attr' : {'id':'frm_datosgotros'}}) }} 
+
+                <div class="col-sm-6 ">
+                    {{ form_row(form.cantSolteras) }}
+                </div>
+                <div class="col-sm-6">
+                    {{ form_row(form.cantSolteros) }}
+                </div>
+                <div class="col-sm-12">
+                    <label>16. ¿Cuantos niños(a) nacieron en la familia durante el año pasado?</label>
+                </div>
+                <div class="col-sm-12">
+                   <button id="btnAddNino" class="btn btn-primary"><i class="fa fa-plus-square-o"></i> Agregar niño</button> 
+                   <table id="tbl_ninosnac" class="table table-striped table-hover">
+                       <thead>
+                           <tr>
+                               <td>Num</td>
+                               <td>Cantidad</td>
+                               <td>Cant.Niños</td>
+                               <td>Cant.Niñas</td>
+                               <td>Edad de la Madre</td>
+                               <td>Acción</td>
+                           </tr>
+                       </thead>
+                       <tbody>
+                       {% set cantreg = 0 %}    
+                       {% for entity in entnac %}
+                           <tr id="fila_{{ loop.index }}">
+                               <td>{{ loop.index }}</td>
+                               <td><input type="number" id="tblcant_{{ loop.index }}" name="tblcant_{{ loop.index }}" value="{{ entity.cantidad }}" class="form-control" placeholder="Cantidad" onkeypress="return validanum(event);" maxlength="2" max="99"></td>
+                               <td><input type="number" id="tblcanth_{{ loop.index }}" name="tblcanth_{{ loop.index }}" value="{{ entity.cantNinos }}" class="form-control" placeholder="Cantidad" onkeypress="return validanum(event);" maxlength="2" max="99"></td>
+                               <td><input type="number" id="tblcantm_{{ loop.index }}" name="tblcantm_{{ loop.index }}" value="{{ entity.cantNinas }}" class="form-control" placeholder="Cantidad" onkeypress="return validanum(event);" maxlength="2" max="99"></td>
+                               <td><input type="number" id="tbledad_{{ loop.index }}" name="tbledad_{{ loop.index }}" value="{{ entity.edad }}" class="form-control" placeholder="Edad" onkeypress="return validanum(event);" maxlength="2" max="99"></td>
+                               <td><button type="button" id="tblborrar" class="btn btn-default" data-num="{{ loop.index }}" title="Borrar" onclick="borrarFila(this);"><i class="fa fa-trash"></i></button></td>
+                               <td style="display:none"><input id="tblest_{{ loop.index }}" type="hidden" name="tblest_{{ loop.index }}" value="2"></td>
+                               <td style="display:none"><input id="tblidotros_{{ loop.index }}" type="hidden" name="tblidotros_{{ loop.index }}" value="{{ entity.id }}"></td>
+                           <tr>
+                           {% set cantreg = loop.index %}    
+                       {% endfor %}    
+                       </tbody>    
+                   </table>  
+                   <input type="hidden" id="contnac" name="contnac" value="{{ cantreg }}">
+                </div>    
+                <!-- div class="col-sm-3">
+                    {-{ form_row(form.cantNacimientos) }}
+                </div>
+                <div class="col-sm-3">
+                    {-{ form_row(form.cantNacNinos) }}
+                </div>
+                <div class="col-sm-3">
+                    {-{ form_row(form.cantNacNinas) }}
+                </div>    
+                <div class="col-sm-3">
+                    {-{ form_row(form.edadMadre) }}
+                </div>                    
+                <div id="msg_cant" style="color: red; display: none" class="col-sm-12"><label>Cantidades de personas no coinciden</label></div -->
+                {{ form_widget(form.idEnc,{'value': idenc,'type':'hidden'})}} 
+                
+                {{ form_rest(form) }}
+
+                {{ form_end(form) }}
+        </div> <!-- FINAL TAB OTROS -->
+    </div> <!-- FINAL TAB CONTENT -->  
+    <div id="msgboxval" style="color:red; display: none"></div>  
+    <ul>
+        <li>
+            <a href="{{ path('datosgenerales') }}">
+                Regresar al listado
+            </a>
+        </li>
+    </ul>    
+<!-- MODAL FORMULARIO FAMILIARES -->
+<div id="modal-form" class="modal" data-backdrop="static" data-keyboard="false" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="btnCerrarMFam1" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="blue bigger">Ingresar información del familiar 
+                    <label class="bigger" id="modal-nombrep"></label>
+                </h4>
+            </div>
+            <div id="msgerror" style="color:red">Aqui</div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="modal-nombre">Nombre</label>
+                            <div>
+                                <input type="text" id="modal-nombref" class="form-control" placeholder="Nombre del familiar" />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label for="modal-sexo">Sexo</label>
+                            <div>
+                                <label class="radio-inline"><input type="radio" name="modal-sexo" value="1" id="modal-sexo1"/>Hombre</label>
+                                <label class="radio-inline"><input type="radio" name="modal-sexo" value="2" id="modal-sexo2"/>Mujer</label>
+                            </div>
+                        </div>                          
+                        <div class="form-group">
+                            <label for="modal-edad">Edad</label>
+                            <div>
+                                <input type="text" id="modal-edad" class="form-control" placeholder="Edad" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-parentesco">Parentesco</label>
+                            <div>
+                                <select id="modal-parentesco" class="form-control">
+                                    <option value="0">-- Selecionar --</option>
+                                    {% for epar in entp %}
+                                        <option value="{{ epar.id}}">{{ epar.descripcion }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-etnia">Etnia</label>
+                            <div>
+                                <select id="modal-etnia" class="form-control">
+                                    <option value="0">-- Selecionar --</option>
+                                    {% for eetn in ente %}
+                                        <option value="{{ eetn.id}}">{{ eetn.descripcion }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-partida">Tiene Partida de nacimiento </label>
+                            <div>
+                                <label class="radio-inline"><input type="radio" name="modal-partida" value="1" id="modal-partida1"/>Si</label>
+                                <label class="radio-inline"><input type="radio" name="modal-partida" value="2" id="modal-partida2"/>No</label>
+                            </div>
+                        </div>                                 
+                        <input id="modal-idenc" type="hidden" value="{{ idenc }}" name="modal-idenc" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="btnCerrarMFam2" class="btn btn-sm btn-primary" data-dismiss="modal">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancel
+                </button>
+
+                <button id="btnSalvar" class="btn btn-sm btn-primary" >
+                        <i class="ace-icon fa fa-check"></i>
+                        Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div><!-- PAGE CONTENT ENDS -->
+<!-- TERMINA FORMULARIO MODAL -->  
+
+<!-- MODAL FORMULARIO RANGO EDADES -->
+<div id="modal-rangos" class="modal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="btnCerrarMRng1" type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="blue bigger">Ingresar información según los rangos de edad 
+                    <label class="bigger" id="modal-nombrep"></label>
+                </h4>
+            </div>
+            <div id="msgerror-rango" style="color:red"></div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="modal-rangoedad">Rango edad</label>
+                            <div>
+                                <select id="modal-rangoedad" class="form-control">
+                                    <option value="0">-- Selecionar --</option>
+                                    {% for rng in rnge %}
+                                        <option value="{{ rng.id}}">{{ rng.descripcion }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label for="modal-cantp">Cantidad de Personas</label>
+                            <div>
+                                <input type="text" id="modal-cantp" maxlength="2" value="0" class="form-control" placeholder="Cantidad personas" onkeypress="return validanum(event);" />
+                            </div>
+                        </div>   
+                        <div class="form-group">
+                            <label for="modal-canth">Cantidad Hombres</label>
+                            <div>
+                                <input type="text" id="modal-canth" maxlength="2" value="0" class="form-control" placeholder="Cantidad hombres " onkeypress="return validanum(event);" />
+                            </div>
+                        </div> 
+                        <div class="form-group">
+                            <label for="modal-cantm">Cantidad Mujeres</label>
+                            <div>
+                                <input type="text" id="modal-cantm" maxlength="2" value="0" class="form-control" placeholder="Cantidad mujeres" onkeypress="return validanum(event);"/>
+                            </div>
+                        </div>                         
+                        <div class="form-group">
+                            <label for="modal-canthl">Cantidad de Hombres que saben leer y escribir</label>
+                            <div>
+                                <input type="text" id="modal-canthl" maxlength="2" value="0" class="form-control" placeholder="Cantidad hombres" onkeypress="return validanum(event);"/>
+                            </div>
+                        </div> 
+                        <div class="form-group">
+                            <label for="modal-cantml">Cantidad de Mujeres que saben leer y escribir</label>
+                            <div>
+                                <input type="text" id="modal-cantml" maxlength="2" value="0" class="form-control" placeholder="Cantidad mujeres" onkeypress="return validanum(event);"/>
+                            </div>
+                        </div>
+                        <input id="modal-idencre" type="hidden" value="{{ idenc }}" name="modal-idencre" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="btnCerrarMRng2" class="btn btn-sm btn-primary" data-dismiss="modal">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancel
+                </button>
+
+                <button id="btnSalvarre" class="btn btn-sm btn-primary" >
+                        <i class="ace-icon fa fa-check"></i>
+                        Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div><!-- PAGE CONTENT ENDS -->
+<!-- TERMINA FORMULARIO MODAL -->
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/app/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{ asset('bundles/app/js/jquery.dataTables.bootstrap.min.js')}}"></script> 
+
+    <script type="text/javascript">
+        var table;
+        var tablar;
+        var contnac = $("#contnac").val();
+        
+        function borrarFila(info) {
+            var idfila = $(info).data("num");
+            $("#fila_"+idfila).hide();
+            $("#tblest_"+idfila).val(0); /* Estados de la fila: 1 = nueva, 2 = actualizar, 0 = borrada */
+            //contnac--;
+            $('#contnac').val(contnac);
+        }
+        
+        $(document).ready(function() {
+            table = $('#tabla-familia').DataTable({
+                language:{
+                    search: "Buscar",
+                    lengthMenu: "Mostrar _MENU_ registros",
+                    emptyTable: "No hay datos...",
+                    info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    infoFiltered: "(Filtrando de un total de _MAX_ registros)",
+                    paginate: {
+                        first: "Primero",
+                        previous: "Anterior",
+                        next: "Siguiente",
+                        last: "Ultimo"
+                    }
+                }
+            });
+            tablar = $('#tabla-rangos').DataTable({
+                language:{
+                    search: "Buscar",
+                    lengthMenu: "Mostrar _MENU_ registros",
+                    emptyTable: "No hay datos...",
+                    info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    infoFiltered: "(Filtrando de un total de _MAX_ registros)",
+                    paginate: {
+                        first: "Primero",
+                        previous: "Anterior",
+                        next: "Siguiente",
+                        last: "Ultimo"
+                    }
+                }
+            });
+            $('#btnSalvarre').prop('disabled',true);
+            
+        $('[name=focal_appbundle_datosdotros]').submit(function(e){
+            $('#focal_appbundle_datosdotros_submit').prop('disabled',true);
+        });
+        
+        /* Seccion para manejo de Agregar nacimientos de niños... */
+        $('#btnAddNino').click(function(e){
+           e.preventDefault(); 
+           agregarNino(); 
+        });
+        
+        
+        
+        var cont = contnac; 
+        function agregarNino(){
+            cont++;
+            var fila = '<tr id="fila_'+cont+'"> \n\
+                <td>'+cont+'</td>\n\
+                <td><input type="number" id="tblcant_'+cont+'" name="tblcant_'+cont+'" class="form-control" placeholder="Cantidad" onkeypress="return validanum(event);" maxlength="2" max="99"></td>\n\
+                <td><input type="number" id="tblcanth_'+cont+'" name="tblcanth_'+cont+'" class="form-control" placeholder="Cantidad" onkeypress="return validanum(event);" maxlength="2" max="99"></td></td>\n\
+                <td><input type="number" id="tblcantm_'+cont+'" name="tblcantm_'+cont+'" class="form-control" placeholder="Cantidad" onkeypress="return validanum(event);" maxlength="2" max="99"></td></td>\n\
+                <td><input type="number" id="tbledad_'+cont+'" name="tbledad_'+cont+'" class="form-control" placeholder="Edad" onkeypress="return validanum(event);" maxlength="2" max="99"></td>\n\
+                <td><button type="button" id="tblborrar" class="btn btn-default" data-num="'+cont+'" title="Borrar" onclick="borrarFila(this);"><i class="fa fa-trash"></i></button></td>\n\
+                <td style="display:none"><input id="tblest_'+cont+'" type="hidden" name="tblest_'+cont+'" value="1"></td>\n\
+                <td style="display:none"><input id="tblidotros_'+cont+'" type="hidden" name="tblidotros_'+cont+'" value="0"></td>\n\
+                </tr>';
+            $('#tbl_ninosnac').append(fila);
+            contnac++; //lleva el control de los registros
+            $('#contnac').val(contnac);
+            
+            /* Estados de la fila: 1 = nueva, 2 = actualizar, 0 = borrada */
+        }
+        $('#focal_appbundle_datosdotros_submit').on('click', function(e){
+
+            var nreg = $('#contnac').val();
+
+            var ok = true;
+            for(i=1;i<=nreg; i++ ) {
+                var estado = $('#tblest_'+i).val();
+                if(estado !== '0') {
+                    ($('#tblcant_'+i).val() == "")? $('#tblcant_'+i).val(0):'';
+                    ($('#tblcanth_'+i).val() == "")? $('#tblcanth_'+i).val(0):'';
+                    ($('#tblcantm_'+i).val() == "")? $('#tblcantm_'+i).val(0):'';
+                    ($('#tbledad_'+i).val() == "")? $('#tbledad_'+i).val(0):'';
+
+                    var cantt = $('#tblcant_'+i).val();
+                    var canth = $('#tblcanth_'+i).val();
+                    var cantm = $('#tblcantm_'+i).val();
+                    var edad = $('#tbledad_'+i).val();
+
+                    if(parseInt(cantt) !== (parseInt(canth) + parseInt(cantm))) {
+                        ok = false;
+                        msg="Cantidad total de nacimiento debe ser igual a cantidades de niños y niñas.";
+                    } else if (parseInt(cantt)<=0 || parseInt(edad)<=0) {
+                        ok = false;
+                        msg="Cantidad total y la edad no puden quedar cero";
+                    }
+                }
+            }
+            if(!ok) {
+                $('#msgboxval').text(msg);
+                $('#msgboxval').show();
+                e.preventDefault();                 
+            } else {
+                $('#msgboxval').hide();
+            }
+        });
+        /* Fin seccion agregar nacimientos */
+        
+        var valor = $('#focal_appbundle_datosdotros_cantNacimientos').val();
+        if( valor == 0 ) {
+            $('#focal_appbundle_datosdotros_cantNacNinos').val(0).prop('disabled', true);
+            $('#focal_appbundle_datosdotros_cantNacNinas').val(0).prop('disabled', true);
+            $('#focal_appbundle_datosdotros_edadMadre').val(0).prop('disabled', true);
+        } else {
+            $('#focal_appbundle_datosdotros_cantNacNinos').prop('disabled', false);
+            $('#focal_appbundle_datosdotros_cantNacNinas').prop('disabled', false);
+            $('#focal_appbundle_datosdotros_edadMadre').prop('disabled', false);
+        }    
+        
+        });
+        $("#btnNuevo").click(function(e){
+            e.preventDefault(); 
+            $("#msgerror").hide();
+            $('#modal-form').modal();
+            //$('#btnSalvar').prop('disabled', true);
+        });
+        $("#btnNuevore").click(function(e){
+            e.preventDefault(); 
+            $("#msgerrorre").hide();
+            $('#modal-rangos').modal();
+            //$('#btnSalvar').prop('disabled', true);
+        }); 
+        $("#btnCerrarMFam2, #btnCerrarMFam1").click(function(e){
+            window.location.reload();
+        }); 
+        $("#btnCerrarMRng2, #btnCerrarMRng1").click(function(e){
+            window.location.reload();
+        });
+        
+        
+    $("a[id*='btnBorrarrng']").click(function(e){
+       e.preventDefault();
+        var idreg = $(this).data("id");
+    
+        var param = idreg;
+
+        var url = '/FocalAB/web/app_dev.php/datosdfamilia/borrarregistrorng/'+ param;       
+        if(confirm('¿Quiere borrar este registro?')) { 
+            $.ajax({
+                type:'POST',
+                url:url,
+                beforeSend: function(){
+                    $("#lblError").hide();
+                },
+                dataType: 'json',
+                success:function(data){
+                    if(data.message == 'false'){
+                        alert(data.razon);
+                    }else{
+                        alert("Registro borrado con exito");
+                        var filactual = $("[data-id='" + idreg + "']").parents('td'); 
+                        table.row(filactual.parents('tr')).remove().draw();
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+    }); 
+    
+    $("a[id*='btnBorrar']").click(function(e){
+       e.preventDefault();
+        var idreg = $(this).data("id");
+        var iddep = $(this).data("dep");
+        var idmun = $(this).data("mun");
+        
+        var param = idreg + "&&" + iddep + "&&" + idmun;
+
+        var url = '/FocalAB/web/app_dev.php/datosdfamilia/borrarregistrofam/'+ param;
+
+        if(confirm('¿Quiere borrar este registro?\n\nAdvertencia: Se borraran los datos de Educación y Fuerza Laboral')) { 
+            $.ajax({
+                type:'POST',
+                url:url,
+                beforeSend: function(){
+                    $("#lblError").hide();
+                },
+                dataType: 'json',
+                success:function(data){
+                    if(data.message == 'false'){
+                        alert(data.razon);
+                    }else{
+                        alert("Registro borrado con exito");
+                        var filactual = $("[data-id='" + idreg + "']").parents('td'); 
+                        table.row(filactual.parents('tr')).remove().draw();
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+    }); 
+    
+    $('#btnSalvar').click(function(e) {
+        e.preventDefault();
+        $("#msgerror").hide();
+        var nombre = $('#modal-nombref').val();
+        var edad  = $('#modal-edad').val();
+        var sexo   = $('input:radio[name=modal-sexo]:checked').val();
+        var parentesco = $('#modal-parentesco option:selected').val(); 
+        var etnia = $('#modal-etnia option:selected').val(); 
+        var partida = $('input:radio[name=modal-partida]:checked').val();
+        var idenc = $('#modal-idenc').val();
+        
+        var param = nombre + "&&" + edad + "&&" + sexo + "&&" + parentesco + "&&" + etnia + "&&" + partida + "&&" + idenc ;
+        var url = '/FocalAB/web/app_dev.php/datosdfamilia/agregarfamiliar/'+ param; 
+
+        var ok = true;
+        if(nombre === '') {
+            ok = false;
+        } else if(edad === ''||edad <= 0) {
+            ok = false;
+        } else if(parentesco === 0) {
+            ok = false;
+        } else if(etnia === 0) {
+            ok = false;
+        } else if(!$('#modal-sexo1').prop('checked') && !$('#modal-sexo2').prop('checked') ) {
+            ok = false;
+        } else if(!$('#modal-partida1').prop('checked') && !$('#modal-partida2').prop('checked')) {
+            ok = false;
+        }
+        if (ok) {
+            $.ajax({
+                type:'POST',
+                url:url,
+                beforeSend: function(){
+                    $("#msgerror").hide();
+                },
+                dataType: 'json',
+                success:function(data){
+                    if(data.message == 'false'){
+                        $("#msgerror").show();
+                        $('#msgerror').text(data.razon);
+                        alert(data.razon);
+                    }else{
+                        alert('Cambios guardados con exito.');        
+                        //$('#modal-form').modal('hide');
+                        $('#modal-nombref').val('');
+                        $('#modal-edad').val('');
+                        $('input:radio[name=modal-sexo]').prop('checked',false);
+                        //$('#modal-etnia option:selected').val(0);
+                        $('#modal-etnia').val('0');
+                        $('#modal-parentesco').val(0); 
+                        $('input:radio[name=modal-partida]').prop('checked', false);
+                        if(data.cerrar === 'si') {
+                           window.location.reload();
+                        }
+                        
+                    }
+                }
+            });
+        } else {
+            $("#msgerror").show();
+            $('#msgerror').text('Los campos del formulario no pueden estar vacios');
+        }
+    });
+    
+    $('#focal_appbundle_datosdotros_cantNacimientos').on('change', function(){
+        var valor = $(this).val();
+        if(valor == 0 ) {
+            $('#focal_appbundle_datosdotros_cantNacNinos').val(0).prop('disabled', true);
+            $('#focal_appbundle_datosdotros_cantNacNinas').val(0).prop('disabled', true);
+            $('#focal_appbundle_datosdotros_edadMadre').val(0).prop('disabled', true);
+        } else {
+            $('#focal_appbundle_datosdotros_cantNacNinos').prop('disabled', false);
+            $('#focal_appbundle_datosdotros_cantNacNinas').prop('disabled', false);
+            $('#focal_appbundle_datosdotros_edadMadre').prop('disabled', false);
+        }
+    });
+    
+    $('#modal-cantp, #modal-canth, #modal-cantm, #modal-canthl, #modal-cantml, #modal-rangoedad').on('change',function(){ 
+        $('#btnSalvarre').prop('disabled',true);
+        $('#msgerror-rango').hide();
+        
+        var cantp  = $('#modal-cantp').val();
+        var canth  = $('#modal-canth').val();
+        var cantm  = $('#modal-cantm').val();
+        var canthl  = $('#modal-canthl').val();
+        var cantml  = $('#modal-cantml').val();
+        var rango = $('#modal-rangoedad option:selected').val();
+        var tpersonas = parseInt(canth) + parseInt(cantm);
+        var tpersonasl = parseInt(canthl) + parseInt(cantml);
+        
+        if(parseInt(rango) <= 3) {
+            $('#modal-canthl').prop('disabled', true).val(0);
+            $('#modal-cantml').prop('disabled', true).val(0);
+        } else {
+            $('#modal-canthl').prop('disabled', false);
+            $('#modal-cantml').prop('disabled', false);
+        }
+        
+        if(parseInt(cantp) <= 0 ) {
+            $('#msgerror-rango').text('Cantidad de personas deben ser mayor que cero.');
+            $('#msgerror-rango').show(); 
+        } else if ( (parseInt(tpersonasl) > parseInt(cantp)) && (parseInt(rango) > 3) ){
+            
+            $('#msgerror-rango').text('Cantidad de Hombres y Mujeres que saben leer y escribir deben ser menor o igual a la cantidad de personas.');
+            $('#msgerror-rango').show();
+        } else if (parseInt(canthl) > parseInt(canth)) {
+            $('#msgerror-rango').text('Cantidad de Hombres que saben leer deben ser menor o igual a la cantidad de hombres.');
+            $('#msgerror-rango').show();
+        } else if (parseInt(cantml) > parseInt(cantm)) {
+            $('#msgerror-rango').text('Cantidad de Mujeres que saben leer deben ser menor o igual a la cantidad de mujeres.');
+            $('#msgerror-rango').show();    
+        } else if (parseInt(tpersonas) !== parseInt(cantp)) {
+             
+            $('#msgerror-rango').text('Cantidad de Hombres y Mujeres deben ser igual a cantidad de personas');
+            $('#msgerror-rango').show();
+        } else {         
+            $('#msg_cant').hide();
+            $('#btnSalvarre').prop('disabled',false);
+        }    
+    });
+    
+    $('#btnSalvarre').click(function(e) {
+        e.preventDefault();
+        $("#msgerror-rango").hide();
+        var rango = $('#modal-rangoedad option:selected').val();
+        var cantp  = $('#modal-cantp').val();
+        var canth  = $('#modal-canth').val();
+        var cantm  = $('#modal-cantm').val();
+        var canthl  = $('#modal-canthl').val();
+        var cantml  = $('#modal-cantml').val();
+        var idencre = $('#modal-idencre').val();
+        
+        var param = rango + "&&" + cantp + "&&" + canth + "&&" + cantm + "&&" + canthl + "&&" + cantml + "&&" + idencre ;
+        var url = '/FocalAB/web/app_dev.php/datosdfamilia/agregarrangos/'+ param; 
+        var ok = true;
+        if(rango === 0) {
+            ok = false;
+        } else if(cantp === '' || cantp === 0) {
+            ok = false;
+        } 
+        
+        if (ok) {
+            $.ajax({
+                type:'POST',
+                url:url,
+                beforeSend: function(){
+                    $("#msgerror-rango").hide();
+                },
+                dataType: 'json',
+                success:function(data){
+                    if(data.message == 'false'){
+                        $("#msgerror-rango").show();
+                        $('#msgerror-rango').text(data.razon);
+                        alert(data.razon);
+                    }else{
+                        alert('Cambios guardados con exito.');        
+                        $('#modal-form').modal('hide');
+                        $('#modal-rangoedad option:selected').val(0);
+                        $('#modal-cantp').val(0);
+                        $('#modal-canth').val(0);
+                        $('#modal-cantm').val(0);
+                        $('#modal-canthl').val(0);
+                        $('#modal-cantml').val(0);
+                        if(data.cerrar === 'si') {
+                           window.location.reload();
+                        }
+                        
+                    }
+                }
+            });
+        } else {
+            $("#msgerror-rango").show();
+            $('#msgerror-rango').text('Los campos del formulario no pueden estar vacios');
+        }
+    });        
+    
+    </script>      
+{% endblock %}

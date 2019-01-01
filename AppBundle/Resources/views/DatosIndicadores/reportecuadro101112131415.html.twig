@@ -1,0 +1,1756 @@
+
+{% block stylesheets %}
+    <style type="text/Css">
+
+        #body{
+            font-family:Arial, Helvetica, sans-serif;
+            font-size:11px;
+            font-weight:400;
+            color:#000;
+        }
+        .small_font{
+            font-size:8px;
+            color:#666;
+        }
+        .bg_img{
+            background-color:#F5ECCE;
+            border-radius:5px;
+            height:50px;
+        }
+        .linea{
+            border-width:1px;
+            border-bottom:solid;
+            border-color:#666;
+        }
+        .txt_title{
+            font-size:16px;
+            font-weight:bold;
+        }
+        .txt_titleheader{
+            font-size:10px;
+            font-weight:bold;
+            color:#333;
+        }
+        .txt_titleheader_cotenido{
+            font-size:7px;
+        }
+        .celda {
+            text-align: center;
+        }
+        .celdad {
+            text-align: right;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+    <page backtop="30mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 11px;">
+        <page_header>
+            <table cellspacing="0" border='0' align="center"  style="width: 90%; font-size: 6pt;">
+                <tbody>
+                    <tr>
+                        <th colspan="4"  style="width: 100%; text-align: center; padding-bottom: 3px;" align="center" class="txt_title"></th>
+                    </tr><br/><br/>
+                <tr>
+                    <th colspan='4' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                        <label  class="txt_titleheader">Cuadro # 11, 12, 13, 14, 15</label>
+                    </th> 
+                </tr> 
+                <tr>
+                    <th colspan='4' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                        <label  class="txt_titleheader">Principales indicadores socioeconómicos en el marco de los ODS y PN</label>
+                    </th> 
+                </tr>
+                <tr>
+                    <th colspan='4'  border="0" align="left" class="txt_titleheader"> 
+                    </th> 
+                </tr> 
+                <tr> 
+                    <th  style="width: 22%;" border="0" align="left"class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }} 
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Municipio:  {{ codmun }} - {{ nommun }}
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Fecha inicio: {{fin|date('Y-m-d')}} 
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Fecha Fin: {{fin2|date('Y-m-d')}}  
+                    </th>
+                </tr>  
+                </tbody>
+            </table>
+            <br/>
+
+            <table cellspacing="0" align="center"  border='1' style="width: 90%; text-align: center; font-size: 6pt;">
+                <thead>
+                    <tr>
+                        <th  style="width: 5%; background: #E7E7E7;"  align="center" ># ORDEN</th>
+                        <th  style="width: 20%; background: #E7E7E7;"  align="center" >CLIENTE</th>
+                        <th  style="width: 40%; background: #E7E7E7;"  align="center" >TRABAJO ORDENADO</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >MOTOR</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >DEPARTAMENTO</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >RECIBIDO</th>
+                        <th  style="width: 5%; background: #E7E7E7;"  align="center" >FECHA</th>
+                    </tr>
+                </thead>
+                <tbody>  
+                </tbody>
+            </table>
+
+        </page_header> 
+        <page_footer>  
+
+            <table cellspacing="0" border ="1" style="width: 100%; font-size: 6pt;">
+                <tbody>
+
+
+                </tbody>
+            </table>
+        </page_footer>
+ 
+<table style="height: 37px; width: 720px;">
+<tbody>
+<tr>
+<td style="width: 714px;"><span style="color: #ff0000;">(Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionar la opci&oacute;n # 10 &ldquo;Distribuci&oacute;n de ni&ntilde;@s y j&oacute;venes en edad escolar seg&uacute;n el grado que actualmente estudian o han cursado (de 5 a 23 a&ntilde;os)&rdquo; o ir al cuadro de frecuencia simple y copiar los datos de la tabla de Educaci&oacute;n analizar los datos de la tabla # 40), utilizar de referencia la siguiente tabla para rangos de edad.</span></td>
+</tr>
+</tbody>
+</table>
+<table style="width: 713px;" border="1">
+<tbody>
+<tr>
+<td style="width: 389.75px; text-align: center;">
+<p><strong>Edad por Grado Acad&eacute;mico</strong></p>
+</td>
+<td style="width: 185.25px; text-align: center;">
+<p><strong>Grado Acad&eacute;mico</strong></p>
+</td>
+<td style="width: 130px; text-align: center;">
+<p><strong>A&ntilde;os de estudio</strong></p>
+</td>
+</tr>
+<tr>
+<td style="width: 389.75px;">
+<p>5 a 6 a&ntilde;os de edad</p>
+</td>
+<td style="width: 185.25px;">
+<p>Preescolar</p>
+</td>
+<td style="width: 130px;">
+<p>2</p>
+</td>
+</tr>
+<tr>
+<td style="width: 389.75px;">
+<div class="layoutArea">
+<div class="column">
+<p>7 a&ntilde;os de edad</p>
+</div>
+</div>
+</td>
+<td style="width: 185.25px;">
+<p>Primer Grado</p>
+</td>
+<td style="width: 130px;">
+<div class="layoutArea">
+<div class="column">
+<p>3</p>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td style="width: 389.75px;">
+<div class="layoutArea">
+<div class="column">
+<p>8 a&ntilde;os de edad</p>
+</div>
+</div>
+</td>
+<td style="width: 185.25px;">
+<div class="layoutArea">
+<div class="column">
+<p>Segundo Grado</p>
+</div>
+</div>
+</td>
+<td style="width: 130px;">
+<div class="layoutArea">
+<div class="column">
+<p>4</p>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td style="width: 389.75px;">
+<div class="layoutArea">
+<div class="column">
+<p>9 a&ntilde;os de edad</p>
+</div>
+</div>
+</td>
+<td style="width: 185.25px;">
+<div class="layoutArea">
+<div class="column">
+<p>Tercer Grado</p>
+</div>
+</div>
+</td>
+<td style="width: 130px;">
+<div class="layoutArea">
+<div class="column">
+<p>5</p>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td style="width: 389.75px;">
+<div class="layoutArea">
+<div class="column">
+<p>10 a&ntilde;os de edad</p>
+</div>
+</div>
+</td>
+<td style="width: 185.25px;">
+<div class="layoutArea">
+<div class="column">
+<p>Cuarto Grado</p>
+</div>
+</div>
+</td>
+<td style="width: 130px;">
+<div class="layoutArea">
+<div class="column">
+<p>6</p>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td style="width: 389.75px;">
+<div class="layoutArea">
+<div class="column">
+<p>11 a&ntilde;os de edad</p>
+</div>
+</div>
+</td>
+<td style="width: 185.25px;">
+<div class="layoutArea">
+<div class="column">
+<p>Quinto Grado</p>
+</div>
+</div>
+</td>
+<td style="width: 130px;">
+<div class="layoutArea">
+<div class="column">
+<p>7</p>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td style="width: 389.75px;">
+<div class="layoutArea">
+<div class="column">
+<p>12 a&ntilde;os de edad</p>
+</div>
+</div>
+</td>
+<td style="width: 185.25px;">
+<div class="layoutArea">
+<div class="column">
+<p>Sexto Grado</p>
+</div>
+</div>
+</td>
+<td style="width: 130px;">
+<div class="layoutArea">
+<div class="column">
+<p>8</p>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td style="width: 389.75px;">
+<div class="layoutArea">
+<div class="column">
+<p>13 a&ntilde;os de edad</p>
+</div>
+</div>
+</td>
+<td style="width: 185.25px;">
+<div class="layoutArea">
+<div class="column">
+<p>S&eacute;ptimo Grado (Plan B&aacute;sico)</p>
+</div>
+</div>
+</td>
+<td style="width: 130px;">
+<div class="layoutArea">
+<div class="column">
+<p>9</p>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td style="width: 389.75px;">
+<div class="layoutArea">
+<div class="column">
+<p>14 a&ntilde;os de edad</p>
+</div>
+</div>
+</td>
+<td style="width: 185.25px;">
+<div class="layoutArea">
+<div class="column">
+<p>Octavo Grado (Plan B&aacute;sico)</p>
+</div>
+</div>
+</td>
+<td style="width: 130px;">
+<div class="layoutArea">
+<div class="column">
+<p>10</p>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td style="width: 389.75px;">
+<div class="layoutArea">
+<div class="column">
+<p>15 a&ntilde;os de edad</p>
+</div>
+</div>
+</td>
+<td style="width: 185.25px;">
+<div class="layoutArea">
+<div class="column">
+<p>Noveno Grado (Plan B&aacute;sico)</p>
+</div>
+</div>
+</td>
+<td style="width: 130px;">
+<div class="layoutArea">
+<div class="column">
+<p>11</p>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td style="width: 389.75px;">
+<div class="layoutArea">
+<div class="column">
+<p>16 a 18 a&ntilde;os de edad</p>
+</div>
+</div>
+</td>
+<td style="width: 185.25px;">
+<div class="layoutArea">
+<div class="column">
+<p>Diversificado</p>
+</div>
+</div>
+</td>
+<td style="width: 130px;">
+<div class="layoutArea">
+<div class="column">
+<p>13 o 14</p>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td style="width: 389.75px;">
+<div class="layoutArea">
+<div class="column">
+<p>19 a 23 a&ntilde;os de edad</p>
+</div>
+</div>
+</td>
+<td style="width: 185.25px;">
+<div class="layoutArea">
+<div class="column">
+<p>Universidad</p>
+</div>
+</div>
+</td>
+<td style="width: 130px;">
+<div class="layoutArea">
+<div class="column">
+<p>19 o 20<span style="text-align: center;">&nbsp;</span></p>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="layoutArea">&nbsp;</div>
+<div class="layoutArea">
+<div class="column">
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;">&nbsp;&nbsp;</p>
+<p style="text-align: center;"><strong>Cuadro # 11</strong></p>
+<table style="width: 770px;">
+<tbody>
+<tr>
+<td style="width: 772px; text-align: center;"><strong>Distribuci&oacute;n de ni&ntilde;@s y j&oacute;venes en edad escolar seg&uacute;n el grado que actualmente estudian o han cursado (de 5 a 23 a&ntilde;os)</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="column">&nbsp;</div>
+<table style="width: 594.40625px;" border="1">
+<tbody>
+<tr>
+<td style="width: 200px;" rowspan="2">
+<p><strong>Grado Acad&eacute;mico</strong></p>
+</td>
+<td style="width: 139px;" colspan="2">
+<p><strong># Personas en edad escolar</strong></p>
+</td>
+<td style="width: 143px;" colspan="2">
+<p><strong># personas que actualmente estudian a estudiaron</strong></p>
+</td>
+<td style="width: 162.40625px;" colspan="2">
+<p><strong>Estudia Ahora</strong></p>
+</td>
+</tr>
+<tr>
+<td style="width: 62px; text-align: center;">
+<p><strong>Cant</strong></p>
+</td>
+<td style="width: 77px; text-align: center;">
+<p><strong>%</strong></p>
+</td>
+<td style="width: 74px; text-align: center;">
+<p><strong>Cant.</strong></p>
+</td>
+<td style="width: 69px; text-align: center;">
+<p><strong>%</strong></p>
+</td>
+<td style="width: 69px; text-align: center;">
+<p><strong>Si</strong></p>
+</td>
+<td style="width: 93.40625px; text-align: center;">
+<p><strong>No</strong></p>
+</td>
+</tr>
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;os en preescolar</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.pem}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.pem + dtdie.pef) > 0 %}{{ ((dtdie.pem  / (dtdie.pem + dtdie.pef))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.petm}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.petm + dtdie.petf) > 0 %}{{ ((dtdie.petm  / (dtdie.petm + dtdie.petf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.peem}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.peenm}}</p>
+</td>
+</tr>  
+
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;as en preescolar</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.pef}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.pem + dtdie.pef) > 0 %}{{ ((dtdie.pef  / (dtdie.pem + dtdie.pef))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.petf}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.petm + dtdie.petf) > 0 %}{{ ((dtdie.petf  / (dtdie.petm + dtdie.petf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.peef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.peenf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p style="text-align: center;">Total</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{ dtdie.pem +  dtdie.pef}}</p>
+</td>
+<td style="width: 77px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{ dtdie.petm +  dtdie.petf}}</p>
+</td>
+<td style="width: 69px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{ dtdie.peem +  dtdie.peef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{ dtdie.peenm +  dtdie.peenf}}</p>
+</td>
+</tr>
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;os en primer grado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.pgm}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.pgm + dtdie.pgf) > 0 %}{{ ((dtdie.pgm  / (dtdie.pgm + dtdie.pgf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.pgtm}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.pgtm + dtdie.pgtf) > 0 %}{{ ((dtdie.pgtm  / (dtdie.pgtm + dtdie.pgtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.pgem}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.pgenm}}</p>
+</td>
+</tr>  
+
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;as en primer grado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.pgf}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.pgm + dtdie.pgf) > 0 %}{{ ((dtdie.pgf  / (dtdie.pgm + dtdie.pgf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.pgtf}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.pgtm + dtdie.pgtf) > 0 %}{{ ((dtdie.pgtf  / (dtdie.pgtm + dtdie.pgtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.pgef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.pgenf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p style="text-align: center;">Total</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{ dtdie.pgm +  dtdie.pgf}}</p>
+</td>
+<td style="width: 77px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{ dtdie.pgtm +  dtdie.pgtf}}</p>
+</td>
+<td style="width: 69px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{ dtdie.pgem +  dtdie.pgef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{ dtdie.pgenm +  dtdie.pgenf}}</p>
+</td>
+</tr>
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;os en segundo grado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.sgm}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.sgm + dtdie.sgf) > 0 %}{{ ((dtdie.sgm  / (dtdie.sgm + dtdie.sgf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.sgtm}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.sgtm + dtdie.sgtf) > 0 %}{{ ((dtdie.sgtm  / (dtdie.sgtm + dtdie.sgtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.sgem}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.sgenm}}</p>
+</td>
+</tr>  
+
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;as en segundo grado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.sgf}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.sgm + dtdie.sgf) > 0 %}{{ ((dtdie.sgf  / (dtdie.sgm + dtdie.sgf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.sgtf}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.sgtm + dtdie.sgtf) > 0 %}{{ ((dtdie.sgtf  / (dtdie.sgtm + dtdie.sgtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.sgef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.sgenf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p style="text-align: center;">Total</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{ dtdie.sgm +  dtdie.sgf}}</p>
+</td>
+<td style="width: 77px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{ dtdie.sgtm +  dtdie.sgtf}}</p>
+</td>
+<td style="width: 69px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{ dtdie.sgem +  dtdie.sgef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{ dtdie.sgenm +  dtdie.sgenf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;os en tercer grado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.tgm}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.tgm + dtdie.tgf) > 0 %}{{ ((dtdie.tgm  / (dtdie.tgm + dtdie.tgf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.tgtm}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.tgtm + dtdie.tgtf) > 0 %}{{ ((dtdie.tgtm  / (dtdie.tgtm + dtdie.tgtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.tgem}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.tgenm}}</p>
+</td>
+</tr>  
+
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;as en tercer grado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.tgf}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.tgm + dtdie.tgf) > 0 %}{{ ((dtdie.tgf  / (dtdie.tgm + dtdie.tgf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.tgtf}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.tgtm + dtdie.tgtf) > 0 %}{{ ((dtdie.tgtf  / (dtdie.tgtm + dtdie.tgtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.tgef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.tgenf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p style="text-align: center;">Total</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{ dtdie.tgm +  dtdie.tgf}}</p>
+</td>
+<td style="width: 77px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{ dtdie.tgtm +  dtdie.tgtf}}</p>
+</td>
+<td style="width: 69px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{ dtdie.tgem +  dtdie.tgef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{ dtdie.tgenm +  dtdie.tgenf}}</p>
+</td>
+</tr>
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;os en cuarto grado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.cgm}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.cgm + dtdie.cgf) > 0 %}{{ ((dtdie.cgm  / (dtdie.cgm + dtdie.cgf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.cgtm}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.cgtm + dtdie.cgtf) > 0 %}{{ ((dtdie.cgtm  / (dtdie.cgtm + dtdie.cgtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.cgem}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.cgenm}}</p>
+</td>
+</tr>  
+
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;as en cuarto grado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.cgf}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.cgm + dtdie.cgf) > 0 %}{{ ((dtdie.cgf  / (dtdie.cgm + dtdie.cgf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.cgtf}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.cgtm + dtdie.cgtf) > 0 %}{{ ((dtdie.cgtf  / (dtdie.cgtm + dtdie.cgtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.cgef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.cgenf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p style="text-align: center;">Total</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{ dtdie.cgm +  dtdie.cgf}}</p>
+</td>
+<td style="width: 77px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{ dtdie.cgtm +  dtdie.cgtf}}</p>
+</td>
+<td style="width: 69px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{ dtdie.cgem +  dtdie.cgef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{ dtdie.cgenm +  dtdie.cgenf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;os en quinto grado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.qgm}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.qgm + dtdie.qgf) > 0 %}{{ ((dtdie.qgm  / (dtdie.qgm + dtdie.qgf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.qgtm}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.qgtm + dtdie.qgtf) > 0 %}{{ ((dtdie.qgtm  / (dtdie.qgtm + dtdie.qgtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.qgem}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.qgenm}}</p>
+</td>
+</tr>  
+
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;as en quinto grado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.qgf}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.qgm + dtdie.qgf) > 0 %}{{ ((dtdie.qgf  / (dtdie.qgm + dtdie.qgf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.qgtf}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.qgtm + dtdie.qgtf) > 0 %}{{ ((dtdie.qgtf  / (dtdie.qgtm + dtdie.qgtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.qgef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.qgenf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p style="text-align: center;">Total</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{ dtdie.qgm +  dtdie.qgf}}</p>
+</td>
+<td style="width: 77px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{ dtdie.qgtm +  dtdie.qgtf}}</p>
+</td>
+<td style="width: 69px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{ dtdie.qgem +  dtdie.qgef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{ dtdie.qgenm +  dtdie.qgenf}}</p>
+</td>
+</tr>
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;os en sexto grado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.xgm}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.xgm + dtdie.xgf) > 0 %}{{ ((dtdie.xgm  / (dtdie.xgm + dtdie.xgf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.xgtm}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.xgtm + dtdie.xgtf) > 0 %}{{ ((dtdie.xgtm  / (dtdie.xgtm + dtdie.xgtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.xgem}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.xgenm}}</p>
+</td>
+</tr>  
+
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;as en sexto grado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.xgf}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.xgm + dtdie.xgf) > 0 %}{{ ((dtdie.xgf  / (dtdie.xgm + dtdie.xgf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.xgtf}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.xgtm + dtdie.xgtf) > 0 %}{{ ((dtdie.xgtf  / (dtdie.xgtm + dtdie.xgtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.xgef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.xgenf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p style="text-align: center;">Total</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{ dtdie.xgm +  dtdie.xgf}}</p>
+</td>
+<td style="width: 77px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{ dtdie.xgtm +  dtdie.xgtf}}</p>
+</td>
+<td style="width: 69px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{ dtdie.xgem +  dtdie.xgef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{ dtdie.xgenm +  dtdie.xgenf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;os en plan basico</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.pbm}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.pbm + dtdie.pbf) > 0 %}{{ ((dtdie.pbm  / (dtdie.pbm + dtdie.pbf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.pbtm}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.pbtm + dtdie.pbtf) > 0 %}{{ ((dtdie.pbtm  / (dtdie.pbtm + dtdie.pbtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.pbem}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.pbenm}}</p>
+</td>
+</tr>  
+
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;as en plan basico</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.pbf}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.pbm + dtdie.pbf) > 0 %}{{ ((dtdie.pbf  / (dtdie.pbm + dtdie.pbf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.pbtf}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.pbtm + dtdie.pbtf) > 0 %}{{ ((dtdie.pbtf  / (dtdie.pbtm + dtdie.pbtf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.pbef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.pbenf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p style="text-align: center;">Total</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{ dtdie.pbm +  dtdie.pbf}}</p>
+</td>
+<td style="width: 77px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{ dtdie.pbtm +  dtdie.pbtf}}</p>
+</td>
+<td style="width: 69px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{ dtdie.pbem +  dtdie.pbef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{ dtdie.pbenm +  dtdie.pbenf}}</p>
+</td>
+</tr>
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;os en diversificado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.dim}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.dim + dtdie.dif) > 0 %}{{ ((dtdie.dim  / (dtdie.dim + dtdie.dif))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.ditm}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.ditm + dtdie.ditf) > 0 %}{{ ((dtdie.ditm  / (dtdie.ditm + dtdie.ditf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.diem}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.dienm}}</p>
+</td>
+</tr>  
+
+
+<tr>
+<td style="width: 200px;">
+<p>Ni&ntilde;as en diversificado</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.dif}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.dim + dtdie.dif) > 0 %}{{ ((dtdie.dif  / (dtdie.dim + dtdie.dif))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.ditf}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.ditm + dtdie.ditf) > 0 %}{{ ((dtdie.ditf  / (dtdie.ditm + dtdie.ditf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.dief}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.dienf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p style="text-align: center;">Total</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{ dtdie.dim +  dtdie.dif}}</p>
+</td>
+<td style="width: 77px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{ dtdie.ditm +  dtdie.ditf}}</p>
+</td>
+<td style="width: 69px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{ dtdie.diem +  dtdie.dief}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{ dtdie.dienm +  dtdie.dienf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p>Varones en Universidad</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.unm}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.unm + dtdie.unf) > 0 %}{{ ((dtdie.unm  / (dtdie.unm + dtdie.unf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.untm}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.untm + dtdie.untf) > 0 %}{{ ((dtdie.untm  / (dtdie.untm + dtdie.untf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.unem}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.unenm}}</p>
+</td>
+</tr>  
+
+
+<tr>
+<td style="width: 200px;">
+<p>Hembras en Universidad</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.unf}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>{% if(dtdie.unm + dtdie.unf) > 0 %}{{ ((dtdie.unf  / (dtdie.unm + dtdie.unf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.untf}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{% if(dtdie.untm + dtdie.untf) > 0 %}{{ ((dtdie.untf  / (dtdie.untm + dtdie.untf))*100)|round(2) }}{% endif %}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.dief}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.dienf}}</p>
+</td>
+</tr>
+
+
+<tr>
+<td style="width: 200px;">
+<p style="text-align: center;">Total</p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{ dtdie.unm +  dtdie.unf}}</p>
+</td>
+<td style="width: 77px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{ dtdie.untm +  dtdie.untf}}</p>
+</td>
+<td style="width: 69px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{ dtdie.unem +  dtdie.unef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{ dtdie.unenm +  dtdie.unenf}}</p>
+</td>
+</tr>
+
+<tr>
+<td style="width: 200px;">
+<p><strong>Total ni&ntilde;os -Jovenes</strong></p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.tem}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.totm}}</p>
+</td>
+<td style="width: 69px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.toem}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.toenm}}</p>
+</td>
+</tr>
+<tr>
+<td style="width: 200px;">
+<p><strong>Total ni&ntilde;as - Hembras</strong></p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.tef}}</p>
+</td>
+<td style="width: 77px; text-align: right;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.totf}}</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.toef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.toenf}}</p>
+</td>
+</tr>
+<tr>
+<td style="width: 200px;">
+<p><strong>Total</strong></p>
+</td>
+<td style="width: 62px; text-align: right;">
+<p>{{dtdie.tem + dtdie.tef}}</p>
+</td>
+<td style="width: 77px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 74px; text-align: right;">
+<p>{{dtdie.totm + dtdie.totf}}</p>
+</td>
+<td style="width: 69px;">
+<p>&nbsp;</p>
+</td>
+<td style="width: 69px; text-align: right;">
+<p>{{dtdie.toem + dtdie.toef}}</p>
+</td>
+<td style="width: 93.40625px; text-align: right;">
+<p>{{dtdie.toenm + dtdie.toenf}}</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;Fuente: Elaboraci&oacute;n propia con base a censo l&iacute;nea base levantado en el municipio</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<table style="height: 32px;" width="735">
+<tbody>
+<tr>
+<td style="width: 725px;"><span style="color: #ff0000;">(Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionarla opci&oacute;n # 11 &ldquo;Ni&ntilde;@s y J&oacute;venes en edad escolar vs los que actualmente estudian (de 5&nbsp;a 23 a&ntilde;os)&rdquo; o ir al cuadro de frecuencia simple y copiar los datos de la tabla # 40)</span></td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<table style="width: 685px;" border="1">
+<tbody>
+<tr>
+<td style="text-align: center; width: 360.140625px;">
+<p><strong><span style="color: #000000;">Edad por Grado Acad&eacute;mico</span></strong></p>
+</td>
+<td style="text-align: center; width: 179.859375px;">
+<p><strong><span style="color: #000000;">Grado Acad&eacute;mico</span></strong></p>
+</td>
+<td style="text-align: center; width: 127px;">
+<p><strong><span style="color: #000000;">A&ntilde;os de estudio</span></strong></p>
+</td>
+</tr>
+<tr>
+<td style="width: 360.140625px;">
+<p>5 a 6 a&ntilde;os de edad</p>
+</td>
+<td style="width: 179.859375px;">
+<p>Preescolar</p>
+</td>
+<td style="width: 127px;">
+<p>2</p>
+</td>
+</tr>
+<tr>
+<td style="width: 360.140625px;">
+<p>7 a&ntilde;os de edad</p>
+</td>
+<td style="width: 179.859375px;">
+<p>Primer Grado</p>
+</td>
+<td style="width: 127px;">
+<p>3</p>
+</td>
+</tr>
+<tr>
+<td style="width: 360.140625px;">
+<p>8 a&ntilde;os de edad</p>
+</td>
+<td style="width: 179.859375px;">
+<p>Segundo Grado</p>
+</td>
+<td style="width: 127px;">
+<p>4</p>
+</td>
+</tr>
+<tr>
+<td style="width: 360.140625px;">
+<p>9 a&ntilde;os de edad</p>
+</td>
+<td style="width: 179.859375px;">
+<p>Tercer Grado</p>
+</td>
+<td style="width: 127px;">
+<p>5</p>
+</td>
+</tr>
+<tr>
+<td style="width: 360.140625px;">
+<p>10 a&ntilde;os de edad</p>
+</td>
+<td style="width: 179.859375px;">
+<p>Cuarto Grado</p>
+</td>
+<td style="width: 127px;">
+<p>6</p>
+</td>
+</tr>
+<tr>
+<td style="width: 360.140625px;">
+<p>11 a&ntilde;os de edad</p>
+</td>
+<td style="width: 179.859375px;">
+<p>Quinto Grado</p>
+</td>
+<td style="width: 127px;">
+<p>7</p>
+</td>
+</tr>
+<tr>
+<td style="width: 360.140625px;">
+<p>12 a&ntilde;os de edad</p>
+</td>
+<td style="width: 179.859375px;">
+<p>Sexto Grado</p>
+</td>
+<td style="width: 127px;">
+<p>8</p>
+</td>
+</tr>
+<tr>
+<td style="width: 360.140625px;">
+<p>13 a&ntilde;os de edad</p>
+</td>
+<td style="width: 179.859375px;">
+<p>S&eacute;ptimo Grado (Plan B&aacute;sico)</p>
+</td>
+<td style="width: 127px;">
+<p>9</p>
+</td>
+</tr>
+<tr>
+<td style="width: 360.140625px;">
+<p>14 a&ntilde;os de edad</p>
+</td>
+<td style="width: 179.859375px;">
+<p>Octavo Grado (Plan B&aacute;sico)</p>
+</td>
+<td style="width: 127px;">
+<p>10</p>
+</td>
+</tr>
+<tr>
+<td style="width: 360.140625px;">
+<p>15 a&ntilde;os de edad</p>
+</td>
+<td style="width: 179.859375px;">
+<p>Noveno Grado (Plan B&aacute;sico)</p>
+</td>
+<td style="width: 127px;">
+<p>11</p>
+</td>
+</tr>
+<tr>
+<td style="width: 360.140625px;">
+<p>16 a 18 a&ntilde;os de edad</p>
+</td>
+<td style="width: 179.859375px;">
+<p>Diversificado</p>
+</td>
+<td style="width: 127px;">
+<p>13 o 14</p>
+</td>
+</tr>
+<tr>
+<td style="width: 360.140625px;">
+<p>19 a 23 a&ntilde;os de edad</p>
+</td>
+<td style="width: 179.859375px;">
+<p>Universidad</p>
+</td>
+<td style="width: 127px;">
+<p>19 o 20</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;">&nbsp;</p>
+<p style="text-align: center;">&nbsp;&nbsp;</p>
+<p style="text-align: center;"><strong>Cuadro # 12</strong></p>
+<p style="text-align: center;"><strong>Ni&ntilde;@s y J&oacute;venes en edad escolar vs los que actualmente estudian (de 5 a 23 a&ntilde;os)</strong></p>
+<table border="1">
+<tbody>
+<tr>
+<td style="text-align: center;">
+<p><strong>Rango de edades de ni&ntilde;os en edad escolar</strong></p>
+</td>
+<td style="text-align: center;">
+<p><strong>(A) Ni&ntilde;os (as) en edad escolar</strong></p>
+</td>
+<td style="text-align: center;">
+<p><strong>(B) Ni&ntilde;os (as) que actualmente estudian</strong></p>
+</td>
+<td style="text-align: center;">
+<p><strong>% cobertura Actual (B/A)</strong></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>De 5 a 6 a&ntilde;os</p>
+</td>
+<td>{{dtcober.d56a}}</td>
+<td>{{dtcober.d56e}}</td>
+<td>{% if(dtcober.d56a) > 0 %}{{ ((dtcober.d56e  / dtcober.d56a )*100)|round(2) }}{% endif %}</td>
+</tr>
+<tr>
+<td>
+<p>De 7 a 12 a&ntilde;os</p>
+</td>
+<td>{{dtcober.d712a}}</td>
+<td>{{dtcober.d712e}}</td>
+<td>{% if(dtcober.d712a) > 0 %}{{ ((dtcober.d712e  / dtcober.d712a )*100)|round(2) }}{% endif %}</td>
+</tr>
+<tr>
+<td>
+<p>De 13 a 15 a&ntilde;os</p>
+</td>
+<td>{{dtcober.d1315a}}</td>
+<td>{{dtcober.d1315e}}</td>
+<td>{% if(dtcober.d1315a) > 0 %}{{ ((dtcober.d1315e  / dtcober.d1315a )*100)|round(2) }}{% endif %}</td>
+</tr>
+<tr>
+<td>
+<p>De 16 a 18 a&ntilde;os</p>
+</td>
+<td>{{dtcober.d1618a}}</td>
+<td>{{dtcober.d1618e}}</td>
+<td>{% if(dtcober.d1618a) > 0 %}{{ ((dtcober.d1618e  / dtcober.d1618a )*100)|round(2) }}{% endif %}</td>
+</tr>
+<tr>
+<td>
+<p>De 19 a 23 a&ntilde;os</p>
+</td>
+<td>{{dtcober.d1923a}}</td>
+<td>{{dtcober.d1923e}}</td>
+<td>{% if(dtcober.d1923a) > 0 %}{{ ((dtcober.d1923e  / dtcober.d1923a )*100)|round(2) }}{% endif %}</td>
+</tr>
+<tr>
+<td>
+<p>Total</p>
+</td>
+<td>{{dtcober.totes}}</td>
+<td>{{dtcober.totaes}}</td>
+<td>{% if(dtcober.totes) > 0 %}{{ ((dtcober.totaes  / dtcober.totes )*100)|round(2) }}{% endif %}</td>
+</tr>
+</tbody>
+</table>
+<p>Fuente: Elaboraci&oacute;n propia con base a encuestas de hogares</p>
+<p>&nbsp;</p>
+<table style="height: 6px;" border="0" width="751">
+<tbody>
+<tr>
+<td style="width: 741px;"><span style="color: #ff0000;">(Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionar la opci&oacute;n # 12 &ldquo;Poblaci&oacute;n sabe leer y escribir por rango de edades&rdquo;)</span></td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p style="text-align: center;"><strong>Cuadro # 13</strong></p>
+<p style="text-align: center;"><br /><strong> Poblaci&oacute;n sabe leer y escribir por rango de edades</strong></p>
+<br>
+<table cellspacing="2" border="1">
+<thead>
+    <tr>
+        <td class="celda" style="width: 142px;" colspan="1" rowspan="2">
+        <p><strong>Rangos de Edades</strong></p>
+        </td>
+        <td class="celda" style="width: 131px;" colspan="2" rowspan="1">
+        <p><strong>Personas por rango</strong></p>
+        </td>
+        <td class="celda" style="width: 82px;" colspan="1" rowspan="2">
+        <p><strong>Saben leer y escribir</strong></p>
+        </td>
+        <td class="celda" style="width: 42px;" colspan="1" rowspan="2">
+        <p><strong>%</strong></p>
+        </td>
+        <td class="celda" style="width: 155px;" colspan="2" rowspan="1">
+        <p><strong>No saben leer y escribir</strong></p>
+        </td>
+    </tr>
+    <tr>
+        <td class="celda" style="width: 49px;">
+        <p><strong>Total</strong></p>
+        </td>
+        <td class="celda" style="width: 82px;">
+        <p><strong>%</strong></p>
+        </td>
+        <td class="celda" style="width: 90.34375px;">
+        <p><strong>Total</strong></p>
+        </td>
+        <td class="celda" style="width: 64.65625px;">
+        <p><strong>%</strong></p>
+        </td>
+    </tr>  
+</thead>
+<tbody>
+    {% set totp = 0 %}
+    {% set totpl = 0 %}
+    {% set totpnl = 0 %}
+    {% for dt in dtrng %}
+        <tr>
+            <td style="width:150px"class="celda"><p>{{ dt.descripcion }}</p></td>
+            <td class="celda" style="width:50px">{{ dt.cantp }}</td>
+            <td class="celdad">{{ dt.porp }}</td>
+            <td class="celda">{{ dt.pobleen }}</td>
+            <td class="celdad">{{ dt.porpobleen }}</td>
+            <td class="celda">{{ dt.pobnleen }}</td>
+            <td class="celdad">{{ dt.porpobnleen }}</td>
+        </tr>
+        {% set totp = totp + dt.cantp %}
+        {% set totpl = totpl + dt.pobleen %}
+        {% set totpnl = totpnl + dt.pobnleen %}
+    {% endfor %}
+    <tr>
+        <td>Total</td>
+        <td class="celda">{{ totp }}</td>
+        <td></td>
+        <td class="celda">{{ totpl }}</td>
+        <td></td>
+        <td class="celda">{{ totpnl }}</td>
+        <td></td>
+    </tr>
+</tbody>    
+
+</table> 
+
+
+<p>Fuente: Elaboraci&oacute;n propia con base a censo l&iacute;nea base levantado en el municipio</p>
+<p>Igualdad entre los sexos a nivel educativo</p>
+<p>&nbsp;</p>
+<table style="height: 5px;" width="742">
+<tbody>
+<tr>
+<td style="width: 732px;">
+<p><span style="color: #ff0000;">(Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionar&nbsp;la opci&oacute;n # 13 &ldquo;Acceso a la educaci&oacute;n primaria y secundaria por g&eacute;nero&rdquo;)</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;">&nbsp;<strong>Cuadro # 14</strong><br /><strong> Acceso a la educaci&oacute;n primaria y secundaria por g&eacute;nero</strong></p>
+<table style="width: 772.1875px;" border="1">
+<tbody>
+<tr>
+<td style="text-align: center; width: 56px;" colspan="1" rowspan="2">
+<p><strong>G&eacute;nero</strong></p>
+</td>
+<td style="text-align: center; width: 90px;" colspan="1" rowspan="2">
+<p><strong>En edad Primaria (de 7 a 12 a&ntilde;os)</strong></p>
+</td>
+<td style="text-align: center; width: 79px;" colspan="2" rowspan="1">
+<p><strong>Estudia primaria %</strong></p>
+</td>
+<td style="text-align: center; width: 136px;" colspan="2" rowspan="1">
+<p><strong>Estudia Primaria de los que tienen edad (de 7 a 12 a&ntilde;os)</strong></p>
+</td>
+<td style="text-align: center; width: 63px;" colspan="1" rowspan="2">
+<p><strong>En edad secundaria (de 13 a 15 a&ntilde;os)</strong></p>
+</td>
+<td style="text-align: center; width: 86px;" colspan="2" rowspan="1">
+<p><strong>Estudia secundaria</strong></p>
+</td>
+<td style="text-align: center; width: 119.1875px;" colspan="2" rowspan="1">
+<p><strong>Estudia Secundaria de los que tienen edad (de 13 a 15 a&ntilde;os)</strong></p>
+</td>
+</tr>
+<tr>
+<td style="text-align: center; width: 45px;">
+<p><strong>Total</strong></p>
+</td>
+<td style="text-align: center; width: 34px;">
+<p><strong>%</strong></p>
+</td>
+<td style="text-align: center; width: 59px;">
+<p><strong>Total</strong></p>
+</td>
+<td style="text-align: center; width: 34px;">
+<p><strong>%</strong></p>
+</td>
+<td style="text-align: center; width: 43px;">
+<p><strong>Total</strong></p>
+</td>
+<td style="text-align: center; width: 43px;">
+<p><strong>%</strong></p>
+</td>
+<td style="text-align: center; width: 50px;">
+<p><strong>Total</strong></p>
+</td>
+<td style="text-align: center; width: 69.1875px;">
+<p><strong>%</strong></p>
+</td>
+</tr>
+<tr>
+<td style="width: 56px;">
+<p>Ni&ntilde;os</p>
+</td>
+<td class="celda" style="width: 90px;">{{ dtcober.teprim }}</td>
+<td class="celda"style="width: 45px;">{{ dtcober.tepriem }}</td>
+<td class="celdad" style="width: 34px;">{% if dtcober.teprie > 0 %} {{ ((dtcober.tepriem / dtcober.teprie)*100)|round(2) }}{% endif %}</td>
+<td class="celda"style="width: 59px;">{{ dtcober.tgepriem }}</td>
+<td class="celdad"style="width: 34px;">{% if dtcober.tgeprie > 0 %} {{ ((dtcober.tgepriem / dtcober.tgeprie)*100)|round(2) }}{% endif %}</td>
+<td class="celda" style="width: 63px;">{{ dtcober.tesecm }}</td>
+<td class="celda" style="width: 43px;">{{ dtcober.tesecem }}</td>
+<td class="celdad" style="width: 43px;">{% if dtcober.tesece > 0 %} {{ ((dtcober.tesecem / dtcober.tesece)*100)|round(2) }}{% endif %}</td>
+<td class="celda" style="width: 50px;">{{ dtcober.tgesecem }}</td>
+<td class="celdad" style="width: 69.1875px;">{% if dtcober.tgesece > 0 %} {{ ((dtcober.tgesecem / dtcober.tgesece)*100)|round(2) }}{% endif %}</td>
+</tr>
+<tr>
+<td style="width: 56px;">
+<p>Ni&ntilde;as</p>
+</td>
+<td class="celda" style="width: 90px;">{{ dtcober.teprif }}</td>
+<td class="celda"style="width: 45px;">{{ dtcober.teprief }}</td>
+<td class="celdad" style="width: 34px;">{% if dtcober.teprie > 0 %} {{ ((dtcober.teprief / dtcober.teprie)*100)|round(2) }}{% endif %}</td>
+<td class="celda"style="width: 59px;">{{ dtcober.tgeprief }}</td>
+<td class="celdad"style="width: 34px;">{% if dtcober.tgeprie > 0 %} {{ ((dtcober.tgeprief / dtcober.tgeprie)*100)|round(2) }}{% endif %}</td>
+<td class="celda" style="width: 63px;">{{ dtcober.tesecf }}</td>
+<td class="celda" style="width: 43px;">{{ dtcober.tesecef }}</td>
+<td class="celdad" style="width: 43px;">{% if dtcober.tesece > 0 %} {{ ((dtcober.tesecef / dtcober.tesece)*100)|round(2) }}{% endif %}</td>
+<td class="celda" style="width: 50px;">{{ dtcober.tgesecef }}</td>
+<td class="celdad" style="width: 69.1875px;">{% if dtcober.tgesece > 0 %} {{ ((dtcober.tgesecef / dtcober.tgesece)*100)|round(2) }}{% endif %}</td>
+</tr>
+<tr>
+<td style="width: 56px;">
+<p>Total</p>
+</td>
+<td class="celda" style="width: 90px;">{{ dtcober.tepri }}</td>
+<td class="celda" style="width: 45px;">{{ dtcober.teprie }}</td>
+<td style="width: 34px;">&nbsp;</td>
+<td class="celda" style="width: 59px;">{{ dtcober.tgeprie }}</td>
+<td style="width: 34px;">&nbsp;</td>
+<td class="celda" style="width: 63px;">{{ dtcober.tesec }}</td>
+<td class="celda" style="width: 43px;">{{ dtcober.tesece }}</td>
+<td style="width: 43px;">&nbsp;</td>
+<td class="celda" style="width: 50px;">{{ dtcober.tgesece }}</td>
+<td style="width: 69.1875px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>Fuente: Elaboraci&oacute;n propia con base a censo l&iacute;nea base levantado en el municipio</p>
+<p>&nbsp;</p>
+<table style="height: 17px;" width="786">
+<tbody>
+<tr>
+<td style="width: 776px;">
+<p><span style="color: #ff0000;">(Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionar&nbsp;la opci&oacute;n # 14 &ldquo;Equidad en el acceso al sistema educativo seg&uacute;n g&eacute;nero&rdquo;)</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;"><strong>Cuadro # 15</strong><br /><strong> Equidad en el acceso al sistema educativo seg&uacute;n genero</strong></p>
+<table style="width: 691px;" border="1">
+<tbody>
+<tr>
+<td class="celda" style="width: 89.5px;">
+<p><strong>G&eacute;nero</strong></p>
+</td>
+<td class="celda" style="width: 194.5px;">
+<p><strong>En edad de estudiar (de 5 a 23 a&ntilde;os)</strong></p>
+</td>
+<td class="celda" style="width: 131px;">
+<p><strong>Estudian o han estudiado</strong></p>
+</td>
+<td class="celda" style="width: 52px;">
+<p><strong>%</strong></p>
+</td>
+<td class="celda" style="width: 146px;">
+<p><strong>Est&aacute;n estudiando</strong></p>
+</td>
+<td class="celda" style="width: 53px;">
+<p><strong>%</strong></p>
+</td>
+</tr>
+<tr>
+<td style="width: 89.5px;">
+<p>Varones</p>
+</td>
+<td class="celda" style="width: 194.5px;">{{ dtcober.te5a23m }}</td>
+<td class="celda" style="width: 131px;">{{ dtcober.tg5a23m }}</td>
+<td class="celdad" style="width: 52px;">{% if dtcober.tg5a23 > 0 %} {{ ((dtcober.tg5a23m / dtcober.tg5a23)*100)|round(2) }}{% endif %}</td>
+<td class="celda" style="width: 146px;">{{ dtcober.te5a23em }}</td>
+<td class="celdad" style="width: 53px;">{% if dtcober.te5a23e > 0 %} {{ ((dtcober.te5a23em / dtcober.te5a23e)*100)|round(2) }}{% endif %}</td>
+</tr>
+<tr>
+<td style="width: 89.5px;">
+<p>Mujeres</p>
+</td>
+<td class="celda" style="width: 194.5px;">{{ dtcober.te5a23f }}</td>
+<td class="celda" style="width: 131px;">{{ dtcober.tg5a23f }}</td>
+<td class="celdad" style="width: 52px;">{% if dtcober.tg5a23 > 0 %} {{ ((dtcober.tg5a23f / dtcober.tg5a23)*100)|round(2) }}{% endif %}</td>
+<td class="celda" style="width: 146px;">{{ dtcober.te5a23ef }}</td>
+<td class="celdad" style="width: 53px;"d>{% if dtcober.te5a23e > 0 %} {{ ((dtcober.te5a23ef / dtcober.te5a23e)*100)|round(2) }}{% endif %}</td>
+</tr>
+<tr>
+<td style="width: 89.5px;">
+<p>Total</p>
+</td>
+<td class="celda" style="width: 194.5px;">{{ dtcober.totes }}</td>
+<td class="celda" style="width: 131px;">{{ dtcober.tg5a23 }}</td>
+<td class="celda" tyle="width: 52px;">&nbsp;</td>
+<td class="celda" style="width: 146px;">{{ dtcober.te5a23e }}</td>
+<td class="celda" style="width: 53px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>Fuente: Elaboraci&oacute;n propia con base a censo l&iacute;nea base levantado en el municipio</p>                
+
+
+    </page>
+{% endblock %}

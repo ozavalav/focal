@@ -1,0 +1,161 @@
+{% extends '::basemenu.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{asset('bundles/app/css/focal.css')}}" />
+{% endblock %}      
+{% block header -%}
+    G. Datos Educación
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Ingresar la información sobre la situación de educación actual
+    </small>
+{% endblock %}
+{% block content -%}
+    <div class="row">
+        <div class="col-sm-6" style="float:left">
+            <h4>No. Boleta: {{ numboleta }}</h4>
+            <h4>Id Encuesta: {{ idenc }}</h4>
+        </div>
+        <div class="col-sm-6" style="text-align:right">
+            <ul style="list-style: none; margin-left: 0; padding-top: 10px; display:inline">
+                <li style="display:inline">
+                    <a id="btnAnterior" class="btn btn-md btn-primary" href="{{ path('datossegalimentaria',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-left align-top bigger-120"></i> Anterior
+                    </a> 
+                </li>
+                <li style="display:inline">
+                    <a id="btnSiguiente" class="btn btn-md btn-primary" href="{{ path('datosfuerzaingresos',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-right align-top bigger-120"></i> Siguiente
+                    </a> 
+                </li>
+            </ul> 
+        </div>    
+    </div>
+    {% for type, flash_messages in app.session.flashBag.all %}
+        {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endfor %}
+    <form id="frm-rvacunas" action="{{ path('datoseducacion_create')}}" method="post">  
+        <div style="padding-top: 10px; padding-bottom: 10px">
+        <ul style="display: inline; list-style: none; margin-left: 0;">
+            <li style="display: inline; list-style: none; margin-left: 0;">
+                <button id="btnGuardar" class="btn-default btn btn-success" style="color: white" type="submit">    
+                    <i class="ace-icon fa fa-save align-top bigger-120"></i> Guardar
+                </button>
+            </li>
+            {% if is_granted('ROLE_SUPERV') %}
+            <li style="display: inline; list-style: none; margin-left: 0;">
+                <button id="btnBorrarE" class="btn-default btn btn-danger" style="color: white" type="submit">    
+                    <i class="ace-icon fa fa-save align-top bigger-120"></i> Borrar Registros
+                </button>
+            </li>
+            {% endif %}
+        </ul>
+        </div>
+        <div class="table-header">
+            40. Situación de educación actual e igualdad entre los sexos, de las personas de edad escolar (de 5 a 23 años)
+        </div>
+        <div id="msgerror-rvac" style="color:red"></div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Num</th>
+                    <th>Nombre</th>
+                    <th>Sexo</th>
+                    <th>Edad</th>
+                    <th>
+                        <table class="table" style="margin-bottom:0px"><tr><td>P.</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>B</td><td>D</td><td>U</td></tr></table>
+                    </th>
+                    <th>Estudia</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for entity in entities %}
+                <tr>
+                    <td style="width: 6%" ><input class="form-control" readonly name="num_{{ entity.num == 0 ? loop.index : entity.num }}" value="{{ entity.num == 0 ? loop.index : entity.num }}" type="text"/></td>
+                    <td>{{ entity.nombre }}</td>
+                    <td>{{ entity.sexo == 1 ?'H':'M' }}</td>
+                    <td>{{ entity.edad }}</td>
+                    <td> 
+                        <table class="table" style="margin-bottom:0px">
+                            <tr>
+                                <td><input class="radio-inline" type="radio" name="grado_{{ entity.num == 0 ? loop.index : entity.num }}" value="1" {{ entity.grado == 1 ? 'checked':''}} required="required" ></td>
+                                <td><input class="radio-inline" type="radio" name="grado_{{ entity.num == 0 ? loop.index : entity.num }}" value="2" {{ entity.grado == 2 ? 'checked':''}}></td>
+                                <td><input class="radio-inline" type="radio" name="grado_{{ entity.num == 0 ? loop.index : entity.num }}" value="3" {{ entity.grado == 3 ? 'checked':''}}></td>
+                                <td><input class="radio-inline" type="radio" name="grado_{{ entity.num == 0 ? loop.index : entity.num }}" value="4" {{ entity.grado == 4 ? 'checked':''}}></td>
+                                <td><input class="radio-inline" type="radio" name="grado_{{ entity.num == 0 ? loop.index : entity.num }}" value="5" {{ entity.grado == 5 ? 'checked':''}}></td>
+                                <td><input class="radio-inline" type="radio" name="grado_{{ entity.num == 0 ? loop.index : entity.num }}" value="6" {{ entity.grado == 6 ? 'checked':''}}></td>
+                                <td><input class="radio-inline" type="radio" name="grado_{{ entity.num == 0 ? loop.index : entity.num }}" value="7" {{ entity.grado == 7 ? 'checked':''}}></td>
+                                <td><input class="radio-inline" type="radio" name="grado_{{ entity.num == 0 ? loop.index : entity.num }}" value="8" {{ entity.grado == 8 ? 'checked':''}}></td>
+                                <td><input class="radio-inline" type="radio" name="grado_{{ entity.num == 0 ? loop.index : entity.num }}" value="9" {{ entity.grado == 9 ? 'checked':''}}></td>
+                                <td><input class="radio-inline" type="radio" name="grado_{{ entity.num == 0 ? loop.index : entity.num }}" value="10" {{ entity.grado == 10 ? 'checked':''}}></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table" style="width: 60%; margin-bottom:0px">
+                            <tr>
+                                <td><input type="radio" name="estudia_{{ entity.num == 0 ? loop.index : entity.num }}" value="1" {{ entity.estudia == 1 ? 'checked':''}} required="required">Si</td>
+                                <td><input type="radio" name="estudia_{{ entity.num == 0 ? loop.index : entity.num }}" value="2" {{ entity.estudia == 2 ? 'checked':''}}>No</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <input id="idfam" type="hidden" value="{{ entity.idFamilia }}" name="idfam_{{ entity.num == 0 ? loop.index : entity.num  }}" >
+                <input id="numtreg" type="hidden" value="{{ loop.length }}" name="numtotalreg" >
+            {% endfor %}
+            </tbody>
+        </table>
+        <input id="idencrv" type="hidden" value="{{ idenc }}" name="idenced" >
+        <input id="codmun" type="hidden" value="{{ codmun }}" >
+        <input id="coddep" type="hidden" value="{{ coddep }}" >
+        
+    </form>
+    <ul>
+        <li>
+            <a href="{{ path('datosgenerales') }}">
+                Regresar al listado
+            </a>
+        </li>
+    </ul> 
+    {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $("#btnBorrarE").click(function(e){
+            e.preventDefault();
+             
+             var idenc = $('#idencrv').val();
+             var coddep = $('#coddep').val();
+             var codmun = $('#codmun').val();
+             
+
+             var param = idenc + "&&" + coddep + "&&" + codmun;
+
+             var url = '/Focal/web/app_dev.php/datoseducacion/borrarregistroedu/'+ param;  
+             if(confirm('¿Quiere borrar los registros?')) { 
+                 $.ajax({
+                     type:'POST',
+                     url:url,
+                     beforeSend: function(){
+                         $("#lblError").hide();
+                     },
+                     dataType: 'json',
+                     success:function(data){
+                         if(data.message == 'false'){
+                             alert(data.razon);
+                         }else{
+                             alert("Registros borrados con exito");
+                             window.location.reload();
+                         }
+                     }
+                 });
+             }
+         }); 
+    </script>    
+{% endblock %}        

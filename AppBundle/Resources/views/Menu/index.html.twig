@@ -1,0 +1,35 @@
+{% extends '::basemenu.html.twig' %}
+
+{% block header -%}
+    <div class="page-header">
+        Indicadores
+        <small>
+            <i class="ace-icon fa fa-angle-double-right"></i>
+            Principales Indicadores
+        </small>
+    </div><!-- /.page-header -->
+{% endblock%}    
+{% block content %}
+   <table class="table-responsive">
+       <tr>
+           <td>Número de encuestas procesadas:</td>
+           <td style="text-align: right">{{ dtgen.totalenc }}</td>
+       <tr>
+       <tr>
+           <td>Número de encuestas pendientes:</td>
+           <td style="text-align: right">{{ dtgen.encpen }}</td>
+       <tr>
+       <tr>
+           <td>Número de encuestas ingresadas por su usuario:</td>
+           <td style="text-align: right">{{ dtgen.encxusr }}</td>
+       <tr>    
+       <tr>
+           <td>Fecha última actualización:</td>
+           <td style="text-align: right">{{ dtgen.ultfecha|date("m/d/Y H:i:s") }}</td>
+       <tr>
+           
+   </table>    
+{% endblock %}
+
+
+

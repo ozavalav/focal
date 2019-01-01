@@ -1,0 +1,114 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% block header -%}
+    Nueva Encuesta
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Ingresar la información solicitada
+    </small>
+{% endblock %} 
+{% block content -%}
+{% for type, flash_messages in app.session.flashBag.all %}
+    {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+    {{ form_start(form,{'attr' : {'id':'frm_datosg'}}) }}    
+    <div class="col-sm-8 ">
+        {{ form_row(form.idEncuestador) }}
+    </div>
+    <div class="col-sm-4">
+        {{ form_row(form.numBoleta) }}
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+        <label class="control-label">Comunidad</label>
+            <select required id="comunidad" class="form-control" name="comunidad">
+                <option value="">-- Selecionar --</option>
+                {% for com in comunidades %}
+                    <option value="{{ com.codComunidad}}">{{ com.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>    
+    <!--div class="col-sm-4">
+        {# form_row(form.codColonia) }}
+    </div>
+    <div class="col-sm-3">
+        {{ form_row(form.codBarrio) }}
+    </div>
+    <div class="col-sm-3">
+        {{ form_row(form.codAldea) }}
+    </div>    
+    <div class="col-sm-3">
+        {{ form_row(form.codCaserio) #}
+    </div -->    
+    <div class="col-sm-8">
+        {{ form_row(form.nombreEntrevistado) }}
+    </div>  
+    <div class="col-sm-4">
+        {{ form_row(form.telefonoCel) }}
+    </div>  
+    <div class="col-sm-4">
+        {{ form_row(form.numUbicacion) }}
+    </div>
+    <div class="col-sm-4">
+        {{ form_row(form.cantPersonasvivienda) }}
+        
+    </div>
+    <div class="col-sm-6">
+        {{ form_row(form.cantPersonas523) }}
+    </div>    
+    <div class="col-sm-6">
+        {{ form_row(form.cantPersonasm10) }}
+    </div> 
+   <div id="msg_cant" style="color: red; display: none" class="col-sm-12"><label>Cantidade de personas no coinciden</label></div>
+    {{ form_rest(form) }}
+    
+    {{ form_end(form) }}
+    <div class="col-lg-12">
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path('datosgenerales') }}">
+                Regresar al listado
+            </a>
+        </li>
+    </div>
+</ul>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //$('#focal_appbundle_datosgenerales_submit').prop('disabled',true);
+            $('#msgbox').fadeout(3000);
+        });
+        /*validacion de las cantidades - ya no es necesaria - 24 Jun 2017 */
+        /*$('#focal_appbundle_datosgenerales_cantPersonasvivienda, #focal_appbundle_datosgenerales_cantPersonas523, #focal_appbundle_datosgenerales_cantPersonasm10').on('change',function(){
+          
+            var nvive = $('#focal_appbundle_datosgenerales_cantPersonasvivienda').val();
+            var n523 = $('#focal_appbundle_datosgenerales_cantPersonas523').val();
+            var nm10 = $('#focal_appbundle_datosgenerales_cantPersonasm10').val();
+            
+            var tpersonas = parseInt(n523) + parseInt(nm10);
+            
+            if ( parseInt(tpersonas) !== parseInt(nvive) ){
+               $('#focal_appbundle_datosgenerales_cantPersonasvivienda').css('border-color', 'red'); 
+               $('#focal_appbundle_datosgenerales_cantPersonas523').css('border-color', 'red'); 
+               $('#focal_appbundle_datosgenerales_cantPersonasm10').css('border-color', 'red');
+               $('#msg_cant').show();
+            } else {
+               $('#focal_appbundle_datosgenerales_cantPersonasvivienda').css('border-color', ''); 
+               $('#focal_appbundle_datosgenerales_cantPersonas523').css('border-color', ''); 
+               $('#focal_appbundle_datosgenerales_cantPersonasm10').css('border-color', '');
+               $('#msg_cant').hide();
+               $('#focal_appbundle_datosgenerales_submit').prop('disabled',false);
+            }
+            
+        });*/
+    </script> 
+{% endblock %}

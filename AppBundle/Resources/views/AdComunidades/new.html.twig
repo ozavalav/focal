@@ -1,0 +1,466 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block header -%}
+    Nueva Comunidad
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Ingresar nueva comunidad
+    </small>
+{% endblock %} 
+{% block content -%} 
+{% for type, flash_messages in app.session.flashBag.all %}
+    {% for flash_message in flash_messages %}
+    <div id="msgbox" class="alert alert-{{ type }}">
+        {{ flash_message }}
+    </div>
+    {% endfor %}
+{% endfor %}    
+{{ form_start(form) }}
+    
+    <div class="form-group">
+        <label class="col-md-2 control-label">Aldea</label>
+        <div class="col-md-6">
+            <select id="aldea" class="form-control" name="aldea">
+                <option value="0">-- Selecionar --</option>
+                {% for ald in aldeas %}
+                    <option value="{{ ald.codAldea}}">{{ ald.nomAldea }}</option>
+                {% endfor %}
+            </select>
+            
+        </div>
+        {% if is_granted('ROLE_SUPERV') %}     
+        <div class="col-md-1">
+                <a id="btnNuevaAldea" class="form-group-sm btn btn-md btn-default" href="#" title="Agregar Aldea">
+                    <i class="ace-icon fa fa-plus-square align-top bigger-120"></i>
+                </a> 
+        </div> 
+        {% endif %}
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">Caserio</label>
+        <div class="col-md-6">
+            <select id="caserio" class="form-control" name="caserio">
+                <option value="0">-- Selecionar --</option>
+            </select>
+        </div>
+        {% if is_granted('ROLE_SUPERV') %}     
+        <div class="col-md-1">
+            <a id="btnNuevoCaserio" class="form-group-sm btn btn-md btn-default" href="#" title="Agregar Caserio">
+                    <i class="ace-icon fa fa-plus-square align-top bigger-120"></i>
+                </a> 
+        </div> 
+        {% endif %}        
+    </div>            
+    <div class="form-group">
+        <label class="col-md-2 control-label">Barrio/Colonia</label>
+        <div class="col-md-6">
+            <select id="comunidad" class="form-control" name="comunidad">
+                <option value="0">-- Selecionar --</option>
+            </select>
+        </div>
+        {% if is_granted('ROLE_SUPERV') %}     
+        <div class="col-md-1">
+                <a id="btnNuevaComunidad" class="form-group-sm btn btn-md btn-default" href="#" title="Agregar Barrio/Colonia">
+                    <i class="ace-icon fa fa-plus-square align-top bigger-120"></i>
+                </a> 
+        </div> 
+        {% endif %}
+    </div>        
+    {{ form_row(form.nombre) }}
+    {{ form_row(form.descripcion) }}
+    {{ form_rest(form) }}    
+{{ form_end(form) }}
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('adcomunidades') }}">
+            Regresar al listado
+        </a>
+    </li>
+</ul>
+            
+<!-- MODAL AGREGAR COMUNIDAD -->
+<div id="modal-comunidad" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="blue bigger">Ingresar nueva comunidad 
+                    <label class="bigger" id="modal-lblnombre"></label>
+                </h4>
+            </div>
+            <div id="msgerrorcom" style="color:red">Aqui</div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="modal-nombre">Nombre</label>
+                            <div>
+                                <input type="text" id="modal-nombrecomunidad" class="form-control" placeholder="Nombre de la comunidad" />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                                                       
+                        <input id="modal-idenc" type="hidden" value="" name="modal-" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" data-dismiss="modal">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancel
+                </button>
+
+                <button id="btnAgregarComunidad" class="btn btn-sm btn-primary" >
+                        <i class="ace-icon fa fa-check"></i>
+                        Agregar
+                </button>
+            </div>
+        </div>
+    </div>
+</div><!-- PAGE CONTENT ENDS -->
+<!-- TERMINA FORMULARIO MODAL -->     
+
+<!-- MODAL AGREGAR CASERIOS -->
+<div id="modal-caserio" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="blue bigger">Ingresar Caserio 
+                    <label class="bigger" id="modal-lblnombre"></label>
+                </h4>
+            </div>
+            <div id="msgerrorcas" style="color:red">Aqui</div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="modal-nombre">Nombre</label>
+                            <div>
+                                <input type="text" id="modal-nombrecaserio" class="form-control" placeholder="Nombre del caserio" />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                                                       
+                        <input id="modal-idenc" type="hidden" value="" name="modal-" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" data-dismiss="modal">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancel
+                </button>
+
+                <button id="btnAgregarCaserio" class="btn btn-sm btn-primary" >
+                        <i class="ace-icon fa fa-check"></i>
+                        Agregar
+                </button>
+            </div>
+        </div>
+    </div>
+</div><!-- PAGE CONTENT ENDS -->
+<!-- TERMINA FORMULARIO MODAL -->          
+
+<!-- MODAL AGREGAR ALDEAS -->
+<div id="modal-aldea" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="blue bigger">Ingresar Aldea 
+                    <label class="bigger" id="modal-lblnombre"></label>
+                </h4>
+            </div>
+            <div id="msgerrorald" style="color:red">Aqui</div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="modal-nombre">Nombre</label>
+                            <div>
+                                <input type="text" id="modal-nombrealdea" class="form-control" placeholder="Nombre de la Aldea" />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                                                       
+                        <input id="modal-idenc" type="hidden" value="" name="modal-" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" data-dismiss="modal">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancel
+                </button>
+
+                <button id="btnAgregarAldea" class="btn btn-sm btn-primary" >
+                        <i class="ace-icon fa fa-check"></i>
+                        Agregar
+                </button>
+            </div>
+        </div>
+    </div>
+</div><!-- PAGE CONTENT ENDS -->
+<!-- TERMINA FORMULARIO MODAL -->
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        var table;
+        var tablar;
+        $(document).ready(function() {
+            $('#focal_appbundle_adcomunidades_submit').prop('disabled', true);
+            $('#btnNuevoCaserio').prop('disabled', true);
+            $('#btnNuevaComunidad').prop('disabled', true);
+            $('#focal_appbundle_adcomunidades_nombre').val('');
+        });
+        
+        $("#btnNuevaAldea").click(function(e){
+            e.preventDefault(); 
+            $("#msgerrorald").hide();
+            $('#modal-aldea').modal();
+        });
+        
+        $("#btnNuevoCaserio").click(function(e){
+            e.preventDefault(); 
+            $("#msgerrorcas").hide();
+            $('#modal-caserio').modal();
+        });
+        
+        $("#btnNuevaComunidad").click(function(e){
+            e.preventDefault(); 
+            $("#msgerrorcom").hide();
+            $('#modal-comunidad').modal();
+        });        
+
+    $('#btnAgregarComunidad').click(function(e) {
+        e.preventDefault();
+        $("#msgerrorcom").hide();
+        var nomcomunidad = $('#modal-nombrecomunidad').val();
+        var codaldea = $('#aldea option:selected').val(); 
+        var codcaserio = $('#caserio option:selected').val(); 
+
+        var param = nomcomunidad + '&&' + codaldea + '&&' + codcaserio;
+        var url="/Focal/web/app_dev.php/adcomunidades/agregarComunidad/" + param;
+        
+        var ok = true;
+        if(nomcomunidad === '') {
+            ok = false;
+        } else if(codaldea === '0') {
+            ok = false;
+        } else if (codcaserio === '0') {
+            ok = false;
+        }
+        
+        if (ok) {
+            $.ajax({
+                type:'POST',
+                url:url,
+                beforeSend: function(){
+                    $("#msgerrorcom").hide();
+                },
+                dataType: 'json',
+                success:function(data){
+                    if(data.message == 'false'){
+                        $("#msgerrorcom").show();
+                        $('#msgerrorcom').text(data.razon);
+                        alert(data.razon);
+                    }else{
+                        alert('Comunidad agregada con exito.');        
+                        $('#modal-comunidad').modal('hide');
+                        var ejercicio = "<option value=''> -- seleccionar -- </option>";
+                        $.each(data, function(i) {
+                            ejercicio = ejercicio + "<option value='"+data[i].codBarrio+"'>"+data[i].codBarrio+ " - "+data[i].nomBarrio+ "</option>";  
+                        });
+                        $('#comunidad').html(ejercicio);
+                        $('#modal-nombrecomunidad').val('');
+                    }
+                }
+            });
+        } else {
+            $("#msgerrorcom").show();
+            $('#msgerrorcom').text('Los campos del formulario no pueden estar vacios');
+        }
+    });
+
+    $('#btnAgregarCaserio').click(function(e) {
+        e.preventDefault();
+        $("#msgerrorcas").hide();
+        var nomcaserio = $('#modal-nombrecaserio').val();
+        var codaldea = $('#aldea option:selected').val(); 
+
+        var param = nomcaserio + '&&' + codaldea;
+        var url="/Focal/web/app_dev.php/adcomunidades/agregarCaserio/" + param;
+        
+        var ok = true;
+        if(nomcaserio === '') {
+            ok = false;
+        } else if(codaldea === '0') {
+            ok = false;
+        }
+        
+        if (ok) {
+            $.ajax({
+                type:'POST',
+                url:url,
+                beforeSend: function(){
+                    $("#msgerror-rango").hide();
+                },
+                dataType: 'json',
+                success:function(data){
+                    if(data.message == 'false'){
+                        $("#msgerrorcas").show();
+                        $('#msgerrorcas').text(data.razon);
+                        alert(data.razon);
+                    }else{
+                        alert('Caserio agregado con exito.');        
+                        $('#modal-caserio').modal('hide');
+                        var ejercicio = "<option value=''> -- seleccionar -- </option>";
+                        var valorInicial = "<option value=''> -- seleccionar -- </option>";
+                        $.each(data, function(i) {
+                            ejercicio = ejercicio + "<option value='"+data[i].codCaserio+"'>"+data[i].codCaserio+ " - "+data[i].nomCaserio+ "</option>";  
+                        });
+                        $('#caserio').html(ejercicio);
+                        $('#comunidad').html(valorInicial);
+                        
+                    }
+                }
+            });
+        } else {
+            $("#msgerrorcas").show();
+            $('#msgerrorcas').text('Los campos del formulario no pueden estar vacios');
+        }
+    });  
+    
+    $('#btnAgregarAldea').click(function(e) {
+        e.preventDefault();
+        $("#msgerrorald").hide();
+        var nomaldea = $('#modal-nombrealdea').val();
+        
+        var param = nomaldea;
+        var url="/Focal/web/app_dev.php/adcomunidades/agregarAldea/" + param;
+        
+        var ok = true;
+        if(nomaldea === '') {
+            ok = false;
+        }
+        
+        if (ok) {
+            $.ajax({
+                type:'POST',
+                url:url,
+                beforeSend: function(){
+                    $("#msgerrorald").hide();
+                },
+                dataType: 'json',
+                success:function(data){
+                    if(data.message == 'false'){
+                        $("#msgerrorald").show();
+                        $('#msgerrorald').text(data.razon);
+                    }else{
+                        alert('Aldea agregada con exito.');        
+                        $('#modal-aldea').modal('hide');
+                        var ejercicio = "<option value=''> -- seleccionar -- </option>";
+                        var valorInicial = "<option value=''> -- seleccionar -- </option>";
+                        $.each(data, function(i) {
+                            ejercicio = ejercicio + "<option value='"+data[i].codAldea+"'>"+data[i].codAldea+ " - "+data[i].nomAldea+ "</option>";  
+                        });
+                        $('#aldea').html(ejercicio);
+                        $('#caserio').html(valorInicial);
+                        $('#comunidad').html(valorInicial);
+                        $('#modal-nombrealdea').val('');
+                        //window.location.reload();
+                    }
+                }
+            });
+        } else {
+            $("#msgerrorald").show();
+            $('#msgerrorald').text('Los campos del formulario no pueden estar vacios');
+        }
+    });  
+    
+    $('#aldea').change(function(e) {
+        var valaldea = $(this).val();  
+        e.preventDefault(); 
+          var param =  valaldea;
+           url="/Focal/web/app_dev.php/adcomunidades/buscarCaserio/" + param;
+          $.ajax({
+            type:'POST',
+            url:url,
+            beforeSend: function(){
+            $("#lblError").hide();	
+            },
+            dataType: 'json',
+            success:function(data){
+                if(data.message === 'false'){
+                    alert('false');
+                }else{
+                     var ejercicio = "<option value=''> -- seleccionar -- </option>";
+                     var valorInicial = "<option value=''> -- seleccionar -- </option>";
+                     $.each(data, function(i) {
+                        ejercicio = ejercicio + "<option value='"+data[i].codCaserio+"'>"+data[i].codCaserio+ " - "+data[i].nomCaserio+ "</option>";  
+                     });
+                     $('#caserio').html(ejercicio);
+                     $('#comunidad').html(valorInicial);
+                     $('#focal_appbundle_adcomunidades_nombre').val('');
+                     $('#btnNuevoCaserio').prop('disabled', false);
+                     $('#focal_appbundle_adcomunidades_submit').prop('disabled', true);
+                }
+            }
+        });
+    });       
+  //LLENADO EN CASCADA BARRIO
+    $('#caserio').change(function(e) {
+        var valcaserio = $(this).val();  
+        var valaldea = $('#aldea').val();
+        e.preventDefault(); 
+          
+        url="/Focal/web/app_dev.php/adcomunidades/buscarComunidad/" + valaldea +"," + valcaserio;
+        $.ajax({
+          type:'POST',
+          url:url,
+          beforeSend: function(){
+          $("#lblError").hide();	
+          },
+          dataType: 'json',
+          success:function(data){
+              if(data.message === 'false'){
+                  alert('false');
+              }else{
+                   var ejercicio = "<option value='000'> -- seleccionar -- </option>";
+                   var cont = 0;
+                   $.each(data, function(i) {
+                      ejercicio = ejercicio + "<option value='"+data[i].codBarrio+"'>"+data[i].codBarrio+ " - "+data[i].nomBarrio+ "</option>";  
+                      cont = cont + 1;
+                    });
+                   $('#comunidad').html(ejercicio);
+                   $('#focal_appbundle_adcomunidades_submit').prop('disabled', true); 
+                   $('#btnNuevaComunidad').prop('disabled', false);
+                   if(cont === 0) {
+                       var txtcomunidad = $('#caserio option:selected').text();  
+                       $('#focal_appbundle_adcomunidades_nombre').val(txtcomunidad);
+                       $('#focal_appbundle_adcomunidades_submit').prop('disabled', false);
+                   } else {
+                       $('#focal_appbundle_adcomunidades_nombre').val('');
+                   }
+              }
+          }
+      });
+    });
+    
+    $('#comunidad').change(function(e) {
+        var txtcomunidad = $('#comunidad option:selected').text();  
+        e.preventDefault();
+        $('#focal_appbundle_adcomunidades_nombre').val(txtcomunidad);
+        $('#focal_appbundle_adcomunidades_submit').prop('disabled', false);
+    });    
+    </script>      
+{% endblock %}

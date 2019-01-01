@@ -1,0 +1,445 @@
+
+{% block stylesheets %}
+<style type="text/Css">
+<!--
+#body{
+	font-family:Verdana, Calibri, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	font-weight:400;
+	color:#000;
+}
+.small_font{
+	font-size:8px;
+	color:#666;
+}
+.bg_img{
+	background-color:#F5ECCE;
+	border-radius:5px;
+	height:50px;
+}
+.linea{
+	border-width:1px;
+	border-bottom:solid;
+	border-color:#666;
+}
+.txt_title{
+	font-size:16px;
+	font-weight:bold;
+}
+.txt_titleheader{
+	font-size:12px;
+	font-weight:bold;
+	color:#333;
+}
+.txt_titleheader_cotenido{
+	font-size:7px;
+}
+.celda {
+    text-align: center;
+}
+.celdad {
+    text-align: right;
+}
+.borde-arriba td {
+    border-top: 1px solid #000; 
+}
+.borde-abajo th {
+    border-bottom: 1px solid #000; 
+} 
+.titulo-grupo {
+    background-color: lightskyblue;
+    text-align: center;
+}
+.titulo-tabla {
+    background-color: lightgreen;
+}
+.piede-tabla {
+    background-color: lightgrey;
+}
+-->
+</style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+<page backtop="20mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 14px;" footer="page">
+<page_header>
+  <table cellspacing="0" border='0' align="center"  style="width: 100%; font-size: 12pt;">
+        <tbody>
+        <tr>
+            <th colspan='5' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                <label  class="txt_title">REPORTE - FRECUENCIA SIMPLE</label><br/>
+            </th> 
+        </tr> 
+        <tr style="width: 100%;"> 
+            <th class="txt_titleheader">Fecha Inicio: {{ fin == '00' ? "" : fin|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Fecha Final: {{ fin2 == '00' ? "" : fin2|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }} </th>
+            <th class="txt_titleheader">Municipio: {{ codmun }} - {{ nommun }}  </th>
+        </tr>  
+        <tr style="width: 100%;">    
+            <th colspan="4" class="txt_titleheader">
+                Comunidad: 
+                {% if cantcom <= 5 %}
+                    {% for ncom in dtnomcom %}
+                        {{ ncom.nombre }} / 
+                    {% endfor %} 
+                {% else %}
+                    Varias
+                {% endif %}
+            </th>
+        </tr>  
+   </tbody>
+    </table>
+</page_header>   
+    <table>
+        <tr>
+            <td class="titulo-grupo"><b>=== G. Datos de Educación ===</b></td>
+        </tr> 
+        <tr>
+            <td>
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="7"><b>P.40 Nivel de Educación por Sexo en edad de estudiar</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Nivel E.</td>
+                        <td>Cantidad</td>
+                        <td>% Total</td>
+                        <td>Cant. Hombres</td>
+                        <td class="celda">(%)</td>
+                        <td>Cant. Mujeres</td>
+                        <td class="celda">(%)</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totales = 0 %}
+                        {% set totalesh = 0 %}
+                        {% set totalesm = 0 %}
+                        {% for datose in datosedu %}
+                            <tr>
+                                <td>{{ datose.nivele }}</td>
+                                <td class="celda">{{ datose.canttot }}</td>
+                                <td class="celdad">{{ datose.portot|round(2) }}</td>
+                                <td class="celda">{{ datose.canth }}</td>
+                                <td class="celdad">{{ datose.porhom|round(2) }}</td>
+                                <td class="celda">{{ datose.cantm }}</td>
+                                <td class="celdad">{{ datose.pormuj|round(2) }}</td>
+                            </tr>
+                            {% set totales = totales + datose.canttot %}
+                            {% set totalesh= totalesh + datose.canth %}
+                            {% set totalesm = totalesm + datose.cantm %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totales }}</td>
+                            <td></td>
+                            <td class="celda">{{ totalesh }}</td>
+                            <td></td>
+                            <td class="celda">{{ totalesm }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="15"><b>P.40.1 Personas Estudiando - Estudian</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Nivel E.</td>
+                        <td>Estudia</td>
+                        <td class="celda">(%)</td>
+                        <td>Estudian H</td>
+                        <td>Estudian M</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totalesi = 0 %}
+                        {% set totalesih = 0 %}
+                        {% set totalesim = 0 %}
+                        {% for datose in datosedu %}
+                            <tr>
+                                <td>{{ datose.nivele }}</td>
+                                <td class="celda">{{ datose.siestudia }}</td>
+                                <td class="celdad">{{ datose.porsiest|round(2) }}</td>
+                                <td class="celda">{{ datose.siestudiah }}</td>
+                                <td class="celda">{{ datose.siestudiam }}</td>
+                            </tr>
+                            {% set totalesi = totalesi + datose.siestudia %}
+                            {% set totalesih = totalesih + datose.siestudiah %}
+                            {% set totalesim = totalesim + datose.siestudiam %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalesi }}</td>
+                            <td></td>
+                            <td class="celda">{{ totalesih }}</td>
+                            <td class="celda">{{ totalesim }}</td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="15"><b>P.40.2 Personas Estudiando - NO Estudian</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Nivel E.</td>
+                        <td>NO Estudia</td>
+                        <td class="celda">(%)</td>
+                        <td>No estudian H</td>
+                        <td>No estudian M</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totaleno = 0 %}
+                        {% set totalenoh = 0 %}
+                        {% set totalenom = 0 %}
+                        {% for datose in datosedu %}
+                            <tr>
+                                <td>{{ datose.nivele }}</td>
+                                <td class="celda">{{ datose.noestudia }}</td>
+                                <td class="celdad">{{ datose.pornoest|round(2) }}</td>
+                                <td class="celda">{{ datose.noestudiah }}</td>
+                                <td class="celda">{{ datose.noestudiam }}</td>
+                            </tr>
+                            {% set totaleno = totaleno + datose.noestudia %}
+                            {% set totalenoh = totalenoh + datose.noestudiah %}
+                            {% set totalenom = totalenom + datose.noestudiam %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totaleno }}</td>
+                            <td></td>
+                            <td class="celda">{{ totalenoh }}</td>
+                            <td class="celda">{{ totalenom }}</td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="11"><b>P.40.2 Educación por rango de edad y sexo en edad de estudiar</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Rango</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                        <td>Cant. Hombres</td>
+                        <td class="celda">%</td>
+                        <td>Cant. Mujeres</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totalesr = 0 %}
+                        {% set totalerh = 0 %}
+                        {% set totalerm = 0 %}
+                        {% for datoser in datosestr %}
+                            <tr>
+                                <td>{{ datoser.rangoedad }}</td>
+                                <td class="celda">{{ datoser.cantrane }}</td>
+                                <td class="celdad">{{ datoser.portot|round(2) }}</td>
+                                <td class="celda">{{ datoser.canth }}</td>
+                                <td class="celdad">{{ datoser.porhom|round(2) }}</td>
+                                <td class="celda">{{ datoser.cantm }}</td>
+                                <td class="celdad">{{ datoser.pormuj|round(2) }}</td>
+                            </tr>
+                            {% set totalesr = totalesr + datoser.cantrane %}
+                            {% set totalerh= totalerh + datoser.canth %}
+                            {% set totalerm = totalerm + datoser.cantm %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalesr }}</td>
+                            <td></td>
+                            <td class="celda">{{ totalerh }}</td>
+                            <td></td>
+                            <td class="celda">{{ totalerm }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                <table style="width: 100%">
+                    <thead>
+                    <tr>
+                        <td colspan="5"><b>P.40.3 Educación por rango de edad y sexo estudian</b></td>
+                        <td style="width: 50px;">--</td>
+                        <td colspan="5"><b>P.40.4 Educación por rango de edad y sexo NO estudian</b></td>
+                    </tr>
+                    <tr class="titulo-tabla">
+                        <td>Rango</td>
+                        <td>Hombres</td>
+                        <td class="celda">%</td>
+                        <td>Mujeres</td>
+                        <td class="celda">%</td>
+                        <td style="width: 100px; background-color: white"></td>
+                        <td>Rango</td>
+                        <td>Hombres</td>
+                        <td class="celda">%</td>
+                        <td>Mujeres</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set teh = 0 %}
+                        {% set tem = 0 %}
+                        {% set tneh = 0 %}
+                        {% set tnem = 0 %}
+                        {% for datoser in datosestr %}
+                            <tr>
+                                <td>{{ datoser.rangoedad }}</td>
+                                <td class="celda">{{ datoser.canteh }}</td>
+                                <td class="celdad">{{ datoser.poreh|round(2) }}</td>
+                                <td class="celda">{{ datoser.cantem }}</td>
+                                <td class="celdad">{{ datoser.porem|round(2) }}</td>
+                                <td style="width: 100px;"></td>
+                                <td>{{ datoser.rangoedad }}</td>
+                                <td class="celda">{{ datoser.cantneh }}</td>
+                                <td class="celdad">{{ datoser.porneh|round(2) }}</td>
+                                <td class="celda">{{ datoser.cantnem }}</td>
+                                <td class="celdad">{{ datoser.pornem|round(2) }}</td>
+                            </tr>
+                            {% set teh = teh + datoser.canteh %}
+                            {% set tem = tem + datoser.cantem %}
+                            {% set tneh = tneh + datoser.cantneh %}
+                            {% set tnem = tnem + datoser.cantnem %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ teh }}</td>
+                            <td></td>
+                            <td class="celda">{{ tem }}</td>
+                            <td></td>
+                            <td style="width: 100px; background-color: white; border-top: white"></td>
+                            <td>Total</td>
+                            <td class="celda">{{ tneh }}</td>
+                            <td></td>
+                            <td class="celda">{{ tnem }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="5"><b>P.40.5 Estudiantes fuera de edad para estudiar segun el grado</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Grado</td>
+                        <td>Cantidad</td>
+                        <td>% Total</td>
+                        <td>Hombres</td>
+                        <td>Mujeres</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totalefe = 0 %}
+                        {% set totalefeh = 0 %}
+                        {% set totalefem = 0 %}
+                        {% for datosef in datosefe %}
+                            <tr>
+                                <td>{{ datosef.grado }}</td>
+                                <td class="celda">{{ datosef.cantidad }}</td>
+                                <td class="celdad">{{ datosef.portot }}</td>
+                                <td class="celda">{{ datosef.canth }}</td>
+                                <td class="celda">{{ datosef.cantm }}</td>
+                            </tr>
+                            {% set totalefe = totalefe + datosef.cantidad %}
+                            {% set totalefeh = totalefeh + datosef.canth %}
+                            {% set totalefem = totalefem + datosef.cantm %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalefe }}</td>
+                            <td></td>
+                            <td class="celda">{{ totalefeh }}</td>
+                            <td class="celda">{{ totalefem }}</td>
+                        </tr>
+                    </tbody>    
+                </table> 
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="7"><b>P.40.6 Estudiantes fuera de edad para estudiar por rango edad</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Rango</td>
+                        <td>Cantidad</td>
+                        <td>% Total</td>
+                        <td>Hombres</td>
+                        <td>%</td>
+                        <td>Mujeres</td>
+                        <td>%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set tefexr = 0 %}
+                        {% set tefexrh = 0 %}
+                        {% set tefexrm = 0 %}
+                        {% for dtefxr in datosefrxr %}
+                            <tr>
+                                <td>{{ dtefxr.rangoedad }}</td>
+                                <td class="celda">{{ dtefxr.cantidad }}</td>
+                                <td class="celdad">{{ dtefxr.portot }}</td>
+                                <td class="celda">{{ dtefxr.canth }}</td>
+                                <td class="celdad">{{ dtefxr.porh }}</td>
+                                <td class="celda">{{ dtefxr.cantm }}</td>
+                                <td class="celdad">{{ dtefxr.porm }}</td>
+                            </tr>
+                            {% set tefexr = tefexr + dtefxr.cantidad %}
+                            {% set tefexrh = tefexrh + dtefxr.canth %}
+                            {% set tefexrm = tefexrm + dtefxr.cantm %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ tefexr }}</td>
+                            <td></td>
+                            <td class="celda">{{ tefexrh }}</td>
+                            <td></td>
+                            <td class="celda">{{ tefexrm }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table> 
+            </td>
+        </tr>
+        
+    </table>  
+</page>                  
+<page_footer>    
+<br/>  
+    <br/>
+     <table cellspacing="0" style="width: 100%; font-size: 6pt;">
+        <tbody>
+         <tr>
+            <th  align="center" style="width: 100%;" border="0" class="txt_titleheader">
+                <label class="txt_titleheader"></label>
+            </th>
+        </tr>
+        </tbody>
+    </table>
+</page_footer>
+{% endblock %}

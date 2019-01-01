@@ -1,0 +1,28 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block header -%}
+    Nueva Ocupación
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Ingresar nueva ocupación
+    </small>
+{% endblock %} 
+{% block content -%} 
+    {% for type, flash_messages in app.session.flashBag.all %}
+        {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endfor %}
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('adocupaciones') }}">
+            Regresar al listado
+        </a>
+    </li>
+</ul>
+{% endblock %}

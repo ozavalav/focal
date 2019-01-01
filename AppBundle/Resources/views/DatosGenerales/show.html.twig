@@ -1,0 +1,75 @@
+{% extends '::basemenu.html.twig' %}
+
+{% block header -%}
+    Información Datos Generales - 
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        ver toda la información
+    </small>
+{% endblock %} 
+   
+{% block content -%}
+<h1>
+    Boleta No. {{ entity.numBoleta}}
+</h1> 
+<ul class="">
+    <li>
+        <a href="{{ path('datosgenerales') }}">
+            Regresar al listado
+        </a>
+    </li>
+</ul> 
+    <table style="width: 80%" class="table table-bordered table-striped table-responsive">
+        <tbody>
+            <tr>
+                <th style="width: 20%" >Id Encuesta</th>
+                <td style="width: 20%">{{ entity.idEnc }}</td>
+            </tr>
+            <tr>
+                <th>Municipio</th>
+                <td>{{ entity.codMunicipio }} - {{ entity.nomMunicipio }}</td>
+            </tr>
+            <tr>
+                <th>Comunidad</th>
+                <td>{{ entity.codColonia }} - {{ entity.nomColonia }}</td>
+            </tr>
+            <tr>
+                <th>Encuestador</th>
+                <td>{{ entity.idEncuestador }} - {{ entity.nomEncuestador }}</td>
+            </tr>
+            <tr>
+                <th>Nombre de Entrevistado</th>
+                <td>{{ entity.nombreEntrevistado }}</td>
+            </tr>
+            <tr>
+                <th>Teléfono</th>
+                <td>{{ entity.telefonoCel }}</td>
+            </tr>
+            <tr>
+                <th>Ubicación</th>
+                <td>{{ entity.numUbicacion }}</td>
+            </tr>
+            <tr>
+                <th>Cantidad de personas en vivienda</th>
+                <td>{{ entity.cantPersonasvivienda }}</td>
+            </tr>
+            <tr>
+                <th>Cantidad de personas entre 5 y 23 años</th>
+                <td>{{ entity.cantPersonas523 }}</td>
+            </tr>
+            <tr>
+                <th>Cantidad de personas mayores de 10 años</th>
+                <td>{{ entity.cantPersonasm10 }}</td>
+            </tr>
+        </tbody>
+    </table>
+           
+<ul class="">
+    <li>
+        <a href="{{ path('datosgenerales') }}">
+            Regresar al listado
+        </a>
+    </li>
+</ul>       
+
+{% endblock %}

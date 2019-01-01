@@ -1,0 +1,641 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{asset('bundles/app/css/focal.css')}}" />
+    <style type="text/css">
+        .radiomar {
+            margin-right: 10px;
+        }
+    </style>
+{% endblock %}      
+{% block header -%}
+    H. Fuerza de trabajo e Ingresos
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Ingresar la información de las profesiones u oficios e ingresos de la familia
+    </small>
+{% endblock %}
+{% block content -%}
+    <div class="row">
+        <div class="col-sm-6" style="float:left">
+            <h4>No. Boleta: {{ numboleta }}</h4>
+            <h4>Id Encuesta: {{ idenc }}</h4>
+        </div>
+        <div class="col-sm-6" style="text-align:right">
+            <ul style="list-style: none; margin-left: 0; padding-top: 10px; display:inline">
+                <li style="display:inline">
+                    <a id="btnAnterior" class="btn btn-md btn-primary" href="{{ path('datoseducacion',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-left align-top bigger-120"></i> Anterior
+                    </a> 
+                </li>
+                <li style="display:inline">
+                    <a id="btnSiguiente" class="btn btn-md btn-primary" href="{{ path('datosvivienda',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-right align-top bigger-120"></i> Siguiente
+                    </a> 
+                </li>
+            </ul> 
+        </div>    
+    </div>
+    {% for type, flash_messages in app.session.flashBag.all %}
+        {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endfor %}
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#fuerzalaboral">Fuerza laboral</a></li>
+        <li><a id="tab-enfer" data-toggle="tab" href="#ocupaciones">Ocupación</a></li>
+        <li><a id="tab-enfer" data-toggle="tab" href="#remesas">Remesas</a></li>
+    </ul>
+    <!-- INICIO TAB CONTENT -->
+    <div class="tab-content">     
+        <!-- PRIMER TAB FUERZA LABORALL -->
+        <div id="fuerzalaboral" class="tab-pane fade in active">
+            <form id="frm-rvacunas" action="{{ path('datosfuerzaingresos_create')}}" method="post"> 
+                <div style="padding-top: 10px; padding-bottom: 10px">
+                <ul style="display: inline; list-style: none; margin-left: 0;">
+                    <li style="display: inline;" >
+                        <button id="btnGuardarFL" class="btn-default btn btn-success" style="color: white" type="submit">    
+                            <i class="ace-icon fa fa-save align-top bigger-120"></i> Guardar
+                        </button>
+                    </li>
+                    {% if is_granted('ROLE_SUPERV') %}
+                    <li style="display: inline; list-style: none; margin-left: 0;">
+                        <button id="btnBorrarFL" class="btn-default btn btn-danger" style="color: white" type="submit">    
+                            <i class="ace-icon fa fa-save align-top bigger-120"></i> Borrar Registros
+                        </button>
+                    </li>
+                    {% endif %}
+                </ul>
+                </div>
+                <div class="table-header">
+                    41. Profesión u oficios e ingresos de los miembros de la familia en edad de trabajar (de 10 años en adelante)
+                </div>
+                <div id="msgerror-rvac" style="color:red"></div>
+                <table id="fuerzalab" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Num</th>
+                            <th>Nombre</th>
+                            <th>Sexo</th>
+                            <th>Edad</th>
+                            <th>Nivel</th>
+                            <th>
+                                <table class="table" style="margin-bottom:0px">
+                                    <tr>
+                                        <td colspan="4">Estado civil</td>    
+                                    </tr>
+                                    <tr>
+                                        <td>S</td>
+                                        <td>C</td>
+                                        <td>D</td>
+                                        <td>U</td>        
+                                    </tr>
+                                </table>
+                            </th>
+                            <th>Profesión/Oficio</th>
+                            <th>Ocupación</th>
+                            <th>
+                                <table class="table" style="margin-bottom:0px">
+                                    <tr>
+                                        <td colspan="2">Trabaja</td>    
+                                    </tr>
+                                    <tr>
+                                        <td>Si</td>
+                                        <td>No</td>        
+                                    </tr>
+                                </table>                                
+                            </th>
+                            <th>Ingreso mes(Lps)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for entity in entities %}
+                        <tr>
+                            <td style="width: 6%" ><input class="form-control" readonly name="num_{{ entity.num == 0 ? loop.index : entity.num }}" value="{{ entity.num == 0 ? loop.index : entity.num }}" type="text"/></td>
+                            <td>{{ entity.nombre }}</td>
+                            <td>{{ entity.sexo == 1 ?'H':'M' }}</td>
+                            <td>{{ entity.edad }}</td>
+                            <td>
+                                <div class="">
+                                    <div style="width: 61px;">
+                                        <select name="nivele_{{ entity.num == 0 ? loop.index : entity.num }}" id="nivel_edu" class="form-control">
+                                            <option value="0">--</option>
+                                            {% for nvle in entned %}
+                                                <option value="{{ nvle.id}}" {{ nvle.id == entity.nivele ? 'selected' : '' }}>{{ nvle.descripcion }}</option>
+                                            {% endfor %}
+                                            </select>
+                                        <!--input name="nivele_{-{ entity.num == 0 ? loop.index : entity.num }}" data-num="{-{ entity.num }}" type="text" value="{-{ entity.nivele }}" id="cantcv" maxlength="2" class="form-control" placeholder="Nivel" /-->
+                                    </div>
+                                </div>                              
+                            </td>
+                            <td> 
+                                <table class="table" style="margin-bottom:0px">
+                                    <tr>
+                                        <td><input class="radio-inline" type="radio" name="estadoc_{{ entity.num == 0 ? loop.index : entity.num }}" value="1" {{ entity.estadoCivil == 1 ? 'checked':''}}></td>
+                                        <td><input class="radio-inline" type="radio" name="estadoc_{{ entity.num == 0 ? loop.index : entity.num }}" value="2" {{ entity.estadoCivil == 2 ? 'checked':''}}></td>
+                                        <td><input class="radio-inline" type="radio" name="estadoc_{{ entity.num == 0 ? loop.index : entity.num }}" value="3" {{ entity.estadoCivil == 3 ? 'checked':''}}></td>
+                                        <td><input class="radio-inline" type="radio" name="estadoc_{{ entity.num == 0 ? loop.index : entity.num }}" value="4" {{ entity.estadoCivil == 4 ? 'checked':''}}></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <select name="profesion_{{ entity.num == 0 ? loop.index : entity.num }}" id="prefesion" class="form-control" required >
+                                        <option value="">-- Profesión --</option>
+                                        {% for epro in entpro %}
+                                            <option value="{{ epro.id}}" {{ epro.id == entity.profesion ? 'selected' : '' }}>{{ epro.descripcion }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>                                
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <select name="ocupacion_{{ entity.num == 0 ? loop.index : entity.num }}" id="ocupacion" class="form-control" required>
+                                        <option value="">-- Ocupación --</option>
+                                        {% for eocu in entocu %}
+                                            <option value="{{ eocu.id}}" {{ eocu.id == entity.ocupacion ? 'selected' : '' }}>{{ eocu.descripcion }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>                                
+                            </td>                             
+                            <td class="trabaja">
+                                <table class="table" style="width: 60%; margin-bottom:0px">
+                                    <tr>
+                                        <td><input type="radio" name="trabaja_{{ entity.num == 0 ? loop.index : entity.num }}" value="1" {{ entity.trabaja == 1 ? 'checked':''}}></td>
+                                        <td><input type="radio" name="trabaja_{{ entity.num == 0 ? loop.index : entity.num }}" value="2" {{ entity.trabaja == 2 ? 'checked':''}}></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                <div class="">
+                                    <div>
+                                        <input name="ingresos_{{ entity.num == 0 ? loop.index : entity.num }}" data-num="{{ entity.num }}" {{ entity.trabaja == 2 ? 'disabled':''}} type="text" value="{{ entity.ingresos }}" id="canting" maxlength="6" class="form-control" placeholder="Cantidad ingreso" onkeypress="return validanum(event);" />
+                                    </div>
+                                </div>                                
+                            </td>    
+                        </tr>
+                        <input id="idfam" type="hidden" value="{{ entity.idFamilia }}" name="idfam_{{ entity.num == 0 ? loop.index : entity.num  }}" >
+                        <input id="numtreg" type="hidden" value="{{ loop.length }}" name="numtotalreg" >
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <input id="idencrv" type="hidden" value="{{ idenc }}" name="idencfi" >
+                <input id="codmun" type="hidden" value="{{ codmun }}" >
+                <input id="coddep" type="hidden" value="{{ coddep }}" >
+            </form>
+        </div> <!-- FIN TAB FUERZA LABORALL --> 
+        <!-- SEGUNDO TAB OCUPACIONES Y REMESAS -->
+        
+        <div id="ocupaciones" class="tab-pane fade">
+            {{ form_start(form, {'attr': {'class':'form-inline'}}) }} 
+                <div class="col-sm-12 ">
+                    {{ form_row(form.ocupacion) }}
+                </div>
+                <div class="col-sm-12 ">
+                    {{ form_row(form.sectore) }}
+                </div>
+                <div class="col-sm-12 ">
+                    {{ form_row(form.sectorp) }}
+                </div>
+                <div class="col-sm-12 ">
+                    {{ form_row(form.generaemp) }}
+                </div>
+                <div class="col-sm-12 ">
+                    <label>46. ¿Cuanto empleo genera al sector que usted se dedica?</label>
+                </div>
+                <div id="infoemp" class="col-sm-12 ">
+                <table class="table-condensed">
+                    <tr> 
+                        <td>
+
+                                {{ form_label(form.cant15) }}
+
+                        </td>
+                        <td>
+
+                                {{ form_widget(form.cant15) }}
+
+                        </td>
+                    </tr>
+                    <tr> 
+                       <td>
+
+                                {{ form_label(form.cant610) }}
+
+                        </td>
+                        <td>
+
+                                {{ form_widget(form.cant610) }}
+
+                        </td>
+                    </tr>
+                    <tr> 
+                       <td>
+
+                                {{ form_label(form.cant1115) }}
+
+                        </td>
+                        <td>
+
+                                {{ form_widget(form.cant1115) }}
+
+                        </td>
+                    </tr>
+                    <tr> 
+                       <td>
+
+                                {{ form_label(form.cant1620) }}
+
+                        </td>
+                        <td>
+
+                                {{ form_widget(form.cant1620) }}
+
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td>
+
+                                {{ form_label(form.cant21mas) }}
+
+                        </td>
+                        <td>
+
+                                {{ form_widget(form.cant21mas) }}
+
+                        </td>
+                    </tr>                    
+                </table>
+                </div>
+                <div class="col-sm-12 ">
+                    {{ form_row(form.miembroorg) }}
+                </div>
+                <div id="nombreorg" class="col-sm-12 ">
+                    {{ form_row(form.nombreorg) }}
+                </div>
+                <div class="col-sm-12 ">
+                    <label>48. ¿Que instituciones han apoyado al sector productivo al cual usted pertenece?</label>
+                </div>
+                <div class="col-sm-4 ">
+                    {{ form_row(form.inst1) }}
+                </div>
+                <div class="col-sm-4 ">
+                    {{ form_row(form.inst2) }}
+                </div>
+                <div class="col-sm-4 ">
+                    {{ form_row(form.inst3) }}
+                </div>
+                <div class="list-horizontal col-sm-12" style="padding-bottom: 10px"></div> 
+        </div>           
+        <div id="remesas" class="tab-pane fade">
+            <table>
+            <tr>
+                <td>    
+                <div class="col-sm-12 ">
+                    {{ form_row(form.prestamofam) }}
+                </div>           
+                </td>
+            </tr>
+            <tr>    
+                <td>
+                <div id="sp-fam" class="col-sm-6 ">
+                    {{ form_row(form.prestamosexo) }}
+                </div>
+                </td>
+            </tr>
+            </table>    
+            <div class="col-sm-12 ">
+                    {{ form_row(form.remesas) }}
+            </div>
+                <div id="grp-remesas">
+                    <div class="col-sm-6 ">
+                            {{ form_row(form.rangoRemesas,{'value': rrem ~ "" }) }}
+                    </div>
+                    <div class="col-sm-6 ">
+                            {{ form_row(form.cantRemesas) }}
+                    </div>
+                </div>    
+            <div class="col-sm-6 ">
+                    {{ form_row(form.rangoIngresofam,{'value': rifam ~ "" }) }}
+            </div>
+            <div class="col-sm-6 ">
+                    {{ form_row(form.cantIngresofam) }}
+            </div>
+            <div class="col-sm-12 ">
+                    {{ form_row(form.ingresoAjusta) }}
+            </div>
+            
+            <div class="list-horizontal col-lg-12" style="padding-bottom: 10px"></div> 
+            {{ form_widget(form.idEnc,{'value': idenc,'type':'hidden'})}}          
+            {{ form_rest(form) }}    
+            {{ form_end(form) }}
+        </div>
+            
+            
+
+        <!-- FINAL TAB OCUPACIONES y REMESAS -->               
+    </div> <!-- FINAL TAB CONTENT -->         
+
+    <ul>
+        <li>
+            <a href="{{ path('datosgenerales') }}">
+                Regresar al listado
+            </a>
+        </li>
+    </ul> 
+    {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        
+        //$("[name=myRadio]").val(["myValue"]);
+        //$("[name = 'radio-choice-2'][value='choice3']").prop('checked', true).checkboxradio('refresh');
+        
+        $("#focal_appbundle_datosfuerzaotros_submit").prop('enabled',true);
+        
+        function validar_formulario(){
+            var empgen  = $("input:radio[name='focal_appbundle_datosfuerzaotros[generaemp]']:checked").val();
+            var secorg  = $("input:radio[name='focal_appbundle_datosfuerzaotros[miembroorg]']:checked").val();
+            var prefam  = $("input:radio[name='focal_appbundle_datosfuerzaotros[prestamofam]']:checked").val();
+            var recrem  = $("input:radio[name='focal_appbundle_datosfuerzaotros[remesas]']:checked").val();
+            var ocupacion  = $("input:radio[name='focal_appbundle_datosfuerzaotros[ocupacion]']:checked").val();
+            
+            if(ocupacion==='1') {
+                
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[sectore]']").prop('required', true);
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[sectore]']").prop('disabled', false);
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[sectorp]']").prop('required', false);
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[sectorp]']").prop('disabled', true);
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[miembroorg]']").prop('required', false).prop('disabled', true); 
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[generaemp]']").prop('required', false).prop('disabled', true); 
+                $("#focal_appbundle_datosfuerzaotros_inst1").val('').prop('disabled', true);
+                $("#focal_appbundle_datosfuerzaotros_inst2").val('').prop('disabled', true);
+                $("#focal_appbundle_datosfuerzaotros_inst3").val('').prop('disabled', true);
+            
+                
+            } else if(ocupacion==='2'){
+                
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[sectore]']").prop('disabled', true);
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[sectorp]']").prop('disabled', false);
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[sectorp]']").prop('required', true);
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[miembroorg]']").prop('disabled', false);  
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[generaemp]']").prop('disabled', false).prop('required', true); 
+                $("#focal_appbundle_datosfuerzaotros_inst1").val('').prop('disabled', false);
+                $("#focal_appbundle_datosfuerzaotros_inst2").val('').prop('disabled', false);
+                $("#focal_appbundle_datosfuerzaotros_inst3").val('').prop('disabled', false);
+                
+            } else if(ocupacion === '3') {
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[sectore]']").prop('disabled', true);
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[sectorp]']").prop('disabled', true);
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[sectorp]']").prop('required', false);
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[miembroorg]']").prop('disabled', true);  
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[generaemp]']").prop('disabled', true).prop('required', false); 
+                $("#focal_appbundle_datosfuerzaotros_inst1").val('').prop('disabled', true);
+                $("#focal_appbundle_datosfuerzaotros_inst2").val('').prop('disabled', true);
+                $("#focal_appbundle_datosfuerzaotros_inst3").val('').prop('disabled', true);
+            }
+            
+            if(empgen==='1') {
+                $('#infoemp').show();
+                
+            } else {
+                $('#infoemp').hide();
+                $('#focal_appbundle_datosfuerzaotros_cant15').val(0);
+                $('#focal_appbundle_datosfuerzaotros_cant610').val(0);
+                $('#focal_appbundle_datosfuerzaotros_cant1115').val(0);
+                $('#focal_appbundle_datosfuerzaotros_cant1620').val(0);
+                $('#focal_appbundle_datosfuerzaotros_cant21mas').val(0);
+            }
+            if(secorg==='1') {
+                $('#nombreorg').show();
+                //$('#focal_appbundle_datosfuerzaotros_nombreorg').prop('required',true);
+            } else {
+                $('#nombreorg').hide();
+                //$('#focal_appbundle_datosfuerzaotros_nombreorg').prop('required',false);
+                $('#focal_appbundle_datosfuerzaotros_nombreorg').val('');
+                
+                
+            }
+            if(prefam==='1') {
+                $('#sp-fam').show();
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[prestamosexo]']").prop('required', true);
+            } else {
+                $('#sp-fam').hide();
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[prestamosexo]']").prop('checked',false);
+                $("input:radio[name='focal_appbundle_datosfuerzaotros[prestamosexo]']").prop('required', false); 
+            }    
+            if(recrem==='1') {
+                $('#grp-remesas').show();
+                $("#focal_appbundle_datosfuerzaotros_rangoRemesas").prop('required',true);
+                $("#focal_appbundle_datosfuerzaotros_cantRemesas").prop('required',true);
+                               
+            } else {
+                $('#grp-remesas').hide();
+                $("#focal_appbundle_datosfuerzaotros_rangoRemesas").prop('required',false);
+                $("#focal_appbundle_datosfuerzaotros_cantRemesas").prop('required',false);
+                $('#focal_appbundle_datosfuerzaotros_rangoRemesas').val('');
+                $('#focal_appbundle_datosfuerzaotros_cantRemesas').val(0);            
+            }
+        }
+        
+        function validar_fuerzaingresos() {
+            var ichecked = 0;
+            var cantinput = 0;
+            var cantinputtext = 0;
+            $('#fuerzalab :radio').each(function(){
+               var  inombre = $(this).attr('name'); 
+               
+               if($(this).is(':checked')) {
+                   ichecked++;                  
+                   var domobj=$(this).parentsUntil(".trabaja").parent().next().find("input");
+                   if(inombre.startsWith("trabaja") && $(this).val() === '1') {
+                       $(domobj).css('border-color','red');
+                       $(domobj).prop('disabled', false);
+                       cantinputtext++;
+                   } else if(inombre.startsWith("trabaja") && $(this).val() === '2') {
+                       $(domobj).css('border-color','#D2D6DE');
+                       $(domobj).val('0');
+                       $(domobj).prop('disabled', true);
+                       cantinputtext--;
+                       cantinputtext = (cantinputtext < 0)?0:cantinputtext;
+                   }
+               }
+               cantinput++;
+            });
+            var cantchecked = (cantinput/6)*2;
+            if(ichecked === cantchecked) {
+               $("#btnGuardarFL").prop('disabled', false); 
+            } else {
+               $("#btnGuardarFL").prop('disabled', true); 
+            }
+        }
+        /* Evita el cambio de los campos select */
+        $('#focal_appbundle_datosfuerzaotros_rangoIngresofam').on('focus', function(e){
+            $('#focal_appbundle_datosfuerzaotros_cantIngresofam').focus();
+        });
+        $('#focal_appbundle_datosfuerzaotros_rangoRemesas').on('focus', function(e){
+            $('#focal_appbundle_datosfuerzaotros_cantRemesas').focus();
+        });
+        
+        $('[name=focal_appbundle_datosfuerzaotros]').submit(function(e){
+            $('#focal_appbundle_datosfuerzaotros_submit').prop('disabled',true);
+        });
+        
+        $(document).ready(function() {
+            validar_formulario();
+            $("#btnGuardarFL").prop('disabled', true); 
+            
+        $('#focal_appbundle_datossgeneral_metodo').on('change',function(){
+                var val = $(this).val();
+                if(val === '6') {
+                    $('#sexooper').show();
+                    $("input:radio[name='focal_appbundle_datossgeneral[sexoOperacion]']").prop('required', true);                    
+                } else {
+                    $('#sexooper').hide();
+                    $("input:radio[name='focal_appbundle_datossgeneral[sexoOperacion]']").prop('required', false);                    
+                }
+        });
+        $("input:radio[name='focal_appbundle_datosfuerzaotros[ocupacion]']").on('change', function(){
+            validar_formulario();
+        });
+        $("input:radio[name='focal_appbundle_datosfuerzaotros[generaemp]']").on('change', function(){
+            validar_formulario();
+        });
+        $("input:radio[name='focal_appbundle_datosfuerzaotros[miembroorg]']").on('change', function(){
+            validar_formulario();
+        });
+        $("input:radio[name='focal_appbundle_datosfuerzaotros[prestamofam]']").on('change', function(){
+            validar_formulario();
+        });
+        
+        $("select[name^='nivele_']").on('change',function(){
+            validar_fuerzaingresos();
+        });
+        $("select[name^='profesion_']").on('change',function(){
+            validar_fuerzaingresos();
+        });
+        $("select[name^='ocupacion_']").on('change',function(){
+            validar_fuerzaingresos();
+        });
+        $("#btnBorrarFL").click(function(e){
+            e.preventDefault();
+             
+             var idenc = $('#idencrv').val();
+             var coddep = $('#coddep').val();
+             var codmun = $('#codmun').val();
+             
+
+             var param = idenc + "&&" + coddep + "&&" + codmun;
+
+             var url = '/Focal/web/app_dev.php/datosfuerzaingresos/borrarregistrofl/'+ param;  
+
+             if(confirm('¿Quiere borrar los registros?')) { 
+                 $.ajax({
+                     type:'POST',
+                     url:url,
+                     beforeSend: function(){
+                         $("#lblError").hide();
+                     },
+                     dataType: 'json',
+                     success:function(data){
+                         if(data.message == 'false'){
+                             alert(data.razon);
+                         }else{
+                             alert("Registros borrados con exito");
+                             window.location.reload();
+                         }
+                     }
+                 });
+             }
+         }); 
+        $("input:radio[name='focal_appbundle_datosfuerzaotros[remesas]']").on('change', function(){
+            validar_formulario();
+            var recrem  = $(this).val();
+            
+            if(recrem === '2') {
+                $("#msgerror-enfer").hide();
+                var idencfl = $('#focal_appbundle_datosfuerzaotros_idEnc').val();
+                var cantr = $('#focal_appbundle_datosfuerzaotros_cantRemesas').val();
+                var param = idencfl + "&&" + cantr ;
+                var url = '/Focal/web/app_dev.php/datosfuerzaotros/calcularingresototal/'+ param; 
+                var ok = true;
+
+                if (ok) {
+                    $.ajax({
+                        type:'POST',
+                        url:url,
+                        beforeSend: function(){
+                            $("#msgerror-rango").hide();
+                        },
+                        dataType: 'json',
+                        success:function(data){
+                            if(data.message == 'false'){
+                                $("#msgerror-enfer").show();
+                                $('#msgerror-enfer').text(data.razon);
+                                alert(data.razon);
+                            }else{
+                                $('#focal_appbundle_datosfuerzaotros_rangoIngresofam').val(data.rangoi);
+                                $('#focal_appbundle_datosfuerzaotros_cantIngresofam').val(data.canti);
+                            }
+                        }
+                    });
+                } else {
+                    $("#msgerror-enfer").show();
+                    $('#msgerror-enfer').text('Los campos del formulario no pueden estar vacios');
+                }
+            }
+        });
+        
+        $("#focal_appbundle_datosfuerzaotros_cantRemesas").on('change', function(){
+            $("#msgerror-enfer").hide();
+            
+            var idencfl = $('#focal_appbundle_datosfuerzaotros_idEnc').val();
+            var cantr = $(this).val();
+            var param = idencfl + "&&" + cantr ;
+            var url = '/Focal/web/app_dev.php/datosfuerzaotros/calcularingresototal/'+ param; 
+            var ok = true;
+
+            if(cantr <= 1000) {
+                $('#focal_appbundle_datosfuerzaotros_rangoRemesas').val('1');
+            } else if(cantr > 1000 && cantr <= 2000 ) {
+                $('#focal_appbundle_datosfuerzaotros_rangoRemesas').val('2');
+            } else {
+                $('#focal_appbundle_datosfuerzaotros_rangoRemesas').val('3');
+            }
+            if (ok) {
+                $.ajax({
+                    type:'POST',
+                    url:url,
+                    beforeSend: function(){
+                        $("#msgerror-rango").hide();
+                    },
+                    dataType: 'json',
+                    success:function(data){
+                        if(data.message == 'false'){
+                            $("#msgerror-enfer").show();
+                            $('#msgerror-enfer').text(data.razon);
+                            alert(data.razon);
+                        }else{
+                            $('#focal_appbundle_datosfuerzaotros_rangoIngresofam').val(data.rangoi);
+                            $('#focal_appbundle_datosfuerzaotros_cantIngresofam').val(data.canti);
+                        }
+                    }
+                });
+            } else {
+                $("#msgerror-enfer").show();
+                $('#msgerror-enfer').text('Los campos del formulario no pueden estar vacios');
+            }          
+        });
+        
+        /*validacion seccion fuerza de trabajo input:radio[name^='estadoc'*/
+        $("#fuerzalab :radio").on('change', function(){
+            validar_fuerzaingresos();
+        });
+    });    
+    </script>    
+{% endblock %}        

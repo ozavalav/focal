@@ -1,0 +1,460 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{asset('bundles/app/css/focal.css')}}" />
+{% endblock %}      
+{% block header -%}
+    F. Seguridad Alimentaria
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Ingresar la información de seguridad alimentaria
+    </small>
+{% endblock %}
+{% block content -%}
+    <div class="row">
+        <div class="col-sm-6" style="float:left">
+            <h4>No. Boleta: {{ numboleta }}</h4>
+            <h4>Id Encuesta: {{ idenc }}</h4>
+        </div>
+        <div class="col-sm-6" style="text-align:right">
+            <ul style="list-style: none; margin-left: 0; padding-top: 10px; display:inline">
+                <li style="display:inline">
+                    <a id="btnAnterior" class="btn btn-md btn-primary" href="{{ path('datosserviciospub',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-left align-top bigger-120"></i> Anterior
+                    </a> 
+                </li>
+                <li style="display:inline">
+                    <a id="btnSiguiente" class="btn btn-md btn-primary" href="{{ path('datoseducacion',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-right align-top bigger-120"></i> Siguiente
+                    </a> 
+                </li>
+            </ul> 
+        </div>    
+    </div>
+    {% for type, flash_messages in app.session.flashBag.all %}
+        {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endfor %}
+    <div>
+    {{ form_start(form) }} 
+    <table class="table table-condensed">     
+        <tr>
+            <td>    
+                <div class="col-sm-7 ">
+                    {{ form_row(form.trabajoTierra) }}
+                </div>
+                <div id="canthm" style="display:none">
+                    <div class="col-sm-2">
+                        {{ form_row(form.cantHombres) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.cantMujeres) }}
+                    </div>
+                </div>
+                  
+            </td>
+        </tr>   
+        <tr>
+            <td>
+                <div class="col-sm-6">
+                    {{ form_row(form.tipoTenencia) }}
+                </div>
+                <div id="tipo-dominio" style="display: none" class="col-sm-6">
+                    {{ form_row(form.dominio) }}
+                </div>
+            </td>        
+        </tr>      
+        <tr>
+            <td>    
+            <div class="col-sm-12 ">
+                {{ form_row(form.produceAlimento) }}
+            </div>
+            </td>
+        </tr>
+        <tr id="pro-alimento" style="display: none">
+            <td>    
+            <div class="col-sm-12 ">
+                {{ form_row(form.produceSuficiente) }}
+            </div>
+            </td>
+        </tr> 
+    </table>
+    <table id="tbl-siembros" class="table table-condensed" style="display:none">
+        <tr>
+            <td colspan="6">    
+            <div class="col-sm-12 ">
+                <label>35. ¿Que sembro y cuanto produjo durante el año pasado?</label>
+            </div>
+            </td>
+        </tr>            
+        <tr style="background-color:lightskyblue">
+            <td></td>
+            <td class="tabla-enc">Maíz</td>
+            <td class="tabla-enc">Frijol</td>
+            <td class="tabla-enc">Maicillo</td>
+            <td class="tabla-enc">Café</td>
+            <td class="tabla-enc">Caña</td>
+            <td class="tabla-enc">{{form_widget(form.descOtro)}}</td>
+        </tr>   
+        <tr>
+            <td>Quintales</td>
+            <td>
+                <div>
+                    {{ form_widget(form.cantMaiz) }}
+                </div>
+            </td>
+            <td>
+                <div>
+                    {{ form_widget(form.cantFrijol) }}
+                </div>
+            </td>
+            <td>
+                <div>
+                    {{ form_widget(form.cantMaicillo) }}
+                </div>
+            </td>
+            <td>
+                <div>
+                    {{ form_widget(form.cantCafe) }}
+                </div>
+            </td>
+            <td>
+                <div>
+                    {{ form_widget(form.cantCana) }}
+                </div>
+            </td>
+            <td>
+                <div>
+                    {{ form_widget(form.cantOtro) }}
+                </div>
+            </td>
+        </tr> 
+        <tr>
+            <td>Tareas</td>
+            <td>
+                <div>
+                    {{ form_widget(form.areaMaiz) }}
+                </div>
+            </td>
+            <td>
+                <div>
+                    {{ form_widget(form.areaFrijol) }}
+                </div>
+            </td>
+            <td>
+                <div>
+                    {{ form_widget(form.areaMaicillo) }}
+                </div>
+            </td>
+            <td>
+                <div>
+                    {{ form_widget(form.areaCafe) }}
+                </div>
+            </td>
+            <td>
+                <div>
+                    {{ form_widget(form.areaCana) }}
+                </div>
+            </td>
+            <td>
+                <div>
+                    {{ form_widget(form.areaOtro) }}
+                </div>
+            </td>
+        </tr> 
+    </table>
+    <table id="tbl-riego" style="display:none" class="table table-condensed">            
+        <tr>
+            <td colspan="5">    
+            <div class="col-sm-12 ">
+                <label>36. Áreas en tareas con sistema de riego</label>
+            </div>
+            </td>
+        </tr>
+        <tr style="background-color:lightskyblue">
+            <td></td>
+            <td class="tabla-enc">Goteo</td>
+            <td class="tabla-enc">Aspersion</td>
+            <td class="tabla-enc">Ninguno</td>
+            <td class="tabla-enc">{{form_widget(form.descRiego)}}</td>
+        </tr>
+        <tr>
+            <td>Tareas</td>
+            <td>    
+                <div>
+                    {{ form_widget(form.areaGoteo) }}
+                </div>
+            </td>
+            <td>    
+                <div>
+                    {{ form_widget(form.areaAspersion) }}
+                </div>
+            </td>
+            <td>    
+                <div>
+                    {{ form_widget(form.areaNinguno) }}
+                </div>
+            </td>
+            <td>    
+                <div>
+                    {{ form_widget(form.areaRiego) }}
+                </div>
+            </td>            
+        </tr> 
+       <tr>
+           <td colspan="5">    
+            <div class="col-sm-12 ">
+                {{ form_row(form.excedente) }}
+            </div>
+            </td>
+        </tr>        
+    </table>
+    <table class="table">            
+        <tr>
+            <td>    
+            <div class="col-sm-12 ">
+                {{ form_row(form.excedente) }}
+            </div>
+            </td>
+        </tr>
+        <tr>
+            <td>    
+            <div class="col-sm-12 ">
+                {{ form_row(form.tieneHuerto) }}
+            </div>
+            </td>
+        </tr> 
+        <tr>
+            <td>    
+            <div class="col-sm-12 ">
+                {{ form_row(form.tieneAnimales) }}
+            </div>
+            </td>
+        </tr>
+    </table>
+    <table class="table table-condensed" id="tbl-animales" style="display:none; width: 100%">        
+        <tr>
+            <td style="width: 25%">Aves(gallinas, pavos, patos, etc.)</td>
+            <td style="width: 75%">
+                <div class="col-sm-4">
+                    {{ form_widget(form.cantAves) }}
+                </div>
+            </td>      
+        </tr> 
+        <tr>
+            <td>Bovinos(bueyes, vacas)</td>
+            <td>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cantBovino) }}
+                </div>
+            </td>      
+        </tr> 
+        <tr>
+            <td>Caprino(ovejas, cabras)</td>
+            <td>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cantCaprino) }}
+                </div>
+            </td>      
+        </tr> 
+        <tr>
+            <td>Equinos(caballos, mula, burro)</td>
+            <td>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cantEquino) }}
+                </div>
+            </td>      
+        </tr> 
+        <tr>
+            <td>Porcino(cerdos)</td>
+            <td>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cantPorcino) }}
+                </div>
+            </td>      
+        </tr> 
+        <tr>
+            <td>Piscicultura(tilapia, otros)</td>
+            <td>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cantPiscicultura) }}
+                </div>
+            </td>      
+        </tr> 
+        <tr>
+            <td>Apicultura(colmenas)</td>
+            <td>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cantApicultura) }}
+                </div>
+            </td>      
+        </tr> 
+        <tr>
+            <td>Domésticos(perro, gato, etc.)</td>
+            <td>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cantDomesticos) }}
+                </div>
+            </td>      
+        </tr>         
+    </table> 
+    <div id="msgboxval" style="color:red; display: none"></div>              
+    <div style="padding-bottom: 10px"></div>    
+    {{ form_widget(form.idEnc,{'value': idenc,'type':'hidden'})}}          
+    {{ form_rest(form) }}    
+    {{ form_end(form) }}
+    </div>
+    <ul>
+        <li>
+            <a href="{{ path('datosgenerales') }}">
+                Regresar al listado
+            </a>
+        </li>
+    </ul> 
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $('#focal_appbundle_datossegalimentaria_submit').on('click', function(e){
+            
+            var p31  = $("input:radio[name='focal_appbundle_datossegalimentaria[trabajoTierra]']:checked").val();
+            var p39  = $("input:radio[name='focal_appbundle_datossegalimentaria[tieneAnimales]']:checked").val();
+            if(p31==='1') {
+                var valorh = $('#focal_appbundle_datossegalimentaria_cantHombres').val();
+                var valorm = $('#focal_appbundle_datossegalimentaria_cantMujeres').val();
+
+                if ((valorh === '0' || valorh === '') && (valorm === '0' || valorm === '') ) {
+                    $('#msgboxval').text('Cantidades de Hombres y Mujeres No puden ir en cero o vacias');
+                    $('#msgboxval').show();
+                    e.preventDefault();                 
+                } else {
+                    $('#msgboxval').hide();
+                }
+            }
+            var ok = false;
+            if(p39==='1') {
+                var vave = $('#focal_appbundle_datossegalimentaria_cantAves').val();
+                var vbov = $('#focal_appbundle_datossegalimentaria_cantBovino').val();
+                var vcap = $('#focal_appbundle_datossegalimentaria_cantCaprino').val();
+                var vequ = $('#focal_appbundle_datossegalimentaria_cantEquino').val();
+                var vpor = $('#focal_appbundle_datossegalimentaria_cantPorcino').val();
+                var vpis = $('#focal_appbundle_datossegalimentaria_cantPiscicultura').val();
+                var vapi = $('#focal_appbundle_datossegalimentaria_cantApicultura').val();
+                var vdom = $('#focal_appbundle_datossegalimentaria_cantDomesticos').val();
+                
+                if(vave !== '0' && vave !== '' ) {
+                    ok = true;
+                } else if (vbov !== '0' && vbov !== '' ) {
+                    ok = true;
+                } else if (vcap !== '0' && vcap !== '' ) {
+                    ok = true;
+                } else if (vequ !== '0' && vequ !== '' ) {
+                    ok = true;
+                } else if (vpor !== '0' && vpor !== '' ) {
+                    ok = true;
+                } else if (vpis !== '0' && vpis !== '' ) {
+                    ok = true;
+                } else if (vapi !== '0' && vapi !== '' ) {
+                    ok = true;
+                } else if (vdom !== '0' && vdom !== '' ) {
+                    ok = true;
+                }
+                
+                if (!ok) {
+                    $('#msgboxval').text('Cantidades de mascotas no pueden quedar vacias');
+                    $('#msgboxval').show();
+                    e.preventDefault();
+                } else {
+                    $('#msgboxval').hide();
+                }
+            }  
+        });
+        $(document).ready(function() {
+            var p31  = $("input:radio[name='focal_appbundle_datossegalimentaria[trabajoTierra]']:checked").val();
+            var p32  = $("input:radio[name='focal_appbundle_datossegalimentaria[tipoTenencia]']:checked").val();
+            var p33  = $("input:radio[name='focal_appbundle_datossegalimentaria[produceAlimento]']:checked").val();
+            var p39  = $("input:radio[name='focal_appbundle_datossegalimentaria[tieneAnimales]']:checked").val();
+            
+            if(p31==='1') {
+                $('#canthm').show();
+            }
+            if(p32==='1') {
+                $('#tipo-dominio').show();
+                $("input:radio[name='focal_appbundle_datossegalimentaria[dominio]']").prop('required', true);
+            }
+            if(p33==='1') {
+               $('#pro-alimento').show(); 
+               $('#tbl-siembros').show();
+               $('#tbl-riego').show();
+               $("input:radio[name='focal_appbundle_datossegalimentaria[produceSuficiente]']").prop('required', true);
+               $("input:radio[name='focal_appbundle_datossegalimentaria[excedente]']").prop('required', true);
+               
+            }
+            if(p39==='1'){
+               $('#tbl-animales').show(); 
+            }
+            
+        });
+        
+        $('[name=focal_appbundle_datossegalimentaria]').submit(function(e){
+            $('#focal_appbundle_datossegalimentaria_submit').prop('disabled',true);
+        });
+        
+        $("input:radio[name='focal_appbundle_datossegalimentaria[trabajoTierra]']").on('change', function(){
+                var val = $(this).val();
+                if(val === '1') {
+                    $('#canthm').show();
+                } else {
+                    $('#canthm').hide();
+                    $('#focal_appbundle_datossegalimentaria_cantHombres').val(0);
+                    $('#focal_appbundle_datossegalimentaria_cantMujeres').val(0);
+                }
+        }); 
+        $("input:radio[name='focal_appbundle_datossegalimentaria[tipoTenencia]']").on('change', function(){
+                var val = $(this).val();
+                if(val === '1') {
+                    $('#tipo-dominio').show();
+                    $("input:radio[name='focal_appbundle_datossegalimentaria[dominio]']").prop('required', true);
+                } else {
+                    $('#tipo-dominio').hide();
+                    $("input:radio[name='focal_appbundle_datossegalimentaria[dominio]']").prop('required', false);
+                    $("input:radio[name='focal_appbundle_datossegalimentaria[dominio]']").prop('checked',false);
+                }
+        }); 
+        $("input:radio[name='focal_appbundle_datossegalimentaria[produceAlimento]']").on('change', function(){
+                var val = $(this).val();
+                if(val === '1') {
+                    $('#pro-alimento').show(); 
+                    $('#tbl-siembros').show();
+                    $('#tbl-riego').show();
+                    $("input:radio[name='focal_appbundle_datossegalimentaria[produceSuficiente]']").prop('required', true);
+                    $("input:radio[name='focal_appbundle_datossegalimentaria[excedente]']").prop('required', true);
+                } else {
+                    $('#pro-alimento').hide(); 
+                    $('#tbl-siembros').hide();
+                    $('#tbl-riego').hide();
+                    $("input:radio[name='focal_appbundle_datossegalimentaria[produceSuficiente]']").prop('required', false);
+                    $("input:radio[name='focal_appbundle_datossegalimentaria[excedente]']").prop('required', false);
+                    $("input:radio[name='focal_appbundle_datossegalimentaria[produceSuficiente]']").prop('checked',false);
+                    $("input:radio[name='focal_appbundle_datossegalimentaria[excedente]']").prop('checked',false);
+                    $(".inpval-pro").val(0);
+                }
+        });
+        $("input:radio[name='focal_appbundle_datossegalimentaria[tieneAnimales]']").on('change', function(){
+                var val = $(this).val();
+                if(val === '1') {
+                    $('#tbl-animales').show(); 
+                } else {
+                    $('#tbl-animales').hide(); 
+                    $(".inpval-ani").val(0);
+                }
+        });        
+    </script>    
+
+{% endblock %}

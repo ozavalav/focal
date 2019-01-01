@@ -1,0 +1,101 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+
+{% block header -%}
+    Modificar datos rangos de edad
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Modificar los rangos de edad en la familia
+    </small>
+{% endblock %}
+{% block content -%}
+    <div class="col-sm-12" style="float:left">
+            <!--h4>No. Boleta: {#{ numboleta }#}</h4-->
+            <h4>Id Encuesta: {{ idenc }}</h4>
+    </div>
+    {% for type, flash_messages in app.session.flashBag.all %}
+        {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endfor %}
+    <div id="msgerror-rango" class="alert alert-warning"></div>    
+    {{ form(edit_form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('datosdfamilia', {'idenc' : idenc}) }}">
+            Regresar el listado
+        </a>
+    </li>
+    <!--li>{#{ form(delete_form) }#}</li-->
+</ul>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#focal_appbundle_datosdrangos_rango').val('{{rngsel|default('')}}');
+            $('#focal_appbundle_datosdrangos_submit').prop('disabled', true);
+            $('#msgerror-rango').hide();
+            
+            var valsel = $('#focal_appbundle_datosdrangos_rango').val();
+            if (parseInt(valsel) <= 3) {
+                $('#focal_appbundle_datosdrangos_cantHombresLeen').prop('disabled',true).val(0);
+                $('#focal_appbundle_datosdrangos_cantMujeresLeen').prop('disabled',true).val(0);
+            }    
+        });
+        
+        $('#focal_appbundle_datosdrangos_cantPersonas, \n\
+        #focal_appbundle_datosdrangos_cantHombres, \n\
+        #focal_appbundle_datosdrangos_cantMujeres, \n\
+        #focal_appbundle_datosdrangos_cantHombresLeen, \n\
+        #focal_appbundle_datosdrangos_cantMujeresLeen, \n\
+        #focal_appbundle_datosdrangos_rango').on('change',function(){ 
+        $('#focal_appbundle_datosdrangos_submit').prop('disabled', true);
+        $('#msgerror-rango').hide();
+        
+        var cantp  = $('#focal_appbundle_datosdrangos_cantPersonas').val();
+        var canth  = $('#focal_appbundle_datosdrangos_cantHombres').val();
+        var cantm  = $('#focal_appbundle_datosdrangos_cantMujeres').val();
+        var canthl  = $('#focal_appbundle_datosdrangos_cantHombresLeen').val();
+        var cantml  = $('#focal_appbundle_datosdrangos_cantMujeresLeen').val();
+        var rango = $('#focal_appbundle_datosdrangos_rango option:selected').val();
+        var tpersonas = parseInt(canth) + parseInt(cantm);
+        var tpersonasl = parseInt(canthl) + parseInt(cantml);
+
+        if (parseInt(rango) <= 3) {
+            $('#focal_appbundle_datosdrangos_cantHombresLeen').prop('disabled',true).val(0);
+            $('#focal_appbundle_datosdrangos_cantMujeresLeen').prop('disabled',true).val(0);
+        } else {
+            $('#focal_appbundle_datosdrangos_cantHombresLeen').prop('disabled',false).val(0);
+            $('#focal_appbundle_datosdrangos_cantMujeresLeen').prop('disabled',false).val(0);
+        }
+
+        if(parseInt(cantp) <= 0 ) {
+            $('#msgerror-rango').text('Cantidad de personas deben ser mayor que cero.');
+            $('#msgerror-rango').show(); 
+        } else if ( (parseInt(tpersonasl) > parseInt(cantp)) && (parseInt(rango) > 3) ){
+            
+            $('#msgerror-rango').text('Cantidad de Hombres y Mujeres que saben leer y escribir deben ser menor o igual a la cantidad de personas.');
+            $('#msgerror-rango').show();  
+        } else if (parseInt(canthl) > parseInt(canth)) {
+            $('#msgerror-rango').text('Cantidad de Hombres que saben leer deben ser menor o igual a la cantidad de hombres.');
+            $('#msgerror-rango').show();
+        } else if (parseInt(cantml) > parseInt(cantm)) {
+            $('#msgerror-rango').text('Cantidad de Mujeres que saben leer deben ser menor o igual a la cantidad de mujeres.');
+            $('#msgerror-rango').show();     
+        } else if (parseInt(tpersonas) !== parseInt(cantp)) {
+             
+            $('#msgerror-rango').text('Cantidad de Hombres y Mujeres deben ser igual a cantidad de personas');
+            $('#msgerror-rango').show();
+        } else {         
+            $('#msg_cant').hide();
+            $('#focal_appbundle_datosdrangos_submit').prop('disabled', false);
+        }    
+    });        
+    </script>
+{% endblock %}

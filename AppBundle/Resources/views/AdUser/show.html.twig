@@ -1,0 +1,65 @@
+{% extends '::basemenu.html.twig' %}
+
+{% block header -%}
+    Información usuario
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        ver toda la información del usuario
+    </small>
+{% endblock %} 
+
+{% block content -%}
+    <table class="table table-striped table-bordered table-responsive">
+        <tbody>
+            <tr>
+                <th  style="width: 20%">Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <td>{{ entity.username }}</td>
+            </tr>
+            <tr>
+                <th>Nombre usuario</th>
+                <td>{{ entity.nombreUsuario }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{% if(entity.idEstado == 1) %}Activo{%else%}Inactivo{%endif%}</td>
+            </tr>
+            <tr>
+                <th>Código Departamento</th>
+                <td>{{ entity.codDepartamento }}</td>
+            </tr>
+            <tr>
+                <th>Código Municipio</th>
+                <td>{{ entity.codMunicipio }}</td>
+            </tr>
+            <tr>
+                <th>Id Comunidad</th>
+                <td>{{ entity.idComunidad }}</td>
+            </tr>
+            <tr>
+                <th>Isactive</th>
+                <td>{{ entity.isActive }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ entity.email }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('aduser') }}">
+            Regresar al listado
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('aduser_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+</ul>
+{% endblock %}

@@ -1,0 +1,340 @@
+
+{% block stylesheets %}
+    <style type="text/Css">
+
+        #body{
+            font-family:Arial, Helvetica, sans-serif;
+            font-size:11px;
+            font-weight:400;
+            color:#000;
+        }
+        .small_font{
+            font-size:8px;
+            color:#666;
+        }
+        .bg_img{
+            background-color:#F5ECCE;
+            border-radius:5px;
+            height:50px;
+        }
+        .linea{
+            border-width:1px;
+            border-bottom:solid;
+            border-color:#666;
+        }
+        .txt_title{
+            font-size:16px;
+            font-weight:bold;
+        }
+        .txt_titleheader{
+            font-size:10px;
+            font-weight:bold;
+            color:#333;
+        }
+        .txt_titleheader_cotenido{
+            font-size:7px;
+        }
+        .celda {
+            text-align: center;
+        }
+        .celdad {
+            text-align: right;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+    <page backtop="30mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 11px;">
+        <page_header>
+            <table cellspacing="0" border='0' align="center"  style="width: 90%; font-size: 6pt;">
+                <tbody>
+                    <tr>
+                        <th colspan="4"  style="width: 100%; text-align: center; padding-bottom: 3px;" align="center" class="txt_title"></th>
+                    </tr><br/><br/>
+                <tr>
+                    <th colspan='4' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                        <label  class="txt_titleheader">Cuadro # 2 ,3, 4</label>
+                    </th> 
+                </tr> 
+                <tr>
+                    <th colspan='4' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                        <label  class="txt_titleheader">Principales indicadores socioeconómicos en el marco de los ODS y PN</label>
+                    </th> 
+                </tr>
+                <tr>
+                    <th colspan='4'  border="0" align="left" class="txt_titleheader"> 
+                    </th> 
+                </tr> 
+                <tr> 
+                    <th  style="width: 22%;" border="0" align="left"class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }} 
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Municipio:  {{ codmun }} - {{ nommun }}
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Fecha inicio: {{fin|date('Y-m-d')}} 
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Fecha Fin: {{fin2|date('Y-m-d')}}  
+                    </th>
+                </tr>  
+                </tbody>
+            </table>
+            <br/>
+
+            <table cellspacing="0" align="center"  border='1' style="width: 90%; text-align: center; font-size: 6pt;">
+                <thead>
+                    <tr>
+                        <th  style="width: 5%; background: #E7E7E7;"  align="center" ># ORDEN</th>
+                        <th  style="width: 20%; background: #E7E7E7;"  align="center" >CLIENTE</th>
+                        <th  style="width: 40%; background: #E7E7E7;"  align="center" >TRABAJO ORDENADO</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >MOTOR</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >DEPARTAMENTO</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >RECIBIDO</th>
+                        <th  style="width: 5%; background: #E7E7E7;"  align="center" >FECHA</th>
+                    </tr>
+                </thead>
+                <tbody>  
+                </tbody>
+            </table>
+
+        </page_header> 
+        <page_footer>  
+
+            <table cellspacing="0" border ="1" style="width: 100%; font-size: 6pt;">
+                <tbody>
+
+
+                </tbody>
+            </table>
+        </page_footer>
+
+ <p><strong>Poblaci&oacute;n: </strong><span style="color: #ff0000;"><strong>( Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionar la opci&oacute;n 2 </strong></span><span style="color: #ff0000;"><strong>"Poblaci&oacute;n calificada por rango de edades " o ir al cuadro </strong></span><span style="color: #ff0000;"><strong>de frecuencia simple y copiar los datos de la tabla # 13) </strong></span></p>
+<p style="text-align: center;"><strong>Cuadro # 2</strong></p>
+<p style="text-align: center;"><strong>Poblaci&oacute;n clasificada por rangos de edades </strong></p>
+<table style="width:800px;" border="1">    
+    <thead>
+        <tr>
+            <td colspan="2" class="celda"><b>Edad en Rangos</b></td>
+            <td colspan="2" class="celda"><b>No. Personas</b></td>
+            <td colspan="4" class="celda"><b>Clasificación por género</b></td>
+        </tr>
+        <tr class="titulo-tabla borde-arriba borde-abajo">
+            <th style="width:30px" class="celda">Orden</th>
+            <th style="width:130px">Descripción</th>
+            <th style="width:50px;" class="celda">Cantidad</th>
+            <th style="width:50px;" class="celda">%</th>
+            <th style="width:50px;" class="celda">Hombres</th>
+            <th style="width:50px;" class="celda">%</th>
+            <th style="width:50px;" class="celda">Mujeres</th>
+            <th style="width:50px;" class="celda">%</th>
+        </tr>
+    </thead>
+    <tbody> 
+        {% set totp = 0 %}
+        {% set toth = 0 %}
+        {% set totm = 0 %}
+        {% set tothl = 0 %}
+        {% set totml = 0 %}
+        {% set tothnl = 0 %}
+        {% set totmnl = 0 %}
+
+        {% for datos in datosrng %}
+            <tr>
+                <td style="width:30px" class="celda"><p>{{ datos.orden }}</p></td>
+                <td style="width:130px">{{ datos.descripcion }}</td>
+                <td style="width:50px" class="celda">{{ datos.cantp }}</td>
+                <td style="width:50px" class="celdad">{{ datos.porp }}</td>
+                <td style="width:50px" class="celda">{{ datos.canth }}</td>
+                <td style="width:50px" class="celdad">{{ datos.porh }}</td>
+                <td style="width:50px" class="celda">{{ datos.cantm }}</td>
+                <td style="width:50px" class="celdad">{{ datos.porm }}</td>
+            </tr>
+            {% set totp = totp + datos.cantp %}
+            {% set toth = toth + datos.canth %}
+            {% set totm = totm + datos.cantm %}
+        {% endfor %}
+        <tr class="piede-tabla borde-arriba">
+            <td>Total</td>
+            <td></td>
+            <td class="celda">{{ totp }}</td>
+            <td></td>
+            <td class="celda">{{ toth }}</td>
+            <td></td>
+            <td class="celda">{{ totm }}</td>
+            <td></td>
+        </tr>    
+    </tbody>
+</table>                
+<p>Fuente: Elaboraci&oacute;n propia con base a censo l&iacute;nea base levantado en el municipio</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>Salud: </strong></p>
+<p><span style="color: #ff0000;"><strong>(Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionar la opci&oacute;n # 9 &ldquo;Incidencias de enfermedades en viviendas y en poblaci&oacute;n afectada&rdquo; o&nbsp;ir al cuadro de frecuencia simple y copiar los datos de la tabla # 23, para calcular el número de viviendas hay que dividir el número de personas afectadas entre el número de viviendas encuestadas)&nbsp;</strong></span><span style="color: #ff0000;"><strong> ir al cuadro de frecuencia simple y copiar los datos de la tabla # 23, para calcular el n&uacute;mero de viviendas hay que dividir el n&uacute;mero de personas afectadas entre el n&uacute;mero de viviendas encuestadas) </strong></span></p>
+<p style="text-align: center;"><strong>Cuadro # 3</strong></p>
+<p style="text-align: center;"><strong>Incidencia de enfermedades en viviendas y poblaci&oacute;n afectada </strong></p>
+
+<table border="1">    
+    <thead>   
+        <tr class="titulo-tabla borde-arriba borde-abajo">
+            <th style="width:50px" class="celda">Orden</th>
+            <th style="width:150px" class="celda">Descripción</th>
+            <th style="width:80px" class="celda">T. Manif</th>
+            <th style="width:80px" class="celda">% Hogares</th>
+            <th style="width:80px" class="celda">Cantidad Personas</th>
+            <th style="width:80px" class="celda">% Personas</th>
+        </tr>
+        </thead>
+        <tbody> 
+            {% set totm = 0 %}
+            {% set totp = 0 %}
+            
+            {% for datos in dtenfe %}
+                <tr>
+                    <td class="celda"><p>{{ datos.orden }}</p></td>
+                    <td>{{ datos.descripcion }}</td>
+                    <td class="celda">{{ datos.cantmani }}</td>
+                    <td class="celdad">{% if totviv > 0 %} {{ ((datos.cantmani / totviv)*100)|round(2) }}{% endif %}</td>
+                    <td class="celda">{{ datos.cantper }}</td>
+                    <td class="celdad">{% if dtfamilia.totalper > 0 %} {{ ((datos.cantper / dtfamilia.totalper)*100)|round(2) }}{% endif %}</td>
+                </tr>
+                {% set totm = totm + datos.cantmani %}
+                {% set totp = totp + datos.cantper %}
+            {% endfor %}
+            <tr class="piede-tabla borde-arriba">
+                <td>Total</td>
+                <td></td>
+                <td class="celda">{{ totm }}</td>
+                <td></td>
+                <td class="celda">{{ totp }}</td>
+                <td></td>
+            </tr>    
+        </tbody>
+    </table>
+
+<p>Fuente: Elaboraci&oacute;n propia con base a censo l&iacute;nea base levantado en el municipio</p>
+<p>&nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+
+<p style="text-align: center;"><strong>Cuadro # 4</strong></p>
+<p style="text-align: center;"><strong>Población clasificada por rangos de edades en sistema de salud que no cuentan con vacunas completas</strong></p>
+
+
+<div class="layoutArea">
+<div class="column">
+<p>&nbsp;</p>
+<p><strong><span style="color: #ff0000;">(Para llenar este cuadro hayq ir al prorama y en informes &nbsp;municipales, seleccionar la opci&oacute;n # 9 &nbsp;"Incidencias de enfermedades en viviendas y en poblaci&oacute;n afectada" o ir al cuadro de frecuencia simple y copiar los datos de la tabla # 24, para calcular el número de viviendas&nbsp;hay que dividir el número de personas afectadas entre el número de viviendas encuestadas)</span></strong></p>
+</div>
+</div>
+
+<p>&nbsp;</p>                
+    <table border="1">    
+    <thead>   
+
+        <tr class="titulo-tabla borde-arriba borde-abajo">
+            <th class="celda">Orden</th>
+            <th>Rango</th>
+            <th class="celda">T. Personas</th>
+            <th class="celda">% Total</th>
+            <th class="celda">Hombres</th>
+            <th class="celda">%</th>
+            <th class="celda">Mujeres</th>
+            <th class="celda">%</th>
+            <th class="celda">Con Vacuna</th>
+            <th class="celda">%</th>
+            <th class="celda">Sin Vacuna</th>
+            <th class="celda">%</th>
+        </tr>
+        </thead>
+        <tbody> 
+            {% set totm = 0 %}
+            {% set toth = 0 %}
+            {% set totcv = 0 %}
+            {% set totsv = 0 %}
+            {% set totpr = 0 %}
+            
+            {% for datos in dtvac %}
+                <tr>
+                    <td class="celda"><p>{{ datos.rango }}</p></td>
+                    <td>
+                        {% if datos.rango == 1 %}
+                            {{ "Menores de 9 años" }}
+                        {% elseif datos.rango == 2 %}
+                            {{ "De 10 a 19 años" }}
+                        {% elseif datos.rango == 3 %}
+                            {{ "De 20 a 64 años" }}
+                        {% else %}
+                            {{ "De 65 años y mas" }}
+                        {% endif %}
+                    </td>
+                    <td class="celda">{{ datos.cantp }}</td>
+                    <td class="celda">{{ datos.port|round(2) }}</td>
+                    <td class="celda">{{ datos.canth }}</td>
+                    <td class="celdad">{{ (datos.porh)|round(2) }}</td>
+                    <td class="celda">{{ datos.cantm }}</td>
+                    <td class="celdad">{{ datos.porm|round(2) }}</td>
+                    <td class="celda">{{ datos.vcom }}</td>
+                    <td class="celdad">{{ datos.porvc|round(2) }}</td>
+                    <td class="celda">{{ datos.vinc }}</td>
+                    <td class="celdad">{{ datos.porvi|round(2) }}</td>
+                </tr>
+                {% set totm = totm + datos.cantm %}
+                {% set toth = toth + datos.canth %}
+                {% set totpr = totpr + datos.cantp %}
+                {% set totcv = totcv + datos.vcom %}
+                {% set totsv = totsv + datos.vinc %}
+            {% endfor %}
+            <tr class="piede-tabla borde-arriba">
+                <td>Total</td>
+                <td></td>
+                <td class="celda">{{ totpr }}</td>
+                <td></td>
+                <td class="celda">{{ toth }}</td>
+                <td></td>
+                <td class="celda">{{ totm }}</td>
+                <td></td>
+                <td class="celda">{{ totcv }}</td>
+                <td></td>
+                <td class="celda">{{ totsv }}</td>
+                <td></td>
+            </tr>    
+        </tbody>
+    </table>
+
+<p>Fuente: Elaboraci&oacute;n propia con base a censo l&iacute;nea base levantado en el municipio</p>
+<p>&nbsp;</p>
+
+
+    </page>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

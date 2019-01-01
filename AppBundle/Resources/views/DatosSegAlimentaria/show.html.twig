@@ -1,0 +1,232 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>DatosSegAlimentaria</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Idenc</th>
+                <td>{{ entity.idEnc }}</td>
+            </tr>
+            <tr>
+                <th>Coddepartamento</th>
+                <td>{{ entity.codDepartamento }}</td>
+            </tr>
+            <tr>
+                <th>Codmunicipio</th>
+                <td>{{ entity.codMunicipio }}</td>
+            </tr>
+            <tr>
+                <th>Codcomunidad</th>
+                <td>{{ entity.codComunidad }}</td>
+            </tr>
+            <tr>
+                <th>Trabajotierra</th>
+                <td>{{ entity.trabajoTierra }}</td>
+            </tr>
+            <tr>
+                <th>Canthombres</th>
+                <td>{{ entity.cantHombres }}</td>
+            </tr>
+            <tr>
+                <th>Cantmujeres</th>
+                <td>{{ entity.cantMujeres }}</td>
+            </tr>
+            <tr>
+                <th>Propropia</th>
+                <td>{{ entity.proPropia }}</td>
+            </tr>
+            <tr>
+                <th>Propleno</th>
+                <td>{{ entity.proPleno }}</td>
+            </tr>
+            <tr>
+                <th>Proutil</th>
+                <td>{{ entity.proUtil }}</td>
+            </tr>
+            <tr>
+                <th>Propagando</th>
+                <td>{{ entity.proPagando }}</td>
+            </tr>
+            <tr>
+                <th>Proalquilando</th>
+                <td>{{ entity.proAlquilando }}</td>
+            </tr>
+            <tr>
+                <th>Proprestada</th>
+                <td>{{ entity.proPrestada }}</td>
+            </tr>
+            <tr>
+                <th>Prolitigio</th>
+                <td>{{ entity.proLitigio }}</td>
+            </tr>
+            <tr>
+                <th>Procomunal</th>
+                <td>{{ entity.proComunal }}</td>
+            </tr>
+            <tr>
+                <th>Pronotiene</th>
+                <td>{{ entity.proNotiene }}</td>
+            </tr>
+            <tr>
+                <th>Producealimento</th>
+                <td>{{ entity.produceAlimento }}</td>
+            </tr>
+            <tr>
+                <th>Producesuficiente</th>
+                <td>{{ entity.produceSuficiente }}</td>
+            </tr>
+            <tr>
+                <th>Cantmaiz</th>
+                <td>{{ entity.cantMaiz }}</td>
+            </tr>
+            <tr>
+                <th>Areamaiz</th>
+                <td>{{ entity.areaMaiz }}</td>
+            </tr>
+            <tr>
+                <th>Cantfrijol</th>
+                <td>{{ entity.cantFrijol }}</td>
+            </tr>
+            <tr>
+                <th>Areafrijol</th>
+                <td>{{ entity.areaFrijol }}</td>
+            </tr>
+            <tr>
+                <th>Cantmaicillo</th>
+                <td>{{ entity.cantMaicillo }}</td>
+            </tr>
+            <tr>
+                <th>Areamaicillo</th>
+                <td>{{ entity.areaMaicillo }}</td>
+            </tr>
+            <tr>
+                <th>Cantcafe</th>
+                <td>{{ entity.cantCafe }}</td>
+            </tr>
+            <tr>
+                <th>Areacafe</th>
+                <td>{{ entity.areaCafe }}</td>
+            </tr>
+            <tr>
+                <th>Cantcana</th>
+                <td>{{ entity.cantCana }}</td>
+            </tr>
+            <tr>
+                <th>Areacana</th>
+                <td>{{ entity.areaCana }}</td>
+            </tr>
+            <tr>
+                <th>Descotro</th>
+                <td>{{ entity.descOtro }}</td>
+            </tr>
+            <tr>
+                <th>Cantotro</th>
+                <td>{{ entity.cantOtro }}</td>
+            </tr>
+            <tr>
+                <th>Areaotro</th>
+                <td>{{ entity.areaOtro }}</td>
+            </tr>
+            <tr>
+                <th>Areagoteo</th>
+                <td>{{ entity.areaGoteo }}</td>
+            </tr>
+            <tr>
+                <th>Areaaspersion</th>
+                <td>{{ entity.areaAspersion }}</td>
+            </tr>
+            <tr>
+                <th>Areaninguno</th>
+                <td>{{ entity.areaNinguno }}</td>
+            </tr>
+            <tr>
+                <th>Descriego</th>
+                <td>{{ entity.descRiego }}</td>
+            </tr>
+            <tr>
+                <th>Cantriego</th>
+                <td>{{ entity.cantRiego }}</td>
+            </tr>
+            <tr>
+                <th>Excedente</th>
+                <td>{{ entity.excedente }}</td>
+            </tr>
+            <tr>
+                <th>Tienehuerto</th>
+                <td>{{ entity.tieneHuerto }}</td>
+            </tr>
+            <tr>
+                <th>Tieneanimales</th>
+                <td>{{ entity.tieneAnimales }}</td>
+            </tr>
+            <tr>
+                <th>Cantaves</th>
+                <td>{{ entity.cantAves }}</td>
+            </tr>
+            <tr>
+                <th>Cantbovino</th>
+                <td>{{ entity.cantBovino }}</td>
+            </tr>
+            <tr>
+                <th>Cantcaprino</th>
+                <td>{{ entity.cantCaprino }}</td>
+            </tr>
+            <tr>
+                <th>Cantequino</th>
+                <td>{{ entity.cantEquino }}</td>
+            </tr>
+            <tr>
+                <th>Cantporcino</th>
+                <td>{{ entity.cantPorcino }}</td>
+            </tr>
+            <tr>
+                <th>Cantpiscicultura</th>
+                <td>{{ entity.cantPiscicultura }}</td>
+            </tr>
+            <tr>
+                <th>Cantapicultura</th>
+                <td>{{ entity.cantApicultura }}</td>
+            </tr>
+            <tr>
+                <th>Cantdomesticos</th>
+                <td>{{ entity.cantDomesticos }}</td>
+            </tr>
+            <tr>
+                <th>Fechacreacion</th>
+                <td>{{ entity.fechaCreacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Usuariocreacion</th>
+                <td>{{ entity.usuarioCreacion }}</td>
+            </tr>
+            <tr>
+                <th>Usuarioultimamodificacion</th>
+                <td>{{ entity.usuarioUltimaModificacion }}</td>
+            </tr>
+            <tr>
+                <th>Fechaultimamodificacion</th>
+                <td>{{ entity.fechaUltimaModificacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('datossegalimentaria') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('datossegalimentaria_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

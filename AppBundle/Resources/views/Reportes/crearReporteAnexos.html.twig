@@ -1,0 +1,1269 @@
+{% block stylesheets %}
+<style type="text/Css">
+<!--
+#body{
+	font-family:Verdana, Calibri, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	font-weight:400;
+	color:#000;
+}
+.small_font{
+	font-size:8px;
+	color:#666;
+}
+.bg_img{
+	background-color:#F5ECCE;
+	border-radius:5px;
+	height:50px;
+}
+.linea{
+	border-width:1px;
+	border-bottom:solid;
+	border-color:#666;
+}
+.txt_title{
+	font-size:16px;
+	font-weight:bold;
+}
+.txt_titleheader{
+	font-size:10px;
+	font-weight:bold;
+	color:#333;
+}
+.txt_titleheader_cotenido{
+	font-size:7px;
+}
+.celda {
+    text-align: center;
+}
+.celdad {
+    text-align: right;
+}
+.borde-arriba td {
+    border-top: 1px solid #000; 
+}
+.borde-abajo th {
+    border-bottom: 1px solid #000; 
+}
+.borde-completo tabla {
+    border: 1px solid #000; 
+}
+.titulo-grupo {
+    background-color: lightskyblue;
+    text-align: center;
+}
+.titulo-tabla {
+    background-color: lightgreen;
+}
+.piede-tabla {
+    background-color: lightgrey;
+}
+-->
+</style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+<page backtop="20mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 11px;" footer="page">
+<page_header>
+  <table cellspacing="0" border='0' align="center"  style="width: 90%; font-size: 6pt;" class="borde-completo">
+        <tbody>
+        <tr class="borde-completo">
+            <th colspan="4"  style="width: 100%; text-align: center; padding-bottom: 3px;" align="center" class="txt_title"></th>
+        </tr><br/><br/>
+        <tr>
+            <th colspan='4' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                <label  class="txt_titleheader">REPORTE - ANEXOS</label>
+                <label  class="txt_titleheader">LINEA BASE DEMOGRAFICA Y SOCIOECONOMICA DEL MUNICIPO</label>
+            </th> 
+        </tr> 
+         <tr>
+            <th colspan='4'  border="0" align="left" class="txt_titleheader"> 
+            </th> 
+        </tr> 
+          <tr> 
+            <th  style="width: 30%;" border="0" align="left"class="txt_titleheader borde-completo">Fecha Inicio: {{ fin|date('Y-m-d')|default('') }}  
+            </th>
+            <th   style="width: 30%;" border="0" align="left"class="txt_titleheader">Fecha Final: {{ fin2|date('Y-m-d')|default('') }}  
+            </th>
+             <th   style="width: 30%;" border="0" align="left"class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }}  
+            </th>
+        </tr>
+        <tr>
+            <td style="width: 50%;" border="0" align="left"class="txt_titleheader">Municipio: {{ codmun }} - {{ nommun }} 
+            </td>
+            <td  colspan="3" style="width: 50%;" border="0" align="left"class="txt_titleheader">
+                Comunidad: 
+                {% if cantcom <= 3 %}
+                    {% for ncom in dtnomcom %}
+                        {{ ncom.nombre }} / 
+                    {% endfor %} 
+                {% else %}
+                    Varias
+                {% endif %}
+            </td>
+        </tr>  
+   </tbody>
+    </table>
+    
+</page_header>
+<!--table cellspacing="0" align="center"  border='1' style="width: 90%; text-align: center; font-size: 6pt;" -->
+    <table class="table table-condensed table-striped table-bordered">    
+    <thead>
+        <tr class="titulo-tabla borde-arriba borde-abajo">
+            <th width="20%" style="width: 20%">Tematícas</th>
+            <th width="40%" style="width: 40%">Indicadores de Línea Base</th>
+            <th width="15%" style="width: 15%">Cantidad</th>
+            <th width="15%" style="width: 15%">Porcentaje</th> 
+        </tr>   
+    </thead>
+    <tbody> 
+        <tr>
+            <td width="20%" style="width: 20%">Datos Generales sobre Población</td>
+            <td width="40%" style="width: 40%">Viviendas Encuestadas</td>
+            <td width="15%" style="width: 15%" class="celda">{{ dttotal }}</td>
+            <td width="15%" style="width: 15%"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población Total</td>
+            <td class="celda">{{ dttotper }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población Masculina</td>
+            <td class="celda">{{ dtxsex.thom }}</td>
+            <td class="celdad">{% if dttotper > 0 %}{{ ((dtxsex.thom / dttotper) * 100) | number_format(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población Femenina</td>
+            <td class="celda">{{ dtxsex.tmuj }}</td>
+            <td class="celdad">{% if dttotper > 0 %}{{ ((dtxsex.tmuj / dttotper) * 100) | number_format(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Promedio de personas por vivienda</td>
+            <td></td>
+            <td class="celdad">{% if dttotal > 0 %}{{ ((dttotper / dttotal)) | number_format(2) }}{% endif %}</td>
+        </tr>
+        {% set grtotal = 0 %}
+        {% for dtre in dtredad %}
+            {% set grtotal = grtotal + dtre.rtotal %}
+        {% endfor %}
+        {% for dtre in dtredad %}
+            <tr>
+                <td></td>
+                <td>{{dtre.rango}}</td>
+                <td class="celda">{{ dtre.rtotal }}</td>
+                <td class="celdad">{% if grtotal > 0 %}{{ ((dtre.rtotal / grtotal) * 100)|round(2) }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>Fuerza de Trabajo</td>
+            <td>Población de edad de trabajar(PET)</td>
+            <td class="celda">{{ dtpet.pet + dtpei.pei }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población económicamente activa(PEA)</td>
+            <td class="celda">{{ dtpet.peao + dtpet.pead }}</td>
+            <td class="celdad">{% if (dtpet.pet + dtpei.pei) > 0 %}{{ (((dtpet.peao + dtpet.pead) / (dtpet.pet + dtpei.pei))*100) | round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población económicamente activa(PEA) ocupada</td>
+            <td class="celda">{{ dtpet.peao }}</td>
+            <td class="celdad">{% if (dtpet.peao + dtpet.pead) > 0 %}{{ (dtpet.peao*100/(dtpet.peao + dtpet.pead))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población económicamente activa(PEA) desocupada</td>
+            <td class="celda">{{ dtpet.pead }}</td>
+            <td class="celdad">{% if (dtpet.peao + dtpet.pead) > 0 %}{{ (dtpet.pead*100/(dtpet.peao + dtpet.pead))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Tasa de empleo</td>
+            <td class="celda"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población económicamente inactiva(PEI)</td>
+            <td class="celda">{{ dtpei.pei }}</td>
+            <td class="celdad">{% if (dtpet.pet + dtpei.pei) > 0 %}{{ (dtpei.pei*100/(dtpet.pet + dtpei.pei))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población en que su ocupación es como empleado</td>
+            <td class="celda">{{ dtfuerzal.empleado }}</td>
+            <td class="celdad">{% if dtfuerzal.empleado > 0 %}{{ ((dtfuerzal.empleado*100) / (dtfuerzal.empleado + dtfuerzal.propia))|round(2) }} {% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población en que su ocupación es como empleado sector comercial</td>
+            <td class="celda">{{ dtfuerzal.comercial }}</td>
+            <td class="celdad">{% if dtfuerzal.empleado > 0 %}{{ ((dtfuerzal.comercial*100) / dtfuerzal.empleado)|round(2) }} {% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población en que su ocupación es como empleado sector industrial</td>
+            <td class="celda">{{ dtfuerzal.industrial }}</td>
+            <td class="celdad">{% if dtfuerzal.empleado > 0 %}{{ ((dtfuerzal.industrial*100) / dtfuerzal.empleado)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población en que su ocupación es como empleado sector servicio</td>
+            <td class="celda">{{ dtfuerzal.servicios }}</td>
+            <td class="celdad">{% if dtfuerzal.empleado > 0 %}{{ ((dtfuerzal.servicios*100) / dtfuerzal.empleado)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población en que su ocupación es trabaja por cuenta propia</td>
+            <td class="celda">{{ dtfuerzal.propia }}</td>
+            <td class="celdad">{% if dtfuerzal.propia > 0 %}{{ ((dtfuerzal.propia*100) / (dtfuerzal.empleado + dtfuerzal.propia))|round(2) }} {% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población en que su ocupación es que trabaja sector primario</td>
+            <td class="celda">{{ dtfuerzal.primario }}</td>
+            <td class="celdad">{% if dtfuerzal.propia > 0 %}{{ (dtfuerzal.primario*100/dtfuerzal.propia)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población en que su ocupación es que trabaja sector secundario</td>
+            <td class="celda">{{ dtfuerzal.secundario }}</td>
+            <td class="celdad">{% if dtfuerzal.propia > 0 %}{{ (dtfuerzal.secundario*100/dtfuerzal.propia)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población en que su ocupación es que trabaja sector terciario</td>
+            <td class="celda">{{ dtfuerzal.terciario }}</td>
+            <td class="celdad">{% if dtfuerzal.propia > 0 %}{{ (dtfuerzal.terciario*100/dtfuerzal.propia)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de empleos generados en cualquier sector productivo</td>
+            <td class="celda">{{ dtfuerzal.empxsec }}</td>
+            <td class="celdad">{% if (dtpet.pet+dtpei.pei) > 0 %}{{ (dtfuerzal.empxsec*100/(dtpet.pet+dtpei.pei))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># Promedio de hogares con ingreso diario per capita menor de un $1</td>
+            <td class="celda">{{ dtfuerzal.hingm1 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.hingm1*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># Promedio de hogares con ingreso diario per capita entre $1 y $2</td>
+            <td class="celda">{{ dtfuerzal.hing1a2 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.hing1a2*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># Promedio de hogares con ingreso diario per capita mayor que $2</td>
+            <td class="celda">{{ dtfuerzal.hingm2 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.hingm2*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que su ingreso les ajusta para alimentarse los 3 tiempos</td>
+            <td class="celda">{{ dtfuerzal.tiempos3 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.tiempos3*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que su ingreso les ajusta para alimentarse los 2 tiempos</td>
+            <td class="celda">{{ dtfuerzal.tiempos2 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.tiempos2*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que su ingreso les ajusta para alimentarse 1 tiempo</td>
+            <td class="celda">{{ dtfuerzal.tiempos1 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.tiempos1*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Ingresos por remesas</td>
+            <td># de hogares que reciben remesas</td>
+            <td class="celda">{{ dtfuerzal.remesas }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.remesas*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que reciben remesas menos de Lps. 1000</td>
+            <td class="celda">{{ dtfuerzal.rangor1 }}</td>
+            <td class="celdad">{% if dtfuerzal.remesas > 0 %}{{ (dtfuerzal.rangor1*100/dtfuerzal.remesas)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que reciben remesas entre Lps. 1001 y 2000</td>
+            <td class="celda">{{ dtfuerzal.rangor2 }}</td>
+            <td class="celdad">{% if dtfuerzal.remesas > 0 %}{{ (dtfuerzal.rangor2*100/dtfuerzal.remesas)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que reciben remesas de Lps. 2001 en adelante </td>
+            <td class="celda">{{ dtfuerzal.rangor3 }}</td>
+            <td class="celdad">{% if dtfuerzal.remesas > 0 %}{{ (dtfuerzal.rangor3*100/dtfuerzal.remesas)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Ingresos Mensuales Familiares </td>
+            <td># de hogares que reciben ingresos menores Lps. 1000</td>
+            <td class="celda">{{ dtfuerzal.rangoi1 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.rangoi1*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que reciben ingresos entre Lps. 1001 y 2000</td>
+            <td class="celda">{{ dtfuerzal.rangoi2 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.rangoi2*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que reciben ingresos entre Lps. 2001 y 4000</td>
+            <td class="celda">{{ dtfuerzal.rangoi3 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.rangoi3*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que reciben ingresos entre Lps. 4001 y 8000</td>
+            <td class="celda">{{ dtfuerzal.rangoi4 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.rangoi4*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que reciben ingresos entre Lps. 8001 y 12000</td>
+            <td class="celda">{{ dtfuerzal.rangoi5 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.rangoi5*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que reciben ingresos entre Lps. 12001 y 20000</td>
+            <td class="celda">{{ dtfuerzal.rangoi6 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.rangoi6*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que reciben ingresos entre Lps. 20001 y 30000</td>
+            <td class="celda">{{ dtfuerzal.rangoi7 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.rangoi7*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que reciben ingresos entre Lps. 30001 y 50000</td>
+            <td class="celda">{{ dtfuerzal.rangoi8 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.rangoi8*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hogares que reciben ingresos mayores que Lps. 50000</td>
+            <td class="celda">{{ dtfuerzal.rangoi9 }}</td>
+            <td class="celdad">{% if dttotal > 0 %}{{ (dtfuerzal.rangoi9*100/dttotal)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr><td colspan="4">Eduación</td></tr>
+        <tr>
+            <td>Datos sobre población estudiantil</td>
+            <td># de niños(a) en edad de estudiar</td>
+            <td class="celda">{{ dtedu.totaleest }}</td>
+            <td class="celdad">{% if dttotper > 0 %}{{ (dtedu.totaleest*100/dttotper)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños(a) en edad de estudiar que actualmente estudian</td>
+            <td class="celda">{{ dtedu.estudian }}</td>
+            <td class="celdad">{% if dtedu.totaleest > 0 %}{{ (dtedu.estudian*100/dtedu.totaleest)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños(a) en edad de estudiar que actualmente no estudian</td>
+            <td class="celda">{{ dtedu.noestudian }}</td>
+            <td class="celdad">{% if dtedu.totaleest > 0 %}{{ (dtedu.noestudian*100/dtedu.totaleest)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños en edad de estudiar</td>
+            <td class="celda">{{ dtedu.sexom }}</td>
+            <td class="celdad">{% if dtedu.totaleest > 0 %}{{ (dtedu.sexom*100/dtedu.totaleest)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niñas en edad de estudiar</td>
+            <td class="celda">{{ dtedu.sexof }}</td>
+            <td class="celdad">{% if dtedu.totaleest > 0 %}{{ (dtedu.sexof*100/dtedu.totaleest)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños que estudian sin edad de estudiar</td>
+            <td class="celda">{{ dtedu.neseh }}</td>
+            <td class="celdad">{% if dttotper > 0 %}{{ (dtedu.neseh*100/dttotper)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niñas que estudian sin edad de estudiar</td>
+            <td class="celda">{{ dtedu.nesem }}</td>
+            <td class="celdad">{% if dttotper > 0 %}{{ (dtedu.nesem*100/dttotper)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños(a) que estudian sin edad de estudiar</td>
+            <td class="celda">{{ dtedu.nesem + dtedu.neseh }}</td>
+            <td class="celdad">{% if dttotper > 0 %}{{ ((dtedu.nesem + dtedu.neseh)*100/dttotper)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños(a) en edad pre-escolar</td>
+            <td class="celda">{{ dtedu.preesc }}</td>
+            <td class="celdad">{% if dtedu.totaleest > 0 %}{{ ((dtedu.preesc*100)/dtedu.totaleest)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños(a) en edad pre-escolar que estudian</td>
+            <td class="celda">{{ dtedu.preesce }}</td>
+            <td class="celdad">{% if dtedu.preesc > 0 %}{{ (dtedu.preesce*100/dtedu.preesc)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños(a) en edad primaria</td>
+            <td class="celda">{{ dtedu.primaria }}</td>
+            <td class="celdad">{% if dtedu.totaleest > 0 %}{{ ((dtedu.primaria*100)/dtedu.totaleest)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños(a) en edad primaria que estudian</td>
+            <td class="celda">{{ dtedu.primariae }}</td>
+            <td class="celdad">{% if dtedu.primaria > 0 %}{{ (dtedu.primariae*100/dtedu.primaria)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños(a) en edad de plan básico</td>
+            <td class="celda">{{ dtedu.planb }}</td>
+            <td class="celdad">{% if dtedu.totaleest > 0 %}{{ ((dtedu.planb*100)/dtedu.totaleest)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños(a) en edad de plan básico que estudian</td>
+            <td class="celda">{{ dtedu.planbe }}</td>
+            <td class="celdad">{% if dtedu.planb > 0 %}{{ (dtedu.planbe*100/dtedu.planb)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Estudios diversificados</td>
+            <td># de niños(a) en edad de diversificado</td>
+            <td class="celda">{{ dtedu.diver }}</td>
+            <td class="celdad">{% if dtedu.totaleest > 0 %}{{ ((dtedu.diver*100)/dtedu.totaleest)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños(a) en edad de diversificado que estudian</td>
+            <td class="celda">{{ dtedu.divere }}</td>
+            <td class="celdad">{% if dtedu.diver > 0 %}{{ (dtedu.divere*100/dtedu.diver)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Estudios universitarios</td>
+            <td># de jovenes en edad de estudiar en universidad</td>
+            <td class="celda">{{ dtedu.univ }}</td>
+            <td class="celdad">{% if dtedu.totaleest > 0 %}{{ ((dtedu.univ*100)/dtedu.totaleest)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de jovenes en edad de estudiar en universidad que estudian</td>
+            <td class="celda">{{ dtedu.unive }}</td>
+            <td class="celdad">{% if dtedu.univ > 0 %}{{ (dtedu.unive*100/dtedu.univ)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Escolaridad promedio(PN)</td>
+            <td>Tasa de escolaridad promedio<b>(investigar en centro educativo)</b></td>
+            <td class="celda"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población fuerza de trabajo emergente</td>
+            <td class="celda">{{ dtedu.emergente }}</td>
+            <td class="celdad">{% if (dtpet.pet + dtpei.pei) > 0 %}{{ (dtedu.emergente*100/(dtpet.pet + dtpei.pei))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Población fuerza de trabajo emergente que estudia en secundaria</td>
+            <td class="celda">{{ dtedu.emergentees }}</td>
+            <td class="celdad">{% if (dtpet.pet + dtpei.pei) > 0 %}{{ (dtedu.emergentees*100/(dtpet.pet + dtpei.pei))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr><td colspan="4">Género</td></tr>
+        <tr>
+            <td></td>
+            <td># de niños(a) que estudian en preescolar</td>
+            <td class="celda">{{ dtedu.preesce }}</td>
+            <td class="celdad">{% if dtedu.estudian > 0 %}{{ ((dtedu.preesce*100)/dtedu.estudian)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños que estudian en preescolar</td>
+            <td class="celda">{{ dtedu.preescem }}</td>
+            <td class="celdad">{% if dtedu.preesce > 0 %}{{ (dtedu.preescem*100/dtedu.preesce)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niñas que estudian en preescolar</td>
+            <td class="celda">{{ dtedu.preescef }}</td>
+            <td class="celdad">{% if dtedu.preesce > 0 %}{{ (dtedu.preescef*100/dtedu.preesce)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños(a) que estudian en primaria</td>
+            <td class="celda">{{ dtedu.primariae }}</td>
+            <td class="celdad">{% if dtedu.estudian > 0 %}{{ ((dtedu.primariae*100)/dtedu.estudian)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños que estudian en primaria</td>
+            <td class="celda">{{ dtedu.primariaem }}</td>
+            <td class="celdad">{% if dtedu.primariae > 0 %}{{ (dtedu.primariaem*100/dtedu.primariae)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niñas que estudian en primaria</td>
+            <td class="celda">{{ dtedu.primariaef }}</td>
+            <td class="celdad">{% if dtedu.primariae > 0 %}{{ (dtedu.primariaef*100/dtedu.primariae)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños(a) que estudian en secundaria (plan básico)</td>
+            <td class="celda">{{ dtedu.planbe }}</td>
+            <td class="celdad">{% if dtedu.estudian > 0 %}{{ ((dtedu.planbe*100)/dtedu.estudian)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños que estudian en secundaria (plan básico)</td>
+            <td class="celda">{{ dtedu.planbem }}</td>
+            <td class="celdad">{% if dtedu.planbe > 0 %}{{ (dtedu.planbem*100/dtedu.planbe)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niñas que estudian en secundaria (plan básico)</td>
+            <td class="celda">{{ dtedu.planbef }}</td>
+            <td class="celdad">{% if dtedu.planbe > 0 %}{{ (dtedu.planbef*100/dtedu.planbe)|round(2) }}{% endif %}</td>
+        </tr>
+        
+        <tr>
+            <td></td>
+            <td># de niños(a) que estudian en diversificado</td>
+            <td class="celda">{{ dtedu.divere }}</td>
+            <td class="celdad">{% if dtedu.estudian > 0 %}{{ ((dtedu.divere*100)/dtedu.estudian)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños que estudian en diversificado</td>
+            <td class="celda">{{ dtedu.diverem }}</td>
+            <td class="celdad">{% if dtedu.divere > 0 %}{{ (dtedu.diverem*100/dtedu.divere)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niñas que estudian en diversificado</td>
+            <td class="celda">{{ dtedu.diveref }}</td>
+            <td class="celdad">{% if dtedu.divere > 0 %}{{ (dtedu.diveref*100/dtedu.divere)|round(2) }}{% endif %}</td>
+        </tr>
+        
+        <tr>
+            <td></td>
+            <td># de jóvenes que estudian en universidad</td>
+            <td class="celda">{{ dtedu.unive }}</td>
+            <td class="celdad">{% if dtedu.estudian > 0 %}{{ ((dtedu.unive*100)/dtedu.estudian)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hombres que estudian universidad</td>
+            <td class="celda">{{ dtedu.univem }}</td>
+            <td class="celdad">{% if dtedu.unive > 0 %}{{ (dtedu.univem*100/dtedu.unive)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de mujeres que estudian universidad</td>
+            <td class="celda">{{ dtedu.univef }}</td>
+            <td class="celdad">{% if dtedu.unive > 0 %}{{ (dtedu.univef*100/dtedu.unive)|round(2) }}{% endif %}</td>
+        </tr>
+        
+        <tr>
+            <td>Fuerza de trabajo</td>
+            <td># de hombres en edad de trabajar</td>
+            <td class="celda">{{ dtfuerzal2.tfuerzalm }}</td>
+            <td class="celdad">{% if (dtpet.pet + dtpei.pei) > 0 %}{{ (dtfuerzal2.tfuerzalm*100/(dtpet.pet + dtpei.pei))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de mujeres en edad de trabajar</td>
+            <td class="celda">{{ dtfuerzal2.tfuerzalf }}</td>
+            <td class="celdad">{% if (dtpet.pet + dtpei.pei) > 0 %}{{ (dtfuerzal2.tfuerzalf*100/(dtpet.pet + dtpei.pei))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hombres que trabajan remuneradamente (ocupación)</td>
+            <td class="celda">{{ dtpet.ttrah }}</td>
+            <td class="celdad">{% if (dtpet.pet + dtpei.pei) > 0 %}{{ (dtpet.ttrah*100/(dtpet.pet + dtpei.pei))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de mujeres que trabajan remuneradamente (ocupación)</td>
+            <td class="celda">{{ dtpet.ttram }}</td>
+            <td class="celdad">{% if (dtpet.pet + dtpei.pei) > 0 %}{{ (dtpet.ttram*100/(dtpet.pet + dtpei.pei))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de hombres fuerza de trabajo emergente que estudian secundaria</td>
+            <td class="celda">{{ dtedu.emergenteesm }}</td>
+            <td class="celdad">{% if (dtpet.pet + dtpei.pei) > 0 %}{{ (dtedu.emergenteesm*100/(dtpet.pet + dtpei.pei))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de mujeres fuerza de trabajo emergente que estudian secundaria</td>
+            <td class="celda">{{ dtedu.emergenteesf }}</td>
+            <td class="celdad">{% if (dtpet.pet + dtpei.pei) > 0 %}{{ (dtedu.emergenteesf*100/(dtpet.pet + dtpei.pei))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Jejes(a) de hogar</td>
+            <td># Madres solteras</td>
+            <td class="celda">{{ dtdemoo.tmasol }}</td>
+            <td class="celdad">{% if dtxsex.tmuj > 0 %}{{ ((dtdemoo.tmasol*100/dtxsex.tmuj))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># Padres solteros</td>
+            <td class="celda">{{ dtdemoo.tpasol }}</td>
+            <td class="celdad">{% if dtxsex.thom > 0 %}{{ ((dtdemoo.tpasol*100/dtxsex.thom))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Tasa de embarazos en adolescentes(PN) (13 a 21 años)<b>(Investigar en centro de salud)</b></td>
+            <td class="celda"></td>
+            <td></td>
+        </tr>
+        <tr><td colspan="4">Salud</td></tr>
+        <tr>
+            <td></td>
+            <td># de niños menos de 5 años</td>
+            <td class="celda">{{ dtcantm5.totalm5 }}</td>
+            <td class="celdad">{% if dttotper > 0 %}{{ ((dtcantm5.totalm5*100/dttotper))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de niños muertos menos de 5 años en el año anterior</td>
+            <td class="celda">{{ dtmuertesn.muertesninos }}</td>
+            <td class="celdad">{% if dtcantm5.totalm5  > 0 %}{{ ((dtmuertesn.muertesninos*100/dtcantm5.totalm5))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># muertes infantiles por 1000 niños nacidos vivios</td>
+            <td class="celda"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de partos atendidos durante el año anterior</td>
+            <td class="celda">{{ dtpartos.tpartos}}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Total de niños(a) nacidos en el año anterior </td>
+            <td class="celda">{{ dtnnac.tnnac }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de partos atendidos en centro de salud</td>
+            <td class="celda">{{ dtpartos.tcentros }}</td>
+            <td class="celdad">{% if dtpartos.tpartos  > 0 %}{{ (( dtpartos.tcentros * 100 / dtpartos.tpartos ))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de partos atendidos en materno infantil</td>
+            <td class="celda">{{ dtpartos.tmaterno }}</td>
+            <td class="celdad">{% if dtpartos.tpartos  > 0 %}{{ (( dtpartos.tmaterno * 100 / dtpartos.tpartos ))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de partos atendidos en hospital</td>
+            <td class="celda">{{ dtpartos.thospital }}</td>
+            <td class="celdad">{% if dtpartos.tpartos  > 0 %}{{ (( dtpartos.thospital * 100 / dtpartos.tpartos ))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de partos atendidos en clínica privada</td>
+            <td class="celda">{{ dtpartos.tclinica }}</td>
+            <td class="celdad">{% if dtpartos.tpartos  > 0 %}{{ (( dtpartos.tclinica * 100 / dtpartos.tpartos ))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de partos atendidos en otros centros de salud</td>
+            <td class="celda">{{ dtpartos.totros }}</td>
+            <td class="celdad">{% if dtpartos.tpartos  > 0 %}{{ (( dtpartos.totros * 100 / dtpartos.tpartos ))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Objetivo No.3</td>
+            <td># de madres murieron antes del parto año anterior</td>
+            <td class="celda">{{ dtpartos.mantes }}</td>
+            <td class="celdad">{% if dtpartos.tmuertem  > 0 %}{{ (( dtpartos.mantes * 100 / dtpartos.tmuertem ))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de madres murieron durante del parto año anterior</td>
+            <td class="celda">{{ dtpartos.mdurante }}</td>
+            <td class="celdad">{% if dtpartos.tmuertem  > 0 %}{{ (( dtpartos.mdurante * 100 / dtpartos.tmuertem ))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de madres murieron post parto año anterior</td>
+            <td class="celda">{{ dtpartos.mdespues }}</td>
+            <td class="celdad">{% if dtpartos.tmuertem  > 0 %}{{ (( dtpartos.mdespues * 100 / dtpartos.tmuertem ))|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Tasa de mortalidad materna por cada 1000 partos</td>
+            <td class="celda"></td>
+            <td class="celdad">{% if dtpartos.tpartos  > 0 %}{{ (( dtpartos.tmuertem / dtpartos.tpartos )*1000)|round(2) }}{% endif %}</td>
+        </tr>
+        {% for datos in dtenfer %}
+            <tr>
+                <td></td>
+                <td># de personas que se enfermaron de {{ datos.enfermedad }}</td>
+                <td class="celda">{{ datos.tmanif }}</td>
+                <td class="celdad">{{ datos.pormanif }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="4">Servicios públicos</td>
+        </tr>
+        {% for datos in dtservp %}
+            <tr>
+                <td></td>
+                <td># de viviendas con servicio de {{ datos.nomservp }}</td>
+                <td class="celda">{{ datos.cantservp }}</td>
+                <td class="celdad">{% if dtviv.tviv > 0 %}{{ ((datos.cantservp / dtviv.tviv) * 100) | number_format(2) }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="4">Vivienda</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># total de viviendas y edificaciones</td>
+            <td class="celda">{{ dtviv.tviv }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de edificaciones públicas y privadas</td>
+            <td class="celda"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas</td>
+            <td class="celda"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td> 
+            <td># de viviendas desocupadas</td>
+            <td class="celda"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas ocupadas</td>
+            <td class="celda"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Material de construcción</td>
+            <td># de viviendas construidas de adobe</td>
+            <td class="celda">{{ dtviv.tmatado }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tmatado*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas construidas de bloque</td>
+            <td class="celda">{{ dtviv.tmatblo }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tmatblo*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas construidas de ladrillo</td>
+            <td class="celda">{{ dtviv.tmatlad }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tmatlad*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas construidas de bahareque</td>
+            <td class="celda">{{ dtviv.tmatbah }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tmatbah*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas construidas de madera</td>
+            <td class="celda">{{ dtviv.tmatmad }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tmatmad*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas construidas de desperdicios</td>
+            <td class="celda">{{ dtviv.tmatdes }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tmatdes*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas construidas de yugua</td>
+            <td class="celda">{{ dtviv.tmatyug }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tmatyug*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Tenencia de la vivienda</td>
+            <td># de familias con vivienda propia totalmente pagada</td>
+            <td class="celda">{{ dtviv.ttenpro }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.ttenpro*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de familias con vivienda propia pagando</td>
+            <td class="celda">{{ dtviv.ttenpag }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.ttenpag*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de familias alquilando vivienda</td>
+            <td class="celda">{{ dtviv.ttenalq }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.ttenalq*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de familias con vivienda cedida o prestada</td>
+            <td class="celda">{{ dtviv.ttenpre }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.ttenpre*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de familias con vivienda propia pagada y dominio pleno</td>
+            <td class="celda">{{ dtviv.tdomple }}</td>
+            <td class="celdad">{% if dtviv.ttenpro > 0 %}{{ (dtviv.tdomple*100/dtviv.ttenpro)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de familias con vivienda propia pagada y dominio útil</td>
+            <td class="celda">{{ dtviv.tdomuti }}</td>
+            <td class="celdad">{% if dtviv.ttenpro > 0 %}{{ (dtviv.tdomuti*100/dtviv.ttenpro)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de familias con vivienda propia pagada y dominio ocupación</td>
+            <td class="celda">{{ dtviv.tdomocu }}</td>
+            <td class="celdad">{% if dtviv.ttenpro > 0 %}{{ (dtviv.tdomocu*100/dtviv.ttenpro)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de familias con vivienda propia pagada y dominio posesión</td>
+            <td class="celda">{{ dtviv.tdompos }}</td>
+            <td class="celdad">{% if dtviv.ttenpro > 0 %}{{ (dtviv.tdompos*100/dtviv.ttenpro)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Problemas principales de las viviendas</td>
+            <td># de viviendas que no tienen repello</td>
+            <td class="celda">{{ dtviv.tprorep }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tprorep*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas que no tienen repello externo</td>
+            <td class="celda">{{ dtviv.trepext }}</td>
+            <td class="celdad">{% if dtviv.tprorep > 0 %}{{ (dtviv.trepext*100/dtviv.tprorep)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas que no tienen repello interno</td>
+            <td class="celda">{{ dtviv.trepint }}</td>
+            <td class="celdad">{% if dtviv.tprorep > 0 %}{{ (dtviv.trepint*100/dtviv.tprorep)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas sin repello ambos</td>
+            <td class="celda">{{ dtviv.trepamb }}</td>
+            <td class="celdad">{% if dtviv.tprorep > 0 %}{{ (dtviv.trepamb*100/dtviv.tprorep)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas con piso de tierra</td>
+            <td class="celda">{{ dtviv.tpropis }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tpropis*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas sin cielo falso</td>
+            <td class="celda">{{ dtviv.tprocie }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tprocie*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas con techo en mal estado</td>
+            <td class="celda">{{ dtviv.tprotec }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tprotec*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas problemas estructurales</td>
+            <td class="celda">{{ dtviv.tproest }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tproest*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas sin problemas</td>
+            <td class="celda">{{ dtviv.tpronin }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tpronin*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Condiciones de la vivienda</td>
+            <td># de viviendas en buenas condiciones</td>
+            <td class="celda">{{ dtviv.tconbue }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tconbue*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas en regulares condiciones</td>
+            <td class="celda">{{ dtviv.tconreg }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tconreg*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas en malas condiciones</td>
+            <td class="celda">{{ dtviv.tconmal }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tconmal*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Consumo energético para cocinar</td>
+            <td># de viviendas que utilizan electricidad para cocinar</td>
+            <td class="celda">{{ dtviv.tcocele }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tcocele*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas que utilizan el gas volátil para cocinar</td>
+            <td class="celda">{{ dtviv.tcocchi }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tcocchi*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas que utilizan kerosén para cocinar</td>
+            <td class="celda">{{ dtviv.tcocker }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tcocker*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas que utilizan kerosén eco fogón</td>
+            <td class="celda">{{ dtviv.tcoceco }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tcoceco*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas que utilizan leña para cocinar</td>
+            <td class="celda">{{ dtviv.tcoclen }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tcoclen*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Espacios de la vivienda</td>
+            <td># de viviendas con sin piezas</td>
+            <td class="celda">{{ dtviv.tviv0pi }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tviv0pi*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas con una sola pieza</td>
+            <td class="celda">{{ dtviv.tviv1pi }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tviv1pi*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas con dos piezas</td>
+            <td class="celda">{{ dtviv.tviv2pi }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tviv2pi*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas con tres o mas piezas</td>
+            <td class="celda">{{ dtviv.tviv3mp }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tviv3mp*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Viviendas con baños</td>
+            <td># de viviendas sin baño</td>
+            <td class="celda">{{ dtviv.tbansin }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tbansin*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas con un baño</td>
+            <td class="celda">{{ dtviv.tban1ba }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tban1ba*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas con dos a mas baños</td>
+            <td class="celda">{{ dtviv.tban2mb }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tban2mb*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Dormitorios por vivienda</td>
+            <td># de viviendas que tiene sin dormitorios</td>
+            <td class="celda">{{ dtviv.tdor0do }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tdor0do*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas que tiene una pieza como dormitorio</td>
+            <td class="celda">{{ dtviv.tdor1do }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tdor1do*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas que tiene dos piezas como dormitorio</td>
+            <td class="celda">{{ dtviv.tdor2do }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tdor2do*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas que tiene tres o mas  piezas como dormitorio</td>
+            <td class="celda">{{ dtviv.tdor3md }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tdor3md*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Familias por vivienda</td>
+            <td># de viviendas sin una familia</td>
+            <td class="celda">{{ dtviv.tfam0ca }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tfam0ca*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas con una familia</td>
+            <td class="celda">{{ dtviv.tfam1ca }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tfam1ca*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas con dos familias</td>
+            <td class="celda">{{ dtviv.tfam2ca }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tfam2ca*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas con tres o mas familias</td>
+            <td class="celda">{{ dtviv.tfam3mc }}</td>
+            <td class="celdad">{% if dtviv.tprorep > 0 %}{{ (dtviv.tfam3mc*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Emigración</td>
+            <td># hogares con algún miembro emigrado</td>
+            <td class="celda">{{ dtviv.tmieemi }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tmieemi*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares con ningun miembro emigrado</td>
+            <td class="celda">{{ dtviv.tmienoemi }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tmienoemi*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares con algúna mujer que haya emigrado</td>
+            <td class="celda">{{ dtviv.tmieemm }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tmieemm*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares con algún hombre que haya emigrado</td>
+            <td class="celda">{{ dtviv.tmieemh }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtviv.tmieemh*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Acceso al crédito</td>
+            <td># hogares con un miembro haya obtenido algún préstamo</td>
+            <td class="celda">{{ dtcre.tprestamo }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtcre.tprestamo*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares sin un miembro haya obtenido algún préstamo</td>
+            <td class="celda">{{ dtcre.tnoprestamo }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtcre.tnoprestamo*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares con alguna mujer con préstamo</td>
+            <td class="celda">{{ dtcre.tpmujer }}</td>
+            <td class="celdad">{% if dtcre.tprestamo > 0 %}{{ (dtcre.tpmujer*100/dtcre.tprestamo)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares con algun hombre con préstamo</td>
+            <td class="celda">{{ dtcre.tphombre }}</td>
+            <td class="celdad">{% if dtcre.tprestamo > 0 %}{{ (dtcre.tphombre*100/dtcre.tprestamo)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Seguridad Alimentaria</td>
+            <td># hogares que producen alimentos</td>
+            <td class="celda">{{ dtsega.tproducen }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsega.tproducen*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares que NO producen alimentos</td>
+            <td class="celda">{{ dtsega.tnoproducen }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsega.tnoproducen*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares que producen alimentos para autoconsumo</td>
+            <td class="celda">{{ dtsega.tpconsumo }}</td>
+            <td class="celdad">{% if dtsega.tproducen > 0 %}{{ (dtsega.tpconsumo*100/dtsega.tproducen)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares que NO producen alimentos para autoconsumo</td>
+            <td class="celda">{{ dtsega.tpnoconsumo }}</td>
+            <td class="celdad">{% if dtsega.tproducen > 0 %}{{ (dtsega.tpnoconsumo*100/dtsega.tproducen)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares que tienen huerto en su vivienda</td>
+            <td class="celda">{{ dtsega.thuerto }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsega.thuerto*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares que NO tienen huerto en su vivienda</td>
+            <td class="celda">{{ dtsega.tnohuerto }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsega.tnohuerto*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares que cuentan con animales de granja</td>
+            <td class="celda">{{ dtsega.tanimales }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsega.tanimales*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares que NO cuentan con animales de granja</td>
+            <td class="celda">{{ dtsega.tnoanimales }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsega.tnoanimales*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Tenecia de la Tierra</td>
+            <td># hogares con tierra propia totalmente pagada</td>
+            <td class="celda">{{ dtsega.ttpropia }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsega.ttpropia*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares con tierra propia pagando</td>
+            <td class="celda">{{ dtsega.ttpagando }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsega.ttpagando*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares con tierra alquilada</td>
+            <td class="celda">{{ dtsega.ttalquilada }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsega.ttalquilada*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares con tierra prestada</td>
+            <td class="celda">{{ dtsega.ttprestada }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsega.ttprestada*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares con tierra en litigio</td>
+            <td class="celda">{{ dtsega.ttenlitigio }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsega.ttenlitigio*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares con tierra comunal</td>
+            <td class="celda">{{ dtsega.ttcomunal }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsega.ttcomunal*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares no tienen tierra</td>
+            <td class="celda">{{ dtsega.ttnotiene }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsega.ttnotiene*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># hogares con sistema de riego</td>
+            <td class="celda">{{ dtsega.triego }}</td>
+            <td class="celdad">{% if dtsega.tproducen > 0 %}{{ (dtsega.triego*100/dtsega.tproducen)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Violencia</td>
+            <td># jef@s de familia conocen casos de violencia intrafamiliar</td>
+            <td class="celda">{{ dtsegp.tcasosvio }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsegp.tcasosvio * 100/ dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># jef@s de familia le ha sucedido o familia caso de violencia ultimo año</td>
+            <td class="celda">{{ dtsegp.tcasosvfam }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsegp.tcasosvfam * 100/ dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># jef@s de familia se sienten segur@s en comunidad</td>
+            <td class="celda">{{ dtsegp.tsiseguro  }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsegp.tsiseguro*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Participación</td>
+            <td># de hombres que participan en organizaciones(> 18)</td>
+            <td class="celda">{{ dtsegp.thmiembros }}</td>
+            <td class="celdad">{% if dthym18.homm18 > 0 %}{{ (dtsegp.thmiembros*100/dthym18.homm18)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de mujeres que participan en organizaciones(> 18)</td>
+            <td class="celda">{{ dtsegp.tmmiembros }}</td>
+            <td class="celdad">{% if dthym18.mujm18 > 0 %}{{ (dtsegp.tmmiembros*100/dthym18.mujm18)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas donde participan solo un hombre</td>
+            <td class="celda">{{ dtsegp.thsolouno }}</td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsegp.thsolouno*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td># de viviendas donde participan dos mujeres y mas</td>
+            <td class="celda">{{ dtsegp.tmmayor2 }} </td>
+            <td class="celdad">{% if dtviv.tviv > 0 %}{{ (dtsegp.tmmayor2*100/dtviv.tviv)|round(2) }}{% endif %}</td>
+        </tr>
+    </tbody>
+    </table>   
+<page_footer>  
+    <br/>  
+    <br/>
+     <table cellspacing="0" style="width: 100%; font-size: 6pt;">
+        <tbody>
+         <tr>
+            <th  align="center" style="width: 100%;" border="0" class="txt_titleheader">
+                <label  class="txt_titleheader"></label>
+            </th>
+        </tr>
+        </tbody>
+    </table>
+</page_footer>
+  
+</page>
+{% endblock %}

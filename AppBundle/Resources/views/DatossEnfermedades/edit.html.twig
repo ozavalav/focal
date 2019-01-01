@@ -1,0 +1,105 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+
+{% block header -%}
+    Modificar datos de Enfermedades 
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Modificar enfermedades manifestadas en la familia
+    </small>
+{% endblock %}
+{% block content -%}
+    <div class="col-sm-12" style="float:left">
+            <!--h4>No. Boleta: {#{ numboleta }#}</h4-->
+            <h4>Id Encuesta: {{ idenc }}</h4>
+    </div>
+    {% for type, flash_messages in app.session.flashBag.all %}
+        {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endfor %}
+    <div id="msgerror-enfer" class="alert alert-warning"></div>    
+    {{ form(edit_form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('datossgeneral', {'idenc' : idenc}) }}">
+            Regresar al listado
+        </a>
+    </li>
+    <!--li>{#{ form(delete_form) }#}</li-->
+</ul>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#focal_appbundle_datossenfermedades_idEnfermedad').val('{{enfsel|default('')}}');
+            $('#focal_appbundle_datossenfermedades_submit').prop('disabled', true);
+            $('#msgerror-enfer').hide();
+        });
+        
+        $('#focal_appbundle_datossenfermedades_cantManifestaron, \n\
+        #focal_appbundle_datossenfermedades_cantHombres, \n\
+        #focal_appbundle_datossenfermedades_cantMujeres,\n\
+        #focal_appbundle_datossenfermedades_cantPublica, \n\
+        #focal_appbundle_datossenfermedades_cantPrivada, \n\
+        #focal_appbundle_datossenfermedades_idEnfermedad').on('change',function(){ 
+
+        $('#focal_appbundle_datossenfermedades_submit').prop('disabled', true);
+        $('#msgerror-enfer').hide();
+        
+        var cantma  = $('#focal_appbundle_datossenfermedades_cantManifestaron').val();
+        var canth  = $('#focal_appbundle_datossenfermedades_cantHombres').val();
+        var cantm  = $('#focal_appbundle_datossenfermedades_cantMujeres').val();
+        var cantpub  = $('focal_appbundle_datossenfermedades_cantPublica').val();
+        var cantpri  = $('focal_appbundle_datossenfermedades_cantPrivada').val();
+        var enfer = $('#focal_appbundle_datossenfermedades_idEnfermedad option:selected').val();
+        var totmani = parseInt(canth) + parseInt(cantm);
+        if ( (parseInt(totmani) > parseInt(cantma)) && (parseInt(enfer) > 0) ){
+            $('#msgerror-enfer').text('Cantidad de Hombres y Mujeres deber ser igual a la cantidad de manifestaciones.');
+            $('#msgerror-enfer').show();          
+        } else {            
+            $('#msg_cant').hide();
+            $('#focal_appbundle_datossenfermedades_submit').prop('disabled',false);
+        }  
+        
+        $('#focal_appbundle_datossenfermedades_submit').click(function(e) {
+            //e.preventDefault();
+            var ok = true;
+            var cantma  = $('#focal_appbundle_datossenfermedades_cantManifestaron').val();
+            var canth  = $('#focal_appbundle_datossenfermedades_cantHombres').val();
+            var cantm  = $('#focal_appbundle_datossenfermedades_cantMujeres').val();
+            var cantpub  = $('#focal_appbundle_datossenfermedades_cantPublica').val();
+            var cantpri  = $('#focal_appbundle_datossenfermedades_cantPrivada').val();
+            var enfer = $('#focal_appbundle_datossenfermedades_idEnfermedad option:selected').val();
+            var msg = '';
+            
+            if(enfer === '0' || enfer === '') {
+                ok = false;
+                msg='Debe selecionar una enfermedad';
+            } else if(cantma === ''||cantma === '0') {
+                ok = false;
+                msg='Los campos del formulario no pueden estar vacios';
+            } else if(parseInt(cantma) !== (parseInt(canth) + parseInt(cantm))) {
+                ok = false;
+                msg='Las cantidades de hombres mas mujeres no son iguales a manifestaciones ';
+            } else if(parseInt(cantma) < (parseInt(cantpri) + parseInt(cantpub))) {
+                ok = false;
+                msg='Las cantidades asistencias no puede ser mayor que las manifestaciones ';
+            }
+            
+            if(!ok) {
+                e.preventDefault();
+                $("#msgerror-enfer").show();
+                $('#msgerror-enfer').text(msg);
+            }
+            
+        });
+    });        
+    </script>
+{% endblock %}
+
+

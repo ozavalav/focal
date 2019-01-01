@@ -1,0 +1,114 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block header -%}
+    Editar un usuario
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Editar la información de un usuario
+    </small>
+{% endblock %} 
+
+{% block content -%}
+{% for type, flash_messages in app.session.flashBag.all %}
+    {% for flash_message in flash_messages %}
+        <div class="alert {{ type }}">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+    {{ form_start(edit_form) }}
+        {% if is_granted('ROLE_ADMIN') %}
+            {{ form_row(edit_form.codDepartamento) }}
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Municipio</label>
+                <div class="col-sm-10">
+                    <select id="codmunicipio" class="form-control" name="codmunicipio">
+                        <option value="0">-- Selecionar --</option>
+                    </select>
+                </div>
+            </div>             
+        {% endif %}
+        {{ form_row(edit_form.nombreUsuario) }}
+        {{ form_row(edit_form.username) }}
+        {{ form_row(edit_form.password) }}
+        {{ form_row(edit_form.email) }}
+        {% if is_granted('ROLE_ADMIN') %}
+        {{ form_row(edit_form.user_roles) }}
+        {% endif %}
+        {{ form_rest(edit_form) }}
+        
+    {{ form_end(edit_form)}}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('aduser') }}">
+            Regresar al listado
+        </a>
+    </li>
+</ul>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        
+        $(document).ready(function() {
+            $('#focal_appbundle_aduser_username').prop("disabled", true);
+            $('#focal_appbundle_aduser_codDepartamento').val('{% if codDep starts with '0' %}{{ codDep|slice(1,1)}}{% else %}{{codDep|default('')}}{% endif %}');
+            
+            var valdepto = $('#focal_appbundle_aduser_codDepartamento').val();
+            
+            var param =  valdepto;
+            url="/FocalAB/web/app_dev.php/aduser/buscarMunicipio/" + param;
+            
+            $.ajax({
+              type:'POST',
+              url:url,
+              beforeSend: function(){
+              $("#lblError").hide();	
+              },
+              dataType: 'json',
+              success:function(data){
+                  if(data.message === 'false'){
+                      alert('false');
+                  }else{
+                       var ejercicio = "<option value=''> -- seleccionar -- </option>";
+                       $.each(data, function(i) {
+                          ejercicio = ejercicio + "<option value='"+data[i].codMunicipio+"'>"+data[i].codMunicipio+ " - "+data[i].nombre+ "</option>";  
+                       });
+                       $('#codmunicipio').html(ejercicio);
+                       $('#codmunicipio').val('{{codMun}}');
+                  }
+                }
+              });   
+        });
+        
+        $('#focal_appbundle_aduser_codDepartamento').change(function(e) {
+            var valdepto = $(this).val();  
+            e.preventDefault(); 
+              var param =  valdepto;
+               url="/FocalAB/web/app_dev.php/aduser/buscarMunicipio/" + param;
+              $.ajax({
+                type:'POST',
+                url:url,
+                beforeSend: function(){
+                $("#lblError").hide();	
+                },
+                dataType: 'json',
+                success:function(data){
+                    if(data.message === 'false'){
+                        alert('false');
+                    }else{
+                         var ejercicio = "<option value=''> -- seleccionar -- </option>";
+                         $.each(data, function(i) {
+                            ejercicio = ejercicio + "<option value='"+data[i].codMunicipio+"'>"+data[i].codMunicipio+ " - "+data[i].nombre+ "</option>";  
+                         });
+                         $('#codmunicipio').html(ejercicio);
+                         //$('#focal_appbundle_aduser_submit').prop('disabled', true);
+                    }
+                }
+            });
+        });                            
+    </script>
+{% endblock %}  

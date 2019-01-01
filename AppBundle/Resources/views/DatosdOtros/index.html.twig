@@ -1,0 +1,67 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>DatosdOtros list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Idenc</th>
+                <th>Coddepartamento</th>
+                <th>Codmunicipio</th>
+                <th>Codcomunidad</th>
+                <th>Cantsolteras</th>
+                <th>Cantsolteros</th>
+                <th>Cantnacimientos</th>
+                <th>Cantnacninos</th>
+                <th>Cantnacninas</th>
+                <th>Edadmadre</th>
+                <th>Fechacreacion</th>
+                <th>Usuariocreacion</th>
+                <th>Usuarioultimamodificacion</th>
+                <th>Fechaultimamodificacion</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('datosdotros_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.idEnc }}</td>
+                <td>{{ entity.codDepartamento }}</td>
+                <td>{{ entity.codMunicipio }}</td>
+                <td>{{ entity.codComunidad }}</td>
+                <td>{{ entity.cantSolteras }}</td>
+                <td>{{ entity.cantSolteros }}</td>
+                <td>{{ entity.cantNacimientos }}</td>
+                <td>{{ entity.cantNacNinos }}</td>
+                <td>{{ entity.cantNacNinas }}</td>
+                <td>{{ entity.edadMadre }}</td>
+                <td>{% if entity.fechaCreacion %}{{ entity.fechaCreacion|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.usuarioCreacion }}</td>
+                <td>{{ entity.usuarioUltimaModificacion }}</td>
+                <td>{% if entity.fechaUltimaModificacion %}{{ entity.fechaUltimaModificacion|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('datosdotros_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('datosdotros_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('datosdotros_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

@@ -1,0 +1,38 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+
+{% block header -%}
+    Modificar datos familiares
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Modificar la información demográfica de la familia
+    </small>
+{% endblock %}
+{% block content -%}
+    <div class="col-sm-12" style="float:left">
+            <!--h4>No. Boleta: {#{ numboleta }#}</h4-->
+            <h4>Id Encuesta: {{ idenc }}</h4>
+    </div>
+
+    {{ form(edit_form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('datosdfamilia', {'idenc' : idenc}) }}">
+            Regresar al listado
+        </a>
+    </li>
+    <!--li>{#{ form(delete_form) }#}</li-->
+</ul>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#focal_appbundle_datosdfamilia_idParentesco').val('{{parsel|default('')}}');
+            $('#focal_appbundle_datosdfamilia_idEtnia').val('{{etniasel|default('')}}');
+        });
+    </script>
+{% endblock %}

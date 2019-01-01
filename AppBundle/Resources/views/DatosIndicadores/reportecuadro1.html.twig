@@ -1,0 +1,291 @@
+
+{% block stylesheets %}
+    <style type="text/Css">
+
+        #body{
+            font-family:Arial, Helvetica, sans-serif;
+            font-size:11px;
+            font-weight:400;
+            color:#000;
+        }
+        .small_font{
+            font-size:8px;
+            color:#666;
+        }
+        .bg_img{
+            background-color:#F5ECCE;
+            border-radius:5px;
+            height:50px;
+        }
+        .linea{
+            border-width:1px;
+            border-bottom:solid;
+            border-color:#666;
+        }
+        .txt_title{
+            font-size:16px;
+            font-weight:bold;
+        }
+        .txt_titleheader{
+            font-size:10px;
+            font-weight:bold;
+            color:#333;
+        }
+        .txt_titleheader_cotenido{
+            font-size:7px;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+    <page backtop="30mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 11px; text-transform: uppercase;">
+        <page_header>
+            <table cellspacing="0" border='0' align="center"  style="width: 90%; font-size: 6pt;">
+                <tbody>
+                    <tr>
+                        <th colspan="4"  style="width: 100%; text-align: center; padding-bottom: 3px;" align="center" class="txt_title"></th>
+                    </tr><br/><br/>
+                <tr>
+                    <th colspan='4' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                        <label  class="txt_titleheader">Cuadro # 1</label>
+                    </th> 
+                </tr> 
+                <tr>
+                     <th colspan='4' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                        <label  class="txt_titleheader">Principales indicadores socioeconómicos en el marco de los ODS y PN</label>
+                    </th> 
+                </tr>
+                <tr>
+                    <th colspan='4'  border="0" align="left" class="txt_titleheader"> 
+                    </th> 
+                </tr> 
+                <tr> 
+                    <th  style="width: 22%;" border="0" align="left"class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }}  
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Municipio:  {{ codmun }} - {{ nommun }}
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Fecha inicio: {{fin|date('Y-m-d')}} 
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Fecha Fin: {{fin2|date('Y-m-d')}}  
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan='4'  border="0" align="left" class="txt_titleheader"> 
+                        Tipo tasa de cambio: {{ tasa }}
+                    </th> 
+                </tr> 
+                </tbody>
+            </table>
+            <br/>
+
+            <table cellspacing="0" align="center"  border='1' style="width: 90%; text-align: center; font-size: 6pt;">
+                <thead>
+                    <tr>
+                        <th  style="width: 5%; background: #E7E7E7;"  align="center" ># ORDEN</th>
+                        <th  style="width: 20%; background: #E7E7E7;"  align="center" >CLIENTE</th>
+                        <th  style="width: 40%; background: #E7E7E7;"  align="center" >TRABAJO ORDENADO</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >MOTOR</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >DEPARTAMENTO</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >RECIBIDO</th>
+                        <th  style="width: 5%; background: #E7E7E7;"  align="center" >FECHA</th>
+                    </tr>
+                </thead>
+                <tbody>  
+                </tbody>
+            </table>
+
+        </page_header> 
+        <page_footer>  
+
+            <table cellspacing="0" border ="1" style="width: 100%; font-size: 6pt;">
+                <tbody>
+
+
+                </tbody>
+            </table>
+        </page_footer>
+
+        <table style="width: 789.40625px;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 360px;">
+                        <p><strong>Objetivos y metas del Desarrollo Sostenible </strong></p>
+                    </td>
+                    <td style="width: 360px;">
+                        <p><strong>Indicadores de la comunidad</strong></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 360px;">
+                        <p><strong>Objetivo 1: Poner fin a la pobreza en todas sus formas y en todo el mundo </strong>Meta 1.1: Para 2030, erradicar la pobreza extrema para todas las personas en el mundo, actualmente medida por un ingreso por persona inferior a 1,25 d&oacute;lares de los Estados Unidos al d&iacute;a.</p>
+                        <p><span style="color: #ff0000;"><strong>Indicador 1.1.1 </strong></span></p>
+                        <p>Meta 1.2: Para 2030, reducir al menos a la mitad la proporci&oacute;n de hombres, mujeres y ni&ntilde;os de todas las edades que viven en la pobreza en todas sus dimensiones con arreglo a las definiciones nacionales. <span style="color: #ff0000;"><strong><br>Indicador 1.2.1 </strong></span></p>
+                    </td>
+                    <td style="width: 360px;">
+                        <p>- {% if totviv > 0 %} {{ ((dtingreso.rangoi1 / totviv)*100)|round(2) }}%{% endif %} poblaci&oacute;n con ingresos menores a $ 1.25 diario.</p>
+                        <p><span style="color: #ff0000;">(viene del cuadro #20 y #21 de este documento)</span></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 360px;">
+                        <p><strong>Objetivo 2: Poner fin al hambre, lograr la seguridad alimentaria y la mejora de la nutrici&oacute;n y promover la agricultura sostenible </strong>Meta 2.1: Para 2030, poner fin al hambre y asegurar el acceso de todas las personas, en particular los pobres y las personas en situaciones vulnerables, incluidos los lactantes, a una alimentaci&oacute;n sana, nutritiva y suficiente durante todo el a&ntilde;o.</p>
+                        <p><span style="color: #ff0000;"><strong>Indicador 2.1.2 </strong></span></p>
+                    </td>
+                    <td style="width: 360px;">
+                        <p>- {% if totviv > 0 %} {{ ((dtalimento.tproducen / totviv)*100)|round(2) }}%{% endif %} de hogares que siembran alimentos. <span style="color: #ff0000;">(viene de la pregunta # 33 de la Boleta de l&iacute;nea de base) </span>
+                            <br><br>- {% if totviv > 0 %} {{ ((dtalimento.tpconsumo / totviv)*100)|round(2) }}%{% endif %} de hogares que producen suficientes alimentos para autoconsumo. <span style="color: #ff0000;">(viene de la pregunta # 34 de la Boleta de l&iacute;nea de base)</span></p>
+                        <p>- {% if totviv > 0 %} {{ ((dtalimento.thuerto / totviv)*100)|round(2) }}%{% endif %} de hogares que tienen en su vivienda un huerto familiar.<span style="color: #ff0000;"> (viene de la pregunta # 38 de la Boleta de l&iacute;nea de base)</span> 
+                            <br><br>- Al {% if totviv > 0 %} {{ ((dtingreso.tiempos3 / totviv)*100)|round(2) }}%{% endif %} de los hogares los ingresos les ajustan para alimentarse los 3 tiempos de comida, desde la percepci&oacute;n de los Jefes (as) de Hogar.<span style="color: #ff0000;"> (viene de la pregunta # 52 de la Boleta de l&iacute;nea de base)</span></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 360px;">
+                        <p><strong>Objetivo 3: Garantizar una vida sana y promover el bienestar en todas las edades. </strong>Meta 3.1: Para 2030, reducir la tasa mundial de mortalidad materna a menos de 70 por cada 100.000 nacidos vivos</p>
+                        <p><span style="color: #ff0000;"><strong>Indicador 3.1.1 </strong></span></p>
+                        <p>Meta 3.2: Para 2030, poner fin a las muertes evitables de reci&eacute;n nacidos y de ni&ntilde;os menores de 5 a&ntilde;os, logrando que todos los pa&iacute;ses intenten reducir la mortalidad neonatal al menos hasta 12 por cada 1.000 nacidos vivos, y la mortalidad de ni&ntilde;os menores de 5 a&ntilde;os al menos hasta 25 por cada 1.000 nacidos vivos</p>
+                        <p><span style="color: #ff0000;"><strong>Indicador 3.2.2<br>Indicador 3.2.1</strong></span><br><br>Meta 3.3: Para 2030, poner fin a las epidemias del SIDA, la tuberculosis, la malaria y las enfermedades tropicales desatendidas y combatir la hepatitis, las enfermedades transmitidas por el agua y otras enfermedades transmisibles</p>
+                    </td>
+                    <td style="width: 360px;">
+                        <p>- __% muertes maternas por mil partos atendidos en el 2011 (viene de la pregunta # 19 de la Boleta de l&iacute;nea de base)</p>
+                        <p>- __% muertes por 1000 nacidos menores de 5 a&ntilde;os.</p>
+                        <p><span style="color: #ff0000;">(viene de la pregunta # 22 de la Boleta de l&iacute;nea de base)</span></p>
+                        <p>- {% if dtfamilia.totalper > 0 %} {{ ((dtenfermedad.paludismo / dtfamilia.totalper)*1000)|round(2) }}%{% endif %} infectados con paludismo por cada mil <br>
+                            - {% if dtfamilia.totalper > 0 %} {{ ((dtenfermedad.ira / dtfamilia.totalper)*1000)|round(2) }}%{% endif %} afectados por IRAS por cada mil habitantes <br>
+                            - {% if dtfamilia.totalper > 0 %} {{ ((dtenfermedad.tuber / dtfamilia.totalper)*1000)|round(2) }}%{% endif %} infectado de tuberculosis por cada mil <br>
+                            - {% if dtfamilia.totalper > 0 %} {{ ((dtenfermedad.denguec / dtfamilia.totalper)*1000)|round(2) }}%{% endif %} infectados con dengue cl&aacute;sico por cada mil <br>
+                            - {% if dtfamilia.totalper > 0 %} {{ ((dtenfermedad.dengueh / dtfamilia.totalper)*1000)|round(2) }}%{% endif %} infectado con dengue hemorr&aacute;gico por cada mil</p>
+                        <p><span style="color: #ff0000;">(vienen del cuadro # 3 de este documento)</span></p>
+                        <p>- {% if dtsalud.planifican > 0 %} {{ ((dtsalud.ritmo / dtsalud.planifican)*100)|round(2) }}%{% endif %} hogares que planifican con el ritmo<br>
+                           - {% if dtsalud.planifican > 0 %} {{ ((dtsalud.diu / dtsalud.planifican)*100)|round(2) }}%{% endif %} hogares que planifican con el DIU<br>
+                           - {% if dtsalud.planifican > 0 %} {{ ((dtsalud.pastilla / dtsalud.planifican)*100)|round(2) }}%{% endif %} hogares que planifican con pastilla</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="width: 786px;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 360px;">
+                        <p><span style="color: #ff0000;"><strong>Indicador 3.3.1<br>Indicador 3.3.2<br>Indicador 3.3.3<br>Indicador 3.3.4<br>Indicador 3.3.5</strong></span><br><br>Meta 3.7: Para el 2030, garantizar el acceso universal a los servicios de salud sexual y reproductiva, incluidos los de planificaci&oacute;n familiar, informaci&oacute;n y educaci&oacute;n, y la integraci&oacute;n de la salud reproductiva en las estrategias y los programas nacionales</p>
+                        <p><span style="color: #ff0000;"><strong>Indicador 3.7.1<br>Indicador 3.7.2</strong></span></p>
+                    </td>
+                    <td style="width: 360px;">
+                        <p>- {% if dtsalud.planifican > 0 %} {{ ((dtsalud.condon / dtsalud.planifican)*100)|round(2) }}%{% endif %} hogares que planifican con cond&oacute;n<br>
+                            - {% if dtsalud.planifican > 0 %} {{ ((dtsalud.inyeccion / dtsalud.planifican)*100)|round(2) }}%{% endif %} hogares que planifican con inyecci&oacute;n<br>
+                            - {% if dtsalud.planifican > 0 %} {{ ((dtsalud.implante / dtsalud.planifican)*100)|round(2) }}%{% endif %} hogares que planifican con implante<br>
+                            - {% if dtsalud.planifican > 0 %} {{ ((dtsalud.operacion / dtsalud.planifican)*100)|round(2) }}%{% endif %} hogares que planifican con operaci&oacute;n <br><span style="color: #ff0000;">(viene de la pregunta # 21 de la Boleta de l&iacute;nea de base)</span></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 360px;">
+                        <p><strong>Objetivo 4: Garantizar una educaci&oacute;n inclusiva, equitativa y de calidad y promover oportunidades de aprendizaje durante toda la vida para todos</strong><br><br>Meta 4: Para 2030, velar por que todas las ni&ntilde;as y todos los ni&ntilde;os terminen los ciclos de la ense&ntilde;anza primaria y secundaria, que ha de ser gratuita, equitativa y de calidad y producir resultados escolares pertinentes y eficaces.</p>
+                        <p><span style="color: #ff0000;"><strong>Indicador 4.1.1 </strong></span></p>
+                    </td>
+                    <td style="width: 360px;">
+                        <p>- {% if dtedu.total_escolar > 0 %} {{ ((dtedu.escolare / dtedu.total_escolar)*100)|round(2) }}%{% endif %} de ni&ntilde;os(as) en edad escolar que actualmente estudian <span style="color: #ff0000;">(viene del cuadro # 15 de este documento)</span><br>
+                           - {% if dtedu.total_escolar > 0 %} {{ ((dtedu.primaria_e / dtedu.total_escolar)*100)|round(2) }}%{% endif %} de ni&ntilde;os(as) que estudian primaria de los que tienen edad para hacerlo <span style="color: #ff0000;">(viene del cuadro # 14 de este documento)</span></p>
+                        <p>- {% if dtedu.total_escolar > 0 %} {{ ((dtedu.emergente_cp / dtedu.total_escolar)*100)|round(2) }}%{% endif %} de la fuerza de trabajo emergente que concluy&oacute; la educaci&oacute;n primaria. <span style="color: #ff0000;">(viene del cuadro # 12 de este documento, pero solo determinar el porcentaje del rango de edad, entre 13 a 18 a&ntilde;os)</span></p>
+                        <p>- {% if dtedu.total_escolar > 0 %} {{ ((dtedu.primaria_m / dtedu.total_escolar)*100)|round(2) }}%{% endif %} de ni&ntilde;os que estudian primaria de los que tienen edad. <span style="color: #ff0000;">(viene del cuadro # 14 de este documento) <br>
+                           - {% if dtedu.total_escolar > 0 %} {{ ((dtedu.primaria_f / dtedu.total_escolar)*100)|round(2) }}%{% endif %} de ni&ntilde;as que estudian primaria (viene del cuadro # 14 de este documento)</span></p>
+                        <p>- {% if dtedu.total_escolar > 0 %} {{ ((dtedu.secundaria_m / dtedu.total_escolar)*100)|round(2) }}%{% endif %} de ni&ntilde;os que estudian secundaria (viene del cuadro # 14 de este documento) <br>
+                           - {% if dtedu.total_escolar > 0 %} {{ ((dtedu.secundaria_f / dtedu.total_escolar)*100)|round(2) }}%{% endif %} ni&ntilde;as que estudian secundaria <span style="color: #ff0000;">(viene del cuadro # 14 de este documento)</span></p>
+                        <p>- {% if dtedu.total_escolar > 0 %} {{ ((dtedu.escolarm / dtedu.total_escolar)*100)|round(2) }}%{% endif %} de ni&ntilde;os en edad escolar<span style="color: #ff0000;"> (viene del cuadro # 15 de este documento)</span><br>
+                           - {% if dtedu.total_escolar > 0 %} {{ ((dtedu.escolarf / dtedu.total_escolar)*100)|round(2) }}%{% endif %} de ni&ntilde;as en edad escolar<span style="color: #ff0000;"> (viene del cuadro # 15 de este documento)</span></p>
+                        <p>- {% if dtedu.total_escolar > 0 %} {{ ((dtedu.escolarem / dtedu.total_escolar)*100)|round(2) }}%{% endif %} de ni&ntilde;os que actualmente estudian en todos los niveles <span style="color: #ff0000;">(viene del cuadro # 11 de este documento)</span><br>
+                           - {% if dtedu.total_escolar > 0 %} {{ ((dtedu.escolaref / dtedu.total_escolar)*100)|round(2) }}%{% endif %} de ni&ntilde;as que actualmente estudian en todos los niveles <span style="color: #ff0000;">(viene del cuadro # 11 de este documento)</span></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 360px;">
+                        <p><strong>Objetivo 6: Garantizar la disponibilidad de agua y su gesti&oacute;n sostenible y el saneamiento para todos </strong>Meta 6.1: Para 2030, lograr el acceso universal y equitativo al agua potable, a un precio asequible para todos.</p>
+                        <p><span style="color: #ff0000;"><strong>Indicador 6.1.1 </strong></span></p>
+                        <p>Meta 6.2: Para 2030, lograr el acceso equitativo a servicios de saneamiento e higiene adecuados para todos y poner fin a la defecaci&oacute;n al aire libre, prestando especial atenci&oacute;n a las necesidades de las mujeres y las ni&ntilde;as y las personas en situaciones vulnerables..</p>
+                    </td>
+                    <td style="width: 360px;">
+                        <p>- {% if totviv > 0 %} {{ ((dtvivienda.cocinalena / totviv)*100)|round(2) }}%{% endif %} de los hogares utiliza le&ntilde;a para cocinar <span style="color: #ff0000;">(viene del cuadro # 10 de este documento)</span><br><br>
+                            - {% if totviv > 0 %} {{ ((dtsrvpub.recagua / totviv)*100)|round(2) }}%{% endif %} hogares con acceso al agua por acueducto.<span style="color: #ff0000;"> (viene del cuadro # 5 de este documento)</span> <br><br>
+                            - {% if totviv > 0 %} {{ ((dtsrvpub.recexcreta / totviv)*100)|round(2) }}%{% endif %} hogares con acceso a eliminaci&oacute;n de excretas <span style="color: #ff0000;">(viene del cuadro # 5 de este documento)</span><br><br>
+                            - {% if totviv > 0 %} {{ ((dtsrvpub.basurano / totviv)*100)|round(2) }}%{% endif %} viviendas con inadecuada disposici&oacute;n de la basura. <span style="color: #ff0000;">(viene del cuadro # 5 de este documento)</span><br><br>
+                            - {% if totviv > 0 %} {{ ((dtvivienda.conregmal / totviv)*100)|round(2) }}%{% endif %} de las viviendas bajo condiciones de regulares a malas <span style="color: #ff0000;">(viene de la pregunta # 59 de la Boleta de l&iacute;nea de base)</span><br><br>
+                            - {% if totviv > 0 %} {{ ((dtsrvpub.serviciono / totviv)*100)|round(2) }}%{% endif %} de las viviendas no tienen ba&ntilde;o <span style="color: #ff0000;">(viene del cuadro # 9 de este documento)</span></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="width: 782px;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 360px;">
+                        <p><span style="color: #ff0000;"><strong>Indicador 6.2.1 </strong></span></p>
+                    </td>
+                    <td style="width: 360px;">
+                        <p>- {% if totviv > 0 %} {{ ((dtvivienda.undormitorio / totviv)*100)|round(2) }}%{% endif %} de las viviendas tienen una sola pieza como dormitorio (__ personas por hogar)<span style="color: #ff0000;">(viene del cuadro # 7 de este documento)</span></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 360px;">
+                        <p><strong>Objetivo 7: Garantizar el acceso a una energ&iacute;a asequible, segura, sostenible y moderna para todos </strong>Meta 7.1: Para 2030, garantizar el acceso universal a servicios de energ&iacute;a asequibles, confiables y modernos.</p>
+                        <p><span style="color: #ff0000;"><strong>Indicador 7.1.1 </strong></span></p>
+                    </td>
+                    <td style="width: 360px;">
+                        <p>- {% if totviv > 0 %} {{ ((dtsrvpub.energiasi / totviv)*100)|round(2) }}%{% endif %} hogares con servicio de energ&iacute;a el&eacute;ctrica domiciliar <span style="color: #ff0000;">(viene del cuadro # 5 de este documento)</span></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 360px;">
+                        <p><strong>Objetivo 8: Promover el crecimiento econ&oacute;mico sostenido, inclusivo y sostenido, el empleo pleno y productivo y el trabajo decente para todos </strong>Meta 8.1:.</p>
+                        <p><span style="color: #ff0000;"><strong>Indicador 8.3.1 Indicador 8.6.1 Indicador 8.7.1 </strong></span></p>
+                    </td>
+                    <td style="width: 360px;">
+                        <p>- {% if totviv > 0 %} {{ ((dtfuerzat.propia / totviv)*100)|round(2) }}%{% endif %} de jefes de hogar que trabajan por cuenta propia, cualquier sector productivo.<span style="color: #ff0000;"> (viene de la pregunta # 42 de la Boleta de l&iacute;nea de base)</span></p>
+                        <p>- {% if totviv > 0 %} {{ ((dtfuerzat.primario / totviv)*100)|round(2) }}%{% endif %} de jefes de hogar que trabajan por cuenta propia, en el sector primario. <br><br>
+                           - {% if totviv > 0 %} {{ ((dtfuerzat.secundario / totviv)*100)|round(2) }}%{% endif %} de jefes de hogar que trabajan por cuenta propia, en el sector secundario.</p>
+                        <p>- {% if totviv > 0 %} {{ ((dtfuerzat.terciario / totviv)*100)|round(2) }}%{% endif %} de jefes de hogar que trabajan por cuenta propia, en el sector terciario.<span style="color: #ff0000;"> (viene de la pregunta # 44 de la Boleta de l&iacute;nea de base)</span></p>
+                        <p>- {% if totviv > 0 %} {{ ((dtfuerzat.generaemp / totviv)*100)|round(2) }}%{% endif %} de jefes de hogar que generan empleo en cualquier sector productivo. <span style="color: #ff0000;">(viene de la pregunta # 45 de la Boleta de l&iacute;nea de base)</span></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 360px;">
+                        <p><strong>Objetivo 16: Promover sociedades pac&iacute;ficas e inclusivas para el desarrollo sostenible, facilitar el acceso a la justicia para todos y crear instituciones eficaces, responsables e inclusivas a todos los niveles </strong>Meta 8.1: Reducir considerablemente todas las formas de violencia y las tasas de mortalidad conexas en todo el mundo..</p>
+                        <p><span style="color: #ff0000;"><strong>Indicador 16.1.3?? </strong></span></p>
+                    </td>
+                    <td style="width: 360px;">
+                        <p>- {% if totviv > 0 %} {{ ((dtseg.casosvio / totviv)*100)|round(2) }}%{% endif %}  de jefes de hogar que conocen casos de violencia en su comunidad. <span style="color: #ff0000;">(viene de la pregunta # 25 de la Boleta de l&iacute;nea de base)</span></p>
+                        <p>- {% if totviv > 0 %} {{ ((dtseg.victimavio / totviv)*100)|round(2) }}%{% endif %} de hogares que le han sucedido alg&uacute;n caso de violencia.<span style="color: #ff0000;"> (viene de la pregunta # 26 de la Boleta de l&iacute;nea de base)</span></p>
+                        <p>- {% if totviv > 0 %} {{ ((dtseg.tsiseguro / totviv)*100)|round(2) }}%{% endif %} de hogares que sienten seguro donde viven.</p>
+                        <p><span style="color: #ff0000;">(viene de la pregunta # 45 de la Boleta de l&iacute;nea de base)</span></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </page>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

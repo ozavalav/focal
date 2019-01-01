@@ -1,0 +1,253 @@
+{% block stylesheets %}
+<style type="text/Css">
+<!--
+#body{
+	font-family:Verdana, Calibri, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	font-weight:400;
+	color:#000;
+}
+.small_font{
+	font-size:8px;
+	color:#666;
+}
+.bg_img{
+	background-color:#F5ECCE;
+	border-radius:5px;
+	height:50px;
+}
+.linea{
+	border-width:1px;
+	border-bottom:solid;
+	border-color:#666;
+}
+.txt_title{
+	font-size:16px;
+	font-weight:bold;
+}
+.txt_titleheader{
+	font-size:10px;
+	font-weight:bold;
+	color:#333;
+}
+.txt_titleheader_cotenido{
+	font-size:7px;
+}
+.celda {
+    text-align: center;
+}
+.celdad {
+    text-align: right;
+}
+.borde-arriba td {
+    border-top: 1px solid #000; 
+}
+.borde-abajo th {
+    border-bottom: 1px solid #000; 
+}
+.borde-completo tabla {
+    border: 1px solid #000; 
+}
+.titulo-grupo {
+    background-color: lightskyblue;
+    text-align: center;
+}
+.titulo-tabla {
+    background-color: lightgreen;
+}
+.piede-tabla {
+    background-color: lightgrey;
+}
+-->
+</style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+<page backtop="30mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 11px;">
+<page_header>
+  <table cellspacing="0" border='0' align="center"  style="width: 90%; font-size: 6pt;" class="borde-completo">
+        <tbody>
+        <tr class="borde-completo">
+            <th colspan="4"  style="width: 100%; text-align: center; padding-bottom: 3px;" align="center" class="txt_title"></th>
+        </tr><br/><br/>
+        <tr>
+            <th colspan='4' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                <label  class="txt_titleheader">REPORTE - GENERAL</label><br>
+                <label  class="txt_titleheader">LINEA BASE DEMOGRAFICA Y SOCIOECONOMICA DEL MUNICIPO</label>
+            </th> 
+        </tr> 
+        <tr>
+            <th colspan='4'  border="0" align="left" class="txt_titleheader"> 
+            </th> 
+        </tr> 
+        <tr> 
+            <th  style="width: 30%;" border="0" align="left"class="txt_titleheader borde-completo">Fecha Inicio: {{ fin|date('Y-m-d')|default('') }}  
+            </th>
+            <th   style="width: 30%;" border="0" align="left"class="txt_titleheader">Fecha Final: {{ fin2|date('Y-m-d')|default('') }}  
+            </th>
+             <th   style="width: 30%;" border="0" align="left"class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }}  
+            </th>
+            <th></th>
+        </tr>
+        <tr>
+            <td style="width: 50%;" border="0" align="left"class="txt_titleheader">Municipio: {{ codmun }} - {{ nommun }} 
+            </td>
+            <td  colspan="3" style="width: 50%;" border="0" align="left"class="txt_titleheader">
+                Comunidad: 
+                {% if cantcom <= 3 %}
+                    {% for ncom in dtnomcom %}
+                        {{ ncom.nombre }} / 
+                    {% endfor %} 
+                {% else %}
+                    Varias
+                {% endif %}
+            </td>
+        </tr>    
+   </tbody>
+    </table>
+    
+</page_header>
+    <table cellspacing="0" align="center"  border='1' style="width: 90%; text-align: center; font-size: 6pt;">
+    <thead>
+        <tr><td colspan="2">Cantidad de Encuentas por Comunidad</td></tr>
+        <tr class="titulo-tabla borde-arriba borde-abajo">
+            <th width="20%" style="width: 50%">Nombre Comunidad</th>
+            <th width="40%" style="width: 50%">Cantidad</th>
+        </tr>   
+    </thead>
+    <tbody> 
+        {% set totalenc = 0 %}
+        {% for dtenc in dtencxmuni %}
+            <tr>
+                <td style="text-align: left" >{{dtenc.nombre}}</td>
+                <td class="celda">{{ dtenc.cantidad }}</td>
+                {% set totalenc = totalenc + dtenc.cantidad %}
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>Total</td>
+            <td class="celda">{{ totalenc }}</td>
+        </tr>
+    </tbody>
+    </table>
+    <br>    
+    <table cellspacing="0" align="center"  border='1' style="width: 90%; text-align: center; font-size: 6pt;">    
+        <tr><td class="titulo-tabla" colspan="2">Cantidad de Encuentas por Usuario</td></tr>
+        {% set totalenc = 0 %}
+        {% for dtenc in dtencxuser %}
+            <tr>
+                <td style="text-align: left" >{{dtenc.usuario}}</td>
+                <td class="celda">{{ dtenc.cantidad }}</td>
+                {% set totalenc = totalenc + dtenc.cantidad %}
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>Total</td>
+            <td class="celda">{{ totalenc }}</td>
+        </tr>
+    </table>
+    <br>
+    
+    <!-- Total de encuentas por departamento y municipio -->
+    <table cellspacing="0" align="center"  border='1' style="width: 90%; text-align: center; font-size: 6pt;">    
+        <tr><td class="titulo-tabla" colspan="5">Total de Encuentas procesadas por Departamento y Municipio</td></tr>
+        <tr class="titulo-tabla borde-arriba borde-abajo">
+            <th width="20%" style="width: 50%">Departamento</th>
+            <th width="40%" style="width: 50%">Municipio</th>
+            <th width="40%" style="width: 50%">Validadas</th>
+            <th width="40%" style="width: 50%">Pendientes</th>
+            <th width="40%" style="width: 50%">Total</th>
+        </tr>
+        {% set totalencv = 0 %}
+        {% set totalencp = 0 %}
+        {% set totalenc = 0 %}
+        {% for dtenc in dtencxdym %}
+            {% set depa = dtenc.cod %}    
+            <tr>
+                <td style="text-align: left" >{{dtenc.departamento}}</td>
+                <td class="celda">{{ dtenc.municipio }}</td>
+                <td class="celda">{{ dtenc.validadas }}</td>
+                <td class="celda">{{ dtenc.pendientes }}</td>
+                <td class="celda">{{ dtenc.total }}</td>
+                {% set totalencv = totalencv + dtenc.validadas %}
+                {% set totalencp = totalencp + dtenc.pendientes %}
+                {% set totalenc = totalenc + dtenc.total %}
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>Total</td>
+            <td></td>
+            <td class="celda">{{ totalencv }}</td>
+            <td class="celda">{{ totalencp }}</td>
+            <td class="celda">{{ totalenc }}</td>
+        </tr>
+    </table>
+    <br>    
+    <table cellspacing="0" align="center"  border='1' style="width: 90%; text-align: center; font-size: 6pt;">    
+        <tr><td class="titulo-tabla" colspan="4">Discrepancias en boletas </td></tr>
+        <tr class="titulo-tabla borde-arriba borde-abajo">
+            <th width="20%" style="width: 50%">ID de Encuesta</th>
+            <th width="40%" style="width: 50%">Cantidad en Familia</th>
+            <th width="40%" style="width: 50%">Cantidad en Rangos</th>
+            <th width="40%" style="width: 50%">Numero de Boleta</th>
+        </tr>
+        {% set totalenc = 0 %}
+        {% for dtdis in dtdisper %}
+            <tr>
+                <td style="text-align: left" >{{dtdis.num_enc}}</td>
+                <td style="text-align: center" >{{dtdis.familia}}</td>
+                <td style="text-align: center" >{{dtdis.rango}}</td>
+                <td style="text-align: right" >{{dtdis.num_boleta}}</td>
+            </tr>
+            {% set totalenc = totalenc + 1 %}
+        {% endfor %}
+        <tr>
+            <td>Total</td>
+            <td class="celda">{{ totalenc }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <br>    
+    <!-- Correlativo por numero de boletas -->
+    <br>    
+    <!--table>    
+        <tr><td class="titulo-tabla" colspan="20">Números correlativos de boletas</td></tr>
+
+        <tr>
+        {#% set fila = 0 %}    
+        {% for dtnb in dtxnumb %}
+                {% if fila > 19 %}
+                    {% set fila = 0 %}
+                    </tr>
+                    <tr>
+                {% else %}
+                    <td class="celda">{{ dtnb.num_boleta }} </td>
+                    {% set fila = fila + 1 %}
+                {% endif %}
+        {% endfor %#}
+        </tr>
+    </table -->
+        
+<page_footer>  
+    <br/>  
+    <br/>
+     <table cellspacing="0" style="width: 100%; font-size: 6pt;">
+        <tbody>
+         <tr>
+            <th  align="center" style="width: 100%;" border="0" class="txt_titleheader">
+                <label  class="txt_titleheader"></label>
+            </th>
+        </tr>
+        </tbody>
+    </table>
+</page_footer>
+  
+</page>
+{% endblock %}

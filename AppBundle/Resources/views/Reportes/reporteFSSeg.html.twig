@@ -1,0 +1,297 @@
+
+{% block stylesheets %}
+<style type="text/Css">
+<!--
+#body{
+	font-family:Verdana, Calibri, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	font-weight:400;
+	color:#000;
+}
+.small_font{
+	font-size:8px;
+	color:#666;
+}
+.bg_img{
+	background-color:#F5ECCE;
+	border-radius:5px;
+	height:50px;
+}
+.linea{
+	border-width:1px;
+	border-bottom:solid;
+	border-color:#666;
+}
+.txt_title{
+	font-size:16px;
+	font-weight:bold;
+}
+.txt_titleheader{
+	font-size:12px;
+	font-weight:bold;
+	color:#333;
+}
+.txt_titleheader_cotenido{
+	font-size:7px;
+}
+.celda {
+    text-align: center;
+}
+.celdad {
+    text-align: right;
+}
+.borde-arriba td {
+    border-top: 1px solid #000; 
+}
+.borde-abajo th {
+    border-bottom: 1px solid #000; 
+} 
+.titulo-grupo {
+    background-color: lightskyblue;
+    text-align: center;
+}
+.titulo-tabla {
+    background-color: lightgreen;
+}
+.piede-tabla {
+    background-color: lightgrey;
+}
+-->
+</style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+<page backtop="20mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 14px;" footer="page">
+<page_header>
+  <table cellspacing="0" border='0' align="center"  style="width: 100%; font-size: 12pt;">
+        <tbody>
+        <tr>
+            <th colspan='5' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                <label  class="txt_title">REPORTE - FRECUENCIA SIMPLE</label><br/>
+            </th> 
+        </tr> 
+        <tr style="width: 100%;"> 
+            <th class="txt_titleheader">Fecha Inicio: {{ fin == '00' ? "" : fin|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Fecha Final: {{ fin2 == '00' ? "" : fin2|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }} </th>
+            <th class="txt_titleheader">Municipio: {{ codmun }} - {{ nommun }}  </th>
+        </tr>  
+        <tr style="width: 100%;">    
+            <th colspan="4" class="txt_titleheader">
+                Comunidad: 
+                {% if cantcom <= 5 %}
+                    {% for ncom in dtnomcom %}
+                        {{ ncom.nombre }} / 
+                    {% endfor %} 
+                {% else %}
+                    Varias
+                {% endif %}
+            </th>
+        </tr>  
+   </tbody>
+    </table>
+</page_header>   
+    <table>
+        <tr>
+            <td colspan="4" class="titulo-grupo"><b>=== C. Seguridad ===</b></td>
+        </tr> 
+        <tr>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="4"><b>P.25 Casos de violencia</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                        <td>Num. Casos</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totalcv = 0 %}
+                        {% for datoscv in datoscasv %}
+                            <tr>
+                                <td>{{ datoscv.casosviolencia }}</td>
+                                <td class="celda">{{ datoscv.cantidad }}</td>
+                                <td class="celdad">{{ datoscv.portot|round(2) }}</td>
+                                <td class="celda">{{ datoscv.cantcasos }}</td>
+                            </tr>
+                            {% set totalcv = totalcv + datoscv.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalcv }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="4"><b>P.26 Victima de violencia</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                        <td>Num. Casos</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totalvv = 0 %}
+                        {% for datosvv in datosvicv %}
+                            <tr>
+                                <td>{{ datosvv.victimavio }}</td>
+                                <td class="celda">{{ datosvv.cantidad }}</td>
+                                <td class="celdad">{{ datosvv.porviv|round(2) }}</td>
+                                <td class="celda">{{ datosvv.cantcasosv }}</td>
+                            </tr>
+                            {% set totalvv = totalvv + datosvv.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalvv }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="3"><b>P.27 Que tan seguro estan</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totales = 0 %}
+                        {% for datoses in datosests %}
+                            <tr>
+                                <td>{{ datoses.seguros }}</td>
+                                <td class="celda">{{ datoses.cantidad }}</td>
+                                <td class="celdad">{{ datoses.porseg|round(2) }}</td>
+                            </tr>
+                            {% set totales = totales + datoses.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totales }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+            <td style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="3"><b>P.28 y 29 Participación</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Pregunta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>  
+                    <tr>
+                        <td>Cantidad de Hombres</td>
+                        <td class="celda">{{ datospar.canth }}</td>
+                        <td class="celda">{{ datospar.porph|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Cantidad de Mujeres</td>
+                        <td class="celda">{{ datospar.cantm }}</td>
+                        <td class="celda">{{ datospar.porpm|round(2) }}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ datospar.canth + datospar.cantm }}</td>
+                            <td></td>
+                    </tr>
+                    </tbody>    
+                </table>    
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="7"><b>P.27.1 Motivos de inseguridad</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Orden</td>
+                        <td>Robos</td>
+                        <td>Maras</td>
+                        <td>Drogras</td>
+                        <td>Cantinas</td>
+                        <td>Riñas</td>
+                        <td>Violaciones</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for datosos in datosords %}
+                            <tr>
+                                <td>{{ datosos.num }}</td>
+                                <td class="celda">{{ datosos.crobo }}</td>
+                                <td class="celda">{{ datosos.cmaras }}</td>
+                                <td class="celda">{{ datosos.cdrogas }}</td>
+                                <td class="celda">{{ datosos.ccantinas }}</td>
+                                <td class="celda">{{ datosos.cpeleas }}</td>
+                                <td class="celda">{{ datosos.cviolaciones }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>    
+                </table>    
+            </td>
+            <!-- *** Participacion *** -->
+            <td colspan="2" style="vertical-align: top">
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="2"><b>Participaciones y Expectativas</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Rango de miembros</td>
+                        <td>Cantidad</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totales = 0 %}
+                        {% for datos in datosparxr %}
+                            <tr>
+                                <td>{{ datos.miembros }}</td>
+                                <td class="celda">{{ datos.cantidad }}</td>
+                            </tr>
+                            {% set totales = totales + datos.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totales }}</td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+        </tr>    
+    </table>     
+</page>                  
+<page_footer>    
+<br/>  
+    <br/>
+     <table cellspacing="0" style="width: 100%; font-size: 6pt;">
+        <tbody>
+         <tr>
+            <th  align="center" style="width: 100%;" border="0" class="txt_titleheader">
+                <label class="txt_titleheader"></label>
+            </th>
+        </tr>
+        </tbody>
+    </table>
+</page_footer>
+{% endblock %}

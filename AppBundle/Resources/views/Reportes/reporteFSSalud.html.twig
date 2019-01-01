@@ -1,0 +1,535 @@
+
+{% block stylesheets %}
+<style type="text/Css">
+<!--
+#body{
+	font-family:Verdana, Calibri, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	font-weight:400;
+	color:#000;
+}
+.small_font{
+	font-size:8px;
+	color:#666;
+}
+.bg_img{
+	background-color:#F5ECCE;
+	border-radius:5px;
+	height:50px;
+}
+.linea{
+	border-width:1px;
+	border-bottom:solid;
+	border-color:#666;
+}
+.txt_title{
+	font-size:16px;
+	font-weight:bold;
+}
+.txt_titleheader{
+	font-size:12px;
+	font-weight:bold;
+	color:#333;
+}
+.txt_titleheader_cotenido{
+	font-size:7px;
+}
+.celda {
+    text-align: center;
+}
+.celdad {
+    text-align: right;
+}
+.borde-arriba td {
+    border-top: 1px solid #000; 
+}
+.borde-abajo th {
+    border-bottom: 1px solid #000; 
+} 
+.titulo-grupo {
+    background-color: lightskyblue;
+    text-align: center;
+}
+.titulo-tabla {
+    background-color: lightgreen;
+}
+.piede-tabla {
+    background-color: lightgrey;
+}
+-->
+</style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+<page backtop="20mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 14px;" footer="page">
+<page_header>
+  <table cellspacing="0" border='0' align="center"  style="width: 100%; font-size: 12pt;">
+        <tbody>
+        <tr>
+            <th colspan='5' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                <label  class="txt_title">REPORTE - FRECUENCIA SIMPLE</label><br/>
+            </th> 
+        </tr> 
+        <tr style="width: 100%;"> 
+            <th class="txt_titleheader">Fecha Inicio: {{ fin == '00' ? "" : fin|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Fecha Final: {{ fin2 == '00' ? "" : fin2|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }} </th>
+            <th class="txt_titleheader">Municipio: {{ codmun }} - {{ nommun }}  </th>
+        </tr>  
+        <tr style="width: 100%;">    
+            <th colspan="4" class="txt_titleheader">
+                Comunidad: 
+                {% if cantcom <= 5 %}
+                    {% for ncom in dtnomcom %}
+                        {{ ncom.nombre }} / 
+                    {% endfor %} 
+                {% else %}
+                    Varias
+                {% endif %}
+            </th>
+        </tr>  
+   </tbody>
+    </table>
+</page_header>   
+    <table>
+        <tr>
+            <td colspan="4" class="titulo-grupo"><b>=== B. DATOS DE SALUD ===</b></td>
+        </tr>
+        <tr>
+            <!-- *** Embarazo *** -->
+            <td style="vertical-align: top">
+                <table class="table table-condensed table-striped table-bordered">    
+                    <thead>
+                    <tr>
+                        <td colspan="4"><b>P.17 Rango edad embarazos</b></td>
+                    </tr>    
+                    <tr class="titulo-tabla borde-arriba borde-abajo">
+                        <th class="celda">Rango</th>
+                        <th class="celda">Cantidad</th>
+                        <th class="celda"> % </th>
+                    </tr>
+                    </thead>
+                    <tbody> 
+                        {% set totalemb = 0 %}
+
+                        {% for datos in datosembxe %}
+                            <tr>
+                                <td class="celda">{{ datos.rango }}</td>
+                                <td class="celda">{{ datos.cantemb }}</td>
+                                <td class="celdad">{{ datos.port|round(2) }}</td>
+                            </tr>
+                            {% set totalemb = totalemb + datos.cantemb %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalemb }}</td>
+                            <td></td>
+                        </tr>    
+                    </tbody>
+                </table>
+            </td> 
+            <td style="vertical-align: top">
+                <table>
+                    <tr>
+                        <td><b>P.17.1 Cantidad de embarazadas</b></td>
+                    </tr> 
+                    <tr class="titulo-tabla">
+                        <td>Cantidad</td>
+                    </tr>
+                    <tr>
+                        <td>{{ datosmmp.totemb }}</td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table class="table table-condensed table-striped table-bordered">    
+                <thead>
+                <tr>
+                    <td colspan="3"><b>P.18 Donde nacio el último niño(a)</b></td>
+                </tr>    
+                <tr class="titulo-tabla borde-arriba borde-abajo">
+                    <th class="celda">Lugar</th>
+                    <th class="celda">Cantidad</th>
+                    <th class="celda">%</th>
+                </tr>
+                </thead>
+                <tbody> 
+                    {% set totalnac = 0 %}
+
+                    {% for datos in datosnacxl %}
+                        <tr>
+                            <td>{{ datos.lugar }}</td>
+                            <td class="celda">{{ datos.cantidad }}</td>
+                            <td class="celdad">{{ datos.port|round(2) }}</td>
+                        </tr>
+                        {% set totalnac = totalnac + datos.cantidad %}
+                    {% endfor %}
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ totalnac }}</td>
+                        <td></td>
+                    </tr>    
+                </tbody>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table class="table table-condensed table-striped table-bordered">    
+                    <thead>
+                    <tr>
+                        <td colspan="4"><b>19. Hubo alguna muerte materna?</b></td>
+                    </tr>    
+                    <tr class="titulo-tabla borde-arriba borde-abajo">
+                        <th class="celda">Cuando</th>
+                        <th class="celda">Cantidad</th>
+                    </tr>
+                    </thead>
+                    <tbody> 
+                        {% set totalmm = 0 %}
+                        {% for datos in datosmmxt %}
+                            <tr>
+                                <td>{{ datos.tiempo }}</td>
+                                <td class="celda">{{ datos.cantidad }}</td>
+                            </tr>
+                            {% set totalmm = totalmm + datos.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalmm }}</td>
+                        </tr>    
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top">
+                <table>
+                    <tr>
+                        <td colspan="3"><b>P.19.1 Muertes durante el parto</b></td>
+                    </tr> 
+                    <tr class="titulo-tabla"> 
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Si</td>
+                        <td>{{ datosmmp.cantmsi }}</td>
+                        <td class="celdad">{% if(datosmmp.total > 0) %}{{ ((datosmmp.cantmsi / datosmmp.total)*100)|round(2) }} {% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>No</td>
+                        <td>{{ datosmmp.cantmno }}</td>
+                        <td class="celdad">{% if(datosmmp.total > 0) %}{{ ((datosmmp.cantmno / datosmmp.total)*100)|round(2) }} {% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosmmp.cantmsi + datosmmp.cantmno }}</td>
+                        <td></td>
+                    </tr>
+                </table>    
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr>
+                        <td colspan="3"><b>P.20 Planifica con su pareja</b></td>
+                    </tr> 
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Si</td>
+                        <td>{{ datosmmp.plansi }}</td>
+                        <td class="celdad">{% if(datosmmp.total > 0) %}{{ ((datosmmp.plansi / datosmmp.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>No</td>
+                        <td>{{ datosmmp.planno }}</td>
+                        <td class="celdad">{% if(datosmmp.total > 0) %}{{ ((datosmmp.planno / datosmmp.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosmmp.plansi + datosmmp.planno }}</td>
+                        <td></td>
+                    </tr>
+                </table> 
+            </td>
+            <td style="vertical-align: top">
+                <table class="table table-condensed table-striped table-bordered">    
+                    <thead>
+                    <tr>
+                        <td colspan="4"><b>P.21 Que tipo de metodo utiliza</b></td>
+                    </tr>    
+                    <tr class="titulo-tabla borde-arriba borde-abajo">
+                        <th class="celda">Orden</th>
+                        <th>Descripción</th>
+                        <th class="celda">Cantidad</th>
+                        <th class="celda">%</th>
+                    </tr>
+                    </thead>
+                    <tbody> 
+                        {% set totalm = 0 %}
+
+                        {% for datos in datosmp %}
+                            <tr>
+                                <td class="celda">{{ datos.orden }}</td>
+                                <td>{{ datos.descripcion }}</td>
+                                <td class="celda">{{ datos.cantmetodo }}</td>
+                                <td class="celdad">{{ datos.pormetodo|round(2) }}</td>
+                            </tr>
+                            {% set totalm = totalm + datos.cantmetodo %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td></td>
+                            <td class="celda">{{ totalm }}</td>
+                            <td></td>
+                        </tr>    
+                    </tbody>
+                </table>        
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr>
+                        <td colspan="3"><b>P.21.1 Quien se opero</b></td>
+                    </tr> 
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Hombre</td>
+                        <td>{{ datosso.operh }}</td>
+                        <td class="celdad">{% if(datosso.total > 0) %}{{ ((datosso.operh / datosso.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Mujer</td>
+                        <td>{{ datosso.operm }}</td>
+                        <td class="celdad">{% if(datosso.total > 0) %}{{ ((datosso.operm / datosso.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosso.operh + datosso.operm }}</td>
+                        <td></td>
+                    </tr>
+                </table> 
+            </td>    
+            
+      </tr> 
+      <tr>
+          <td style="vertical-align: top">
+                <table>
+                    <tr>
+                        <td colspan="3"><b>P.22 Muertes de niños(a) menores de 5 años</b></td>
+                    </tr> 
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Niños</td>
+                        <td>{{ datosminf.ninos }}</td>
+                        <td class="celdad">{% if(datosminf.total > 0) %}{{ ((datosminf.ninos / datosminf.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Niñas</td>
+                        <td>{{ datosminf.ninas }}</td>
+                        <td class="celdad">{% if(datosminf.total > 0) %}{{ ((datosminf.ninas / datosminf.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosminf.total }}</td>
+                        <td></td>
+                    </tr>
+                </table> 
+            </td>  
+          <td>
+           </td>
+           <td>
+           </td>
+           <td>
+           </td>
+      </tr>    
+    </table> 
+    <table class="table table-condensed table-striped table-bordered">    
+    <thead>   
+        <tr>
+            <td colspan="12"><b>P.23 Se manifestarón enfermedades</b></td>
+        </tr>
+        <tr class="titulo-tabla borde-arriba borde-abajo">
+            <th class="celda">Orden</th>
+            <th>Descripción</th>
+            <th class="celda">T. Manif</th>
+            <th class="celda">%</th>
+            <th class="celda">Hombres</th>
+            <th class="celda">%</th>
+            <th class="celda">Mujeres</th>
+            <th class="celda">%</th>
+            <th class="celda">Publica</th>
+            <th class="celda">%</th>
+            <th class="celda">Privada</th>
+            <th class="celda">%</th>
+        </tr>
+        </thead>
+        <tbody> 
+            {% set totm = 0 %}
+            {% set toth = 0 %}
+            {% set totmu = 0 %}
+            {% set totpu = 0 %}
+            {% set totpr = 0 %}
+            
+            {% for datos in datose %}
+                <tr>
+                    <td class="celda">{{ datos.orden }}</td>
+                    <td>{{ datos.descripcion }}</td>
+                    <td class="celda">{{ datos.cantmani }}</td>
+                    <td class="celdad">{{ datos.pormani|round(2) }}</td>
+                    <td class="celda">{{ datos.canth }}</td>
+                    <td class="celdad">{{ datos.porh|round(2) }}</td>
+                    <td class="celda">{{ datos.cantm }}</td>
+                    <td class="celdad">{{ datos.porm|round(2) }}</td>
+                    <td class="celda">{{ datos.cantpub }}</td>
+                    <td class="celdad">{{ datos.porpub|round(2) }}</td>
+                    <td class="celda">{{ datos.cantpri }}</td>
+                    <td class="celdad">{{ datos.porpri|round(2) }}</td>
+                </tr>
+                {% set totm = totm + datos.cantmani %}
+                {% set toth = toth + datos.canth %}
+                {% set totmu = totmu + datos.cantm %}
+                {% set totpu = totpu + datos.cantpub %}
+                {% set totpr = totpr + datos.cantpri %}
+            {% endfor %}
+            <tr class="piede-tabla borde-arriba">
+                <td>Total</td>
+                <td></td>
+                <td class="celda">{{ totm }}</td>
+                <td></td>
+                <td class="celda">{{ toth }}</td>
+                <td></td>
+                <td class="celda">{{ totmu }}</td>
+                <td></td>
+                <td class="celda">{{ totpu }}</td>
+                <td></td>
+                <td class="celda">{{ totpr }}</td>
+                <td></td>
+            </tr>    
+        </tbody>
+    </table>
+    <table class="table table-condensed table-striped table-bordered">    
+    <thead>   
+        <tr>
+            <td colspan="12"><b>P.24 Personas Vacunadas</b></td>
+        </tr>
+        <tr class="titulo-tabla borde-arriba borde-abajo">
+            <th class="celda">Orden</th>
+            <th>Rango</th>
+            <th class="celda">T. Personas</th>
+            <th class="celda">% Total</th>
+            <th class="celda">Hombres</th>
+            <th class="celda">%</th>
+            <th class="celda">Mujeres</th>
+            <th class="celda">%</th>
+            <th class="celda">Con Vacuna</th>
+            <th class="celda">%</th>
+            <th class="celda">Sin Vacuna</th>
+            <th class="celda">%</th>
+        </tr>
+        </thead>
+        <tbody> 
+            {% set totm = 0 %}
+            {% set toth = 0 %}
+            {% set totcv = 0 %}
+            {% set totsv = 0 %}
+            {% set totpr = 0 %}
+            
+            {% for datos in datossvac %}
+                <tr>
+                    <td class="celda">{{ datos.rango }}</td>
+                    <td>
+                        {% if datos.rango == 1 %}
+                            {{ "Menores de 9 años" }}
+                        {% elseif datos.rango == 2 %}
+                            {{ "De 10 a 19 años" }}
+                        {% elseif datos.rango == 3 %}
+                            {{ "De 20 a 64 años" }}
+                        {% else %}
+                            {{ "De 65 años y mas" }}
+                        {% endif %}
+                    </td>
+                    <td class="celda">{{ datos.cantp }}</td>
+                    <td class="celda">{{ datos.port|round(2) }}</td>
+                    <td class="celda">{{ datos.canth }}</td>
+                    <td class="celdad">{{ (datos.porh)|round(2) }}</td>
+                    <td class="celda">{{ datos.cantm }}</td>
+                    <td class="celdad">{{ datos.porm|round(2) }}</td>
+                    <td class="celda">{{ datos.vcom }}</td>
+                    <td class="celdad">{{ datos.porvc|round(2) }}</td>
+                    <td class="celda">{{ datos.vinc }}</td>
+                    <td class="celdad">{{ datos.porvi|round(2) }}</td>
+                </tr>
+                {% set totm = totm + datos.cantm %}
+                {% set toth = toth + datos.canth %}
+                {% set totpr = totpr + datos.cantp %}
+                {% set totcv = totcv + datos.vcom %}
+                {% set totsv = totsv + datos.vinc %}
+            {% endfor %}
+            <tr class="piede-tabla borde-arriba">
+                <td>Total</td>
+                <td></td>
+                <td class="celda">{{ totpr }}</td>
+                <td></td>
+                <td class="celda">{{ toth }}</td>
+                <td></td>
+                <td class="celda">{{ totm }}</td>
+                <td></td>
+                <td class="celda">{{ totcv }}</td>
+                <td></td>
+                <td class="celda">{{ totsv }}</td>
+                <td></td>
+            </tr>    
+        </tbody>
+    </table>
+   </page>                  
+<page_footer>    
+<br/>  
+    <br/>
+     <table cellspacing="0" style="width: 100%; font-size: 6pt;">
+        <tbody>
+         <tr>
+            <th  align="center" style="width: 100%;" border="0" class="txt_titleheader">
+                <label class="txt_titleheader"></label>
+            </th>
+        </tr>
+        </tbody>
+    </table>
+</page_footer>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

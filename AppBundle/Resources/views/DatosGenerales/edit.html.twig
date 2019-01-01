@@ -1,0 +1,91 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block header -%}
+    Modificar datos generales
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Modificar la información general de la encuesta
+    </small>
+{% endblock %}
+{% block content -%}
+    <div class="col-sm-12" style="float:left">
+            <h4>Id Encuesta: {{ idenc }}</h4>
+    </div>
+
+    {{ form_start(form,{'attr' : {'id':'frm_datosg'}}) }}    
+    <div class="col-sm-8 ">
+        {{ form_row(form.idEncuestador) }}
+    </div>
+    <div class="col-sm-4">
+        {{ form_row(form.numBoleta) }}
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+        <label class="control-label">Comunidad</label>
+            <select id="comunidad" class="form-control" name="comunidad">
+                <option value="0">-- Selecionar --</option>
+                {% for com in comunidades %}
+                    <option value="{{ com.codComunidad}}">{{ com.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>    
+    <!--div class="col-sm-4">
+        {# form_row(form.codColonia) }}
+    </div>
+    <div class="col-sm-3">
+        {{ form_row(form.codBarrio) }}
+    </div>
+    <div class="col-sm-3">
+        {{ form_row(form.codAldea) }}
+    </div>    
+    <div class="col-sm-3">
+        {{ form_row(form.codCaserio) #}
+    </div -->    
+    <div class="col-sm-8">
+        {{ form_row(form.nombreEntrevistado) }}
+    </div>  
+    <div class="col-sm-4">
+        {{ form_row(form.telefonoCel) }}
+    </div>  
+    <div class="col-sm-4">
+        {{ form_row(form.numUbicacion) }}
+    </div>
+    <div class="col-sm-4">
+        {{ form_row(form.cantPersonasvivienda) }}
+        
+    </div>
+    <div class="col-sm-6">
+        {{ form_row(form.cantPersonas523) }}
+    </div>    
+    <div class="col-sm-6">
+        {{ form_row(form.cantPersonasm10) }}
+    </div> 
+   <div id="msg_cant" style="color: red; display: none" class="col-sm-12"><label>Cantidade de personas no coinciden</label></div>
+    {{ form_rest(form) }}
+    
+    {{ form_end(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('datosgenerales') }}">
+            Regresar al listado
+        </a>
+    </li>
+    <!--li>{#{ form(delete_form) }#}</li-->
+</ul>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#focal_appbundle_datosgenerales_idEncuestador').val('{{encsel|default('')}}');
+            $('#comunidad').val('{{comsel|default('')}}');
+        });
+    </script>
+{% endblock %}
+
+

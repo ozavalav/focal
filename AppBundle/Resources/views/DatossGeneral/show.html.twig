@@ -1,0 +1,172 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>DatossGeneral</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Idenc</th>
+                <td>{{ entity.idEnc }}</td>
+            </tr>
+            <tr>
+                <th>Coddepartamento</th>
+                <td>{{ entity.codDepartamento }}</td>
+            </tr>
+            <tr>
+                <th>Codmunicipio</th>
+                <td>{{ entity.codMunicipio }}</td>
+            </tr>
+            <tr>
+                <th>Codcomunidad</th>
+                <td>{{ entity.codComunidad }}</td>
+            </tr>
+            <tr>
+                <th>Embarazos</th>
+                <td>{{ entity.embarazos }}</td>
+            </tr>
+            <tr>
+                <th>Cantembarazos</th>
+                <td>{{ entity.cantEmbarazos }}</td>
+            </tr>
+            <tr>
+                <th>Edad1</th>
+                <td>{{ entity.edad1 }}</td>
+            </tr>
+            <tr>
+                <th>Edad2</th>
+                <td>{{ entity.edad2 }}</td>
+            </tr>
+            <tr>
+                <th>Edad3</th>
+                <td>{{ entity.edad3 }}</td>
+            </tr>
+            <tr>
+                <th>Edad4</th>
+                <td>{{ entity.edad4 }}</td>
+            </tr>
+            <tr>
+                <th>Lugarcasa</th>
+                <td>{{ entity.lugarCasa }}</td>
+            </tr>
+            <tr>
+                <th>Cantcasa</th>
+                <td>{{ entity.cantCasa }}</td>
+            </tr>
+            <tr>
+                <th>Lugarcentros</th>
+                <td>{{ entity.lugarCentros }}</td>
+            </tr>
+            <tr>
+                <th>Cantcentros</th>
+                <td>{{ entity.cantCentros }}</td>
+            </tr>
+            <tr>
+                <th>Lugarmaterno</th>
+                <td>{{ entity.lugarMaterno }}</td>
+            </tr>
+            <tr>
+                <th>Cantmaterno</th>
+                <td>{{ entity.cantMaterno }}</td>
+            </tr>
+            <tr>
+                <th>Lugarhospital</th>
+                <td>{{ entity.lugarHospital }}</td>
+            </tr>
+            <tr>
+                <th>Canthospital</th>
+                <td>{{ entity.cantHospital }}</td>
+            </tr>
+            <tr>
+                <th>Lugarclinica</th>
+                <td>{{ entity.lugarClinica }}</td>
+            </tr>
+            <tr>
+                <th>Cantclinica</th>
+                <td>{{ entity.cantClinica }}</td>
+            </tr>
+            <tr>
+                <th>Lugarotros</th>
+                <td>{{ entity.lugarOtros }}</td>
+            </tr>
+            <tr>
+                <th>Cantotros</th>
+                <td>{{ entity.cantOtros }}</td>
+            </tr>
+            <tr>
+                <th>Muertemat</th>
+                <td>{{ entity.muerteMat }}</td>
+            </tr>
+            <tr>
+                <th>Cantmuertem</th>
+                <td>{{ entity.cantMuertem }}</td>
+            </tr>
+            <tr>
+                <th>Momentomuertm</th>
+                <td>{{ entity.momentoMuertm }}</td>
+            </tr>
+            <tr>
+                <th>Causamuertem</th>
+                <td>{{ entity.causaMuertem }}</td>
+            </tr>
+            <tr>
+                <th>Planifican</th>
+                <td>{{ entity.planifican }}</td>
+            </tr>
+            <tr>
+                <th>Metodo</th>
+                <td>{{ entity.metodo }}</td>
+            </tr>
+            <tr>
+                <th>Sexooperacion</th>
+                <td>{{ entity.sexoOperacion }}</td>
+            </tr>
+            <tr>
+                <th>Cantmuerteninos</th>
+                <td>{{ entity.cantMuerteNinos }}</td>
+            </tr>
+            <tr>
+                <th>Cantmuerteninas</th>
+                <td>{{ entity.cantMuerteNinas }}</td>
+            </tr>
+            <tr>
+                <th>Causamuerte</th>
+                <td>{{ entity.causaMuerte }}</td>
+            </tr>
+            <tr>
+                <th>Fechacreacion</th>
+                <td>{{ entity.fechaCreacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Usuariocreacion</th>
+                <td>{{ entity.usuarioCreacion }}</td>
+            </tr>
+            <tr>
+                <th>Usuarioultimamodificacion</th>
+                <td>{{ entity.usuarioUltimaModificacion }}</td>
+            </tr>
+            <tr>
+                <th>Fechaultimamodificacion</th>
+                <td>{{ entity.fechaUltimaModificacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('datossgeneral') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('datossgeneral_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

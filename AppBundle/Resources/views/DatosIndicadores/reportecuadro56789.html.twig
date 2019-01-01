@@ -1,0 +1,541 @@
+
+{% block stylesheets %}
+    <style type="text/Css">
+
+        #body{
+            font-family:Arial, Helvetica, sans-serif;
+            font-size:11px;
+            font-weight:400;
+            color:#000;
+        }
+        .small_font{
+            font-size:8px;
+            color:#666;
+        }
+        .bg_img{
+            background-color:#F5ECCE;
+            border-radius:5px;
+            height:50px;
+        }
+        .linea{
+            border-width:1px;
+            border-bottom:solid;
+            border-color:#666;
+        }
+        .txt_title{
+            font-size:16px;
+            font-weight:bold;
+        }
+        .txt_titleheader{
+            font-size:10px;
+            font-weight:bold;
+            color:#333;
+        }
+        .txt_titleheader_cotenido{
+            font-size:7px;
+        }
+        .celda {
+            text-align: center;
+        }
+        .celdad {
+            text-align: right;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+    <page backtop="30mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 11px;">
+        <page_header>
+            <table cellspacing="0" border='0' align="center"  style="width: 90%; font-size: 6pt;">
+                <tbody>
+                    <tr>
+                        <th colspan="4"  style="width: 100%; text-align: center; padding-bottom: 3px;" align="center" class="txt_title"></th>
+                    </tr><br/><br/>
+                <tr>
+                    <th colspan='4' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                        <label  class="txt_titleheader">Cuadro # 5,6,7,8,9 y 10</label>
+                    </th> 
+                </tr> 
+                <tr>
+                    <th colspan='4' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                        <label  class="txt_titleheader">Principales indicadores socioeconómicos en el marco de los ODS y PN</label>
+                    </th> 
+                </tr>
+                <tr>
+                    <th colspan='4'  border="0" align="left" class="txt_titleheader"> 
+                    </th> 
+                </tr> 
+                <tr> 
+                    <th  style="width: 22%;" border="0" align="left"class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }}
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Municipio:  {{ codmun }} - {{ nommun }}
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Fecha inicio: {{fin|date('Y-m-d')}} 
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Fecha Fin: {{fin2|date('Y-m-d')}}  
+                    </th>
+                </tr>  
+                </tbody>
+            </table>
+            <br/>
+
+            <table cellspacing="0" align="center"  border='1' style="width: 90%; text-align: center; font-size: 6pt;">
+                <thead>
+                    <tr>
+                        <th  style="width: 5%; background: #E7E7E7;"  align="center" ># ORDEN</th>
+                        <th  style="width: 20%; background: #E7E7E7;"  align="center" >CLIENTE</th>
+                        <th  style="width: 40%; background: #E7E7E7;"  align="center" >TRABAJO ORDENADO</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >MOTOR</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >DEPARTAMENTO</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >RECIBIDO</th>
+                        <th  style="width: 5%; background: #E7E7E7;"  align="center" >FECHA</th>
+                    </tr>
+                </thead>
+                <tbody>  
+                </tbody>
+            </table>
+
+        </page_header> 
+        <page_footer>  
+
+            <table cellspacing="0" border ="1" style="width: 100%; font-size: 6pt;">
+                <tbody>
+
+
+                </tbody>
+            </table>
+        </page_footer>
+                    
+
+
+<div class="layoutArea">
+<div class="column">
+<p><strong>Servicios básicos:</strong></p>
+<p><span style="color: #ff0000;">(Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionar la opción # 8 &ldquo;Viviendas con Servicios Públicos&rdquo; o ir al cuadro de frecuencia simple y copiar los datos de la tabla de servicios públicos).</span></p>    
+<p style="text-align: center;"><strong>Cuadro # 5</strong><br /><strong> Viviendas con Servicios públicos</strong></p>
+</div>
+</div>
+<br>
+<br>
+<table cellspacing="2" border="1">
+<thead>
+<tr class="titulo-tabla">
+    <td>No.</td>
+    <td>Servicio</td>
+    <td>Reciben Si</td>
+    <td class="celdad">Porcentaje</td>
+    <td>Promedio días</td>
+</tr>
+
+</thead>
+<tbody>
+    {% for datoss in dtsrvp %}
+        <tr>
+            <td style="width:50px"class="celda"><p>{{ datoss.id_servicio }}</p></td>
+            <td style="width:180px">{{ datoss.descripcion }}</td>
+            <td class="celda">{{ datoss.treciben }}</td>
+            <td class="celdad">{% if totviv > 0 %}{{ ((datoss.treciben / totviv)*100)|round(2) }}{% endif %}</td>
+            <td class="celdad">{% if datoss.treciben > 0 %}{{ (datoss.tdias / datoss.treciben)|round(2) }}{% endif %}</td> 
+        </tr>
+    {% endfor %}
+</tbody>    
+</table> 
+<p>Fuente: Elaboración propia con base a censo línea base levantado en el municipio</p>
+<div class="page" title="Page 8">
+<div class="section">
+<div class="layoutArea">
+<div class="column">
+<p><strong>Vivienda:</strong></p>
+<p><span style="color: #ff0000;">(Para llenar este cuadro revisar el cuadro de jefes de hogar, que llenaron los líderes comunitarios al </span><span style="color: #ff0000;">momento de</span>
+<span style="color: #ff0000;">&nbsp;</span><span style="color: #ff0000;">hacer el croquis, en donde se deben de calcular por comunidad, cuántas viviendas están ocupadas, desocupadas, </span>
+<span style="color: #ff0000;">otros y cantidad de personas)</span></p>
+<p style="text-align: center;"><strong>Cuadro # 6</strong><br /><strong> Edificaciones, viviendas ocupadas y población</strong></p>
+</div>
+</div>
+<table style="width: 542px;" border="1">
+<tbody>
+<tr>
+    <td style="width: 79px;" rowspan="2">
+        <p>Comunidad</p>
+    </td>
+    <td style="width: 301px;" colspan="7">
+        <p>Viviendas</p>
+    </td>
+    <td style="width: 116px;" colspan="2">
+        <p>Población</p>
+    </td>
+</tr> 
+<tr>
+    <td style="width: 35px;">Ocup</td>
+    <td style="width: 27.296875px;">%</td>
+    <td style="width: 29.703125px;">Des</td>
+    <td style="width: 36px;">%</td>
+    <td style="width: 54px;">Otras</td>
+    <td style="width: 61px;">Total</td>
+    <td style="width: 58px;">%</td>
+    <td style="width: 49px;">Canto</td>
+    <td style="width: 67px;">%</td>
+</tr>
+<tr>
+    <td style="width: 79px;">&nbsp;</td>
+    <td style="width: 35px;">&nbsp;</td>
+    <td style="width: 27.296875px;">&nbsp;</td>
+    <td style="width: 29.703125px;">&nbsp;</td>
+    <td style="width: 36px;">&nbsp;</td>
+    <td style="width: 54px;">&nbsp;</td>
+    <td style="width: 61px;">&nbsp;</td>
+    <td style="width: 58px;">&nbsp;</td>
+    <td style="width: 49px;">&nbsp;</td>
+    <td style="width: 67px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="width: 79px;">&nbsp;</td>
+<td style="width: 35px;">&nbsp;</td>
+<td style="width: 27.296875px;">&nbsp;</td>
+<td style="width: 29.703125px;">&nbsp;</td>
+<td style="width: 36px;">&nbsp;</td>
+<td style="width: 54px;">&nbsp;</td>
+<td style="width: 61px;">&nbsp;</td>
+<td style="width: 58px;">&nbsp;</td>
+<td style="width: 49px;">&nbsp;</td>
+<td style="width: 67px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="width: 79px;">&nbsp;</td>
+<td style="width: 35px;">&nbsp;</td>
+<td style="width: 27.296875px;">&nbsp;</td>
+<td style="width: 29.703125px;">&nbsp;</td>
+<td style="width: 36px;">&nbsp;</td>
+<td style="width: 54px;">&nbsp;</td>
+<td style="width: 61px;">&nbsp;</td>
+<td style="width: 58px;">&nbsp;</td>
+<td style="width: 49px;">&nbsp;</td>
+<td style="width: 67px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="width: 79px;">&nbsp;</td>
+<td style="width: 35px;">&nbsp;</td>
+<td style="width: 27.296875px;">&nbsp;</td>
+<td style="width: 29.703125px;">&nbsp;</td>
+<td style="width: 36px;">&nbsp;</td>
+<td style="width: 54px;">&nbsp;</td>
+<td style="width: 61px;">&nbsp;</td>
+<td style="width: 58px;">&nbsp;</td>
+<td style="width: 49px;">&nbsp;</td>
+<td style="width: 67px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="width: 79px;">&nbsp;</td>
+<td style="width: 35px;">&nbsp;</td>
+<td style="width: 27.296875px;">&nbsp;</td>
+<td style="width: 29.703125px;">&nbsp;</td>
+<td style="width: 36px;">&nbsp;</td>
+<td style="width: 54px;">&nbsp;</td>
+<td style="width: 61px;">&nbsp;</td>
+<td style="width: 58px;">&nbsp;</td>
+<td style="width: 49px;">&nbsp;</td>
+<td style="width: 67px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="width: 79px;">&nbsp;</td>
+<td style="width: 35px;">&nbsp;</td>
+<td style="width: 27.296875px;">&nbsp;</td>
+<td style="width: 29.703125px;">&nbsp;</td>
+<td style="width: 36px;">&nbsp;</td>
+<td style="width: 54px;">&nbsp;</td>
+<td style="width: 61px;">&nbsp;</td>
+<td style="width: 58px;">&nbsp;</td>
+<td style="width: 49px;">&nbsp;</td>
+<td style="width: 67px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="width: 79px;">&nbsp;</td>
+<td style="width: 35px;">&nbsp;</td>
+<td style="width: 27.296875px;">&nbsp;</td>
+<td style="width: 29.703125px;">&nbsp;</td>
+<td style="width: 36px;">&nbsp;</td>
+<td style="width: 54px;">&nbsp;</td>
+<td style="width: 61px;">&nbsp;</td>
+<td style="width: 58px;">&nbsp;</td>
+<td style="width: 49px;">&nbsp;</td>
+<td style="width: 67px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="width: 79px;">&nbsp;</td>
+<td style="width: 35px;">&nbsp;</td>
+<td style="width: 27.296875px;">&nbsp;</td>
+<td style="width: 29.703125px;">&nbsp;</td>
+<td style="width: 36px;">&nbsp;</td>
+<td style="width: 54px;">&nbsp;</td>
+<td style="width: 61px;">&nbsp;</td>
+<td style="width: 58px;">&nbsp;</td>
+<td style="width: 49px;">&nbsp;</td>
+<td style="width: 67px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="width: 79px;">&nbsp;</td>
+<td style="width: 35px;">&nbsp;</td>
+<td style="width: 27.296875px;">&nbsp;</td>
+<td style="width: 29.703125px;">&nbsp;</td>
+<td style="width: 36px;">&nbsp;</td>
+<td style="width: 54px;">&nbsp;</td>
+<td style="width: 61px;">&nbsp;</td>
+<td style="width: 58px;">&nbsp;</td>
+<td style="width: 49px;">&nbsp;</td>
+<td style="width: 67px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section">
+<div class="layoutArea">
+<div class="column">
+<p>Fuente: Elaboración propia con base a censo línea base levantado en el municipio</p>
+</div>
+</div>
+</div>
+
+<div class="page" title="Page 8">
+<div class="section">
+<div class="layoutArea">
+<div class="column">
+<p><span style="color: #ff0000;">(Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionar la opción # 4 &ldquo;Distribución de viviendas por el número de piezas con que cuentan&rdquo; o ir al cuadro de frecuencia simple y copiar los datos de la tabla # 64 y 66)</span></p>
+<p style="text-align: center;"><strong>Cuadro # 7</strong><br /><strong> Distribución de viviendas por el número de piezas con que cuentan</strong></p>
+</div>
+</div>
+    <br>
+    <br>
+<table cellspacing="2" border="1">
+<thead>
+<tr><td colspan="3"><p>Cantidad Viviendas según # de piezas</p></td></tr>    
+<tr class="titulo-tabla">
+    <td>No. Piezas por vivienda</td>
+    <td class="celda">Total</td>
+    <td class="celda">%</td>
+</tr>
+
+</thead>
+<tbody>
+    {% set totv = 0 %}
+    {% for datos in dtpiviv %}
+        <tr>
+            <td style="width:100px"><p>{{ datos.piezas }}</p></td>
+            <td style="width:50px" class="celdad">{{ datos.cantp }}</td>
+            <td style="width:50px" class="celdad">{% if totviv > 0 %}{{ ((datos.cantp / totviv)*100)|round(2) }}{% endif %}</td>
+        </tr>
+        {% set totv = totv + datos.cantp %}
+    {% endfor %}
+    <tr>
+        <td>Total</td>
+        <td class="celda">{{ totv }}</td>
+        <td></td>
+    </tr> 
+</tbody>    
+</table>
+<br><br>
+<table cellspacing="2" border="1">
+<thead>
+<tr><td colspan="3"><p>Cantidad viviendad por # piezas como dormitorio</p></td></tr>    
+<tr class="titulo-tabla">
+    <td>No. Piezas por vivienda</td>
+    <td class="celda">Total</td>
+    <td class="celda">%</td>
+</tr>
+
+</thead>
+<tbody>
+    {% set totv = 0 %}
+    {% for datos in dtdoviv %}
+        <tr>
+            <td style="width:180px"><p>{{ datos.dorm }}</p></td>
+            <td style="width:50px" class="celdad">{{ datos.cantdorm }}</td>
+            <td style="width:50px" class="celdad">{% if totviv > 0 %}{{ ((datos.cantdorm / totviv)*100)|round(2) }}{% endif %}</td>
+        </tr>
+        {% set totv = totv + datos.cantdorm %}
+    {% endfor %}
+    <tr>
+        <td>Total</td>
+        <td class="celda">{{ totv }}</td>
+        <td></td>
+    </tr> 
+</tbody>    
+</table> 
+<p>Fuente: Elaboración propia con base a censo línea base levantado en el municipio</p>        
+</div>
+</div>        
+<div class="page" title="Page 8">
+<div class="section">        
+<div class="layoutArea">
+<div class="column">
+
+<p><span style="color: #ff0000;">(Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionar la opción # 5 &ldquo;Numero de familias por vivienda&rdquo; o ir al cuadro de frecuencia simple y copiar los datos de la tabla # 68)</span></p>
+<p style="text-align: center;"><strong>Cuadro # 8</strong><br /><strong> Número de familias por vivienda</strong></p>
+<p>Fuente: Elaboración propia con base a censo línea base levantado en el municipio</p>
+<p><span style="color: #ff0000;">(Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionar la opción # 6 &ldquo;Distribución de viviendas por el número de baños con que cuentan&rdquo; o ir al cuadro de frecuencia simple y copiar los datos de la tabla # 65)</span></p>
+</div>
+</div>
+<table cellspacing="2" border="1">
+<thead>
+<tr><td colspan="3"><p>Número de familias por vivienda</p></td></tr>    
+<tr class="titulo-tabla">
+    <td>No. de familias por vivienda</td>
+    <td class="celda">Total</td>
+    <td class="celda">%</td>
+</tr>
+
+</thead>
+<tbody>
+    {% set totv = 0 %}
+    {% for datos in dtfamviv %}
+        <tr>
+            <td style="width:200px"><p>{{ datos.fam }}</p></td>
+            <td style="width:50px" class="celdad">{{ datos.cantfam }}</td>
+            <td style="width:50px" class="celdad">{% if totviv > 0 %}{{ ((datos.cantfam / totviv)*100)|round(2) }}{% endif %}</td>
+        </tr>
+        {% set totv = totv + datos.cantfam %}
+    {% endfor %}
+    <tr>
+        <td>Total</td>
+        <td class="celda">{{ totv }}</td>
+        <td></td>
+    </tr> 
+</tbody>    
+</table> 
+    
+</div>
+<div class="section">
+<div class="layoutArea">
+<div class="column">
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+</div>
+<div class="page" title="Page 9">
+<div class="section">
+<div class="layoutArea">
+<div class="column">
+<p style="text-align: center;"><strong>Cuadro # 9</strong></p>
+<p style="text-align: center;"><strong>Distribuci&oacute;n de viviendas por el n&uacute;mero de ba&ntilde;os con que cuentan </strong></p>
+<table cellspacing="2" border="1">
+<thead>  
+<tr class="titulo-tabla">
+    <td>No. de baños por vivienda</td>
+    <td class="celda">Total</td>
+    <td class="celda">%</td>
+</tr>
+
+</thead>
+<tbody>
+    {% set totv = 0 %}
+    {% for datos in dtbanviv %}
+        <tr>
+            <td style="width:200px"><p>{{ datos.banos }}</p></td>
+            <td style="width:50px" class="celdad">{{ datos.cantbanos }}</td>
+            <td style="width:50px" class="celdad">{% if totviv > 0 %}{{ ((datos.cantbanos / totviv)*100)|round(2) }}{% endif %}</td>
+        </tr>
+        {% set totv = totv + datos.cantbanos %}
+    {% endfor %}
+    <tr>
+        <td>Total</td>
+        <td class="celda">{{ totv }}</td>
+        <td></td>
+    </tr> 
+</tbody>    
+</table> 
+
+<p>&nbsp;</p>
+<p>Fuente: Elaboraci&oacute;n propia con base a censo l&iacute;nea base levantado en el municipio</p>
+</div>
+</div>
+</div>
+</div> 
+        
+        
+<div class="page" title="Page 9">
+<div class="section">
+<div class="layoutArea">
+<div class="column">
+<p style="text-align: center;"><strong>Cuadro # 10</strong></p>
+<p style="text-align: center;"><strong>Tipo de combustible que utilizan para cocinar</strong></p>
+<table cellspacing="2" border="1">
+<thead>  
+<tr class="titulo-tabla">
+    <td>Tipo de Combustible</td>
+    <td class="celda">Total</td>
+    <td class="celda">%</td>
+</tr>
+
+</thead>
+<tbody>
+        <tr>
+            <td style="width:200px"><p>Utilizan electricidad</p></td>
+            <td style="width:50px" class="celdad">{{ dtcomcoc.tcocele }}</td>
+            <td style="width:50px" class="celdad">{% if totviv > 0 %}{{ ((dtcomcoc.tcocele / totviv)*100)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td style="width:200px"><p>Utilizan gas volátil</p></td>
+            <td style="width:50px" class="celdad">{{ dtcomcoc.tcocchi }}</td>
+            <td style="width:50px" class="celdad">{% if totviv > 0 %}{{ ((dtcomcoc.tcocchi / totviv)*100)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td style="width:200px"><p>Utilizan Kerosén</p></td>
+            <td style="width:50px" class="celdad">{{ dtcomcoc.tcocker }}</td>
+            <td style="width:50px" class="celdad">{% if totviv > 0 %}{{ ((dtcomcoc.tcocker / totviv)*100)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td style="width:200px"><p>Utilizan Eco Fogón</p></td>
+            <td style="width:50px" class="celdad">{{ dtcomcoc.tcoceco }}</td>
+            <td style="width:50px" class="celdad">{% if totviv > 0 %}{{ ((dtcomcoc.tcoceco / totviv)*100)|round(2) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td style="width:200px"><p>Utilizan leña</p></td>
+            <td style="width:50px" class="celdad">{{ dtcomcoc.tcoclen }}</td>
+            <td style="width:50px" class="celdad">{% if totviv > 0 %}{{ ((dtcomcoc.tcoclen / totviv)*100)|round(2) }}{% endif %}</td>
+        </tr>
+    <tr>
+        <td>Total</td>
+        <td class="celda">{{ dtcomcoc.tcocele + dtcomcoc.tcocchi + dtcomcoc.tcocker + dtcomcoc.tcoceco + dtcomcoc.tcoclen}}</td>
+        <td></td>
+    </tr> 
+</tbody>    
+</table> 
+
+<p>&nbsp;</p>
+<p>Fuente: Elaboraci&oacute;n propia con base a censo l&iacute;nea base levantado en el municipio</p>
+</div>
+</div>
+</div>
+</div>         
+
+
+    </page>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,840 @@
+
+{% block stylesheets %}
+<style type="text/Css">
+<!--
+#body{
+	font-family:Verdana, Calibri, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	font-weight:400;
+	color:#000;
+}
+.small_font{
+	font-size:8px;
+	color:#666;
+}
+.bg_img{
+	background-color:#F5ECCE;
+	border-radius:5px;
+	height:50px;
+}
+.linea{
+	border-width:1px;
+	border-bottom:solid;
+	border-color:#666;
+}
+.txt_title{
+	font-size:16px;
+	font-weight:bold;
+}
+.txt_titleheader{
+	font-size:12px;
+	font-weight:bold;
+	color:#333;
+}
+.txt_titleheader_cotenido{
+	font-size:7px;
+}
+.celda {
+    text-align: center;
+}
+.celdad {
+    text-align: right;
+}
+.borde-arriba td {
+    border-top: 1px solid #000; 
+}
+.borde-abajo th {
+    border-bottom: 1px solid #000; 
+} 
+.titulo-grupo {
+    background-color: lightskyblue;
+    text-align: center;
+}
+.titulo-tabla {
+    background-color: lightgreen;
+}
+.piede-tabla {
+    background-color: lightgrey;
+}
+-->
+</style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+<page backtop="20mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 14px;" footer="page">
+<page_header>
+  <table cellspacing="0" border='0' align="center"  style="width: 100%; font-size: 12pt;">
+        <tbody>
+        <tr>
+            <th colspan='5' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                <label  class="txt_title">REPORTE - FRECUENCIA SIMPLE</label><br/>
+            </th> 
+        </tr> 
+        <tr style="width: 100%;"> 
+            <th class="txt_titleheader">Fecha Inicio: {{ fin == '00' ? "" : fin|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Fecha Final: {{ fin2 == '00' ? "" : fin2|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }} </th>
+            <th class="txt_titleheader">Municipio: {{ codmun }} - {{ nommun }}  </th>
+        </tr>  
+        <tr style="width: 100%;">    
+            <th colspan="4" class="txt_titleheader">
+                Comunidad: 
+                {% if cantcom <= 5 %}
+                    {% for ncom in dtnomcom %}
+                        {{ ncom.nombre }} / 
+                    {% endfor %} 
+                {% else %}
+                    Varias
+                {% endif %}
+            </th>
+        </tr>  
+   </tbody>
+    </table>
+</page_header>   
+    <table>
+        <tr>
+            <td class="titulo-grupo" colspan="3"><b>=== Datos de Vivienda ===</b></td>
+        </tr> 
+        <tr>
+            <td>
+                <table>
+                    <tr><td colspan="3"><b>P.53 Tipo de Vivienda</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Tipo</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Casa</td>
+                        <td class="celda">{{ datosv.cantcasa }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantcasa / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Apartamento idependiente</td>
+                        <td class="celda">{{ datosv.cantapar }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantapar / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Local NO habitacional</td>
+                        <td class="celda">{{ datosv.cantlocal }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantlocal / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Cuarto mesón (cuarteria)</td>
+                        <td class="celda">{{ datosv.cantcuarto }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantcuarto / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Casa improvisada</td>
+                        <td class="celda">{{ datosv.cantcimpro }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantcimpro / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosv.total }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.54 Tipo de Tenencia</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Tipo</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Propia pagada</td>
+                        <td class="celda">{{ datosv.cantpropia }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantpropia / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Propia pagando</td>
+                        <td class="celda">{{ datosv.cantpagando }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantpagando / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Alquilada</td>
+                        <td class="celda">{{ datosv.cantalquila }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantalquila / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Prestada</td>
+                        <td class="celda">{{ datosv.cantprestada }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantprestada / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosv.total }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.54.1 Dominio</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Tipo</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Pleno</td>
+                        <td class="celda">{{ datosv.cantpleno }}</td>
+                        <td class="celdad">{% if(datosv.cantpropia > 0) %}{{ ((datosv.cantpleno / datosv.cantpropia)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Útil</td>
+                        <td class="celda">{{ datosv.cantutil }}</td>
+                        <td class="celdad">{% if(datosv.cantpropia > 0) %}{{ ((datosv.cantutil / datosv.cantpropia)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Ocupación</td>
+                        <td class="celda">{{ datosv.cantocupacion }}</td>
+                        <td class="celdad">{% if(datosv.cantpropia > 0) %}{{ ((datosv.cantocupacion / datosv.cantpropia)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Posesión</td>
+                        <td class="celda">{{ datosv.cantposesion }}</td>
+                        <td class="celdad">{% if(datosv.cantpropia > 0) %}{{ ((datosv.cantposesion / datosv.cantpropia)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosv.cantpropia }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>    
+        <tr>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.54.2 Sexo propietario</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Sexo</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Hombre</td>
+                        <td class="celda">{{ datosv.cantth }}</td>
+                        <td class="celdad">{% if(datosv.cantpropia > 0) %}{{ ((datosv.cantth / datosv.cantpropia)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Mujer</td>
+                        <td class="celda">{{ datosv.canttm }}</td>
+                        <td class="celdad">{% if(datosv.cantpropia > 0) %}{{ ((datosv.canttm / datosv.cantpropia)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Ambos</td>
+                        <td class="celda">{{ datosv.cantta }}</td>
+                        <td class="celdad">{% if(datosv.cantpropia > 0) %}{{ ((datosv.cantta / datosv.cantpropia)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosv.cantpropia }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.55 Problemas de la vivienda</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Problema</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>No tiene repello</td>
+                        <td class="celda">{{ datosv.pvsinrep }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.pvsinrep / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Piso de Tierra</td>
+                        <td class="celda">{{ datosv.pvpisotie }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.pvpisotie / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Falta de Ciela Falso</td>
+                        <td class="celda">{{ datosv.pvcielofal }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.pvcielofal / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Problemas Estructurales</td>
+                        <td class="celda">{{ datosv.pvestruct }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.pvestruct / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Techo en mal estado</td>
+                        <td class="celda">{{ datosv.pvtechmalo }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.pvtechmalo / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Ninguno</td>
+                        <td class="celda">{{ datosv.pvninguno }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.pvninguno / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.55.1 Problema de repello</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Lugar</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Interno</td>
+                        <td class="celda">{{ datosv.cantri }}</td>
+                        <td class="celdad">{% if(datosv.pvsinrep > 0) %}{{ ((datosv.cantri / datosv.pvsinrep)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Externo</td>
+                        <td class="celda">{{ datosv.cantre }}</td>
+                        <td class="celdad">{% if(datosv.pvsinrep > 0) %}{{ ((datosv.cantre / datosv.pvsinrep)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Ambos</td>
+                        <td class="celda">{{ datosv.cantra }}</td>
+                        <td class="celdad">{% if(datosv.pvsinrep > 0) %}{{ ((datosv.cantra / datosv.pvsinrep)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosv.pvsinrep }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+        </tr> 
+        <tr>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.56 Material de construcción</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Tipo Material</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Adobe</td>
+                        <td class="celda">{{ datosv.cantmado }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantmado / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Bloque</td>
+                        <td class="celda">{{ datosv.cantmblo }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantmblo / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Bahareque</td>
+                        <td class="celda">{{ datosv.cantmbah }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantmbah / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Madera</td>
+                        <td class="celda">{{ datosv.cantmmad }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantmmad / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Desperdicios</td>
+                        <td class="celda">{{ datosv.cantmdes }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantmdes / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Ladrillo</td>
+                        <td class="celda">{{ datosv.cantmlad }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantmlad / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Yugua</td>
+                        <td class="celda">{{ datosv.cantmyug }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantmyug / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosv.total }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b><b>P.57 Material Techo</b></b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Tipo</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Desechos</td>
+                        <td class="celda">{{ datosv.canttdes }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.canttdes / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Paja o Similar</td>
+                        <td class="celda">{{ datosv.canttpaj }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.canttpaj / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Teja de barro</td>
+                        <td class="celda">{{ datosv.canttbar }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.canttbar / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Lámina Metálica</td>
+                        <td class="celda">{{ datosv.canttmet }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.canttmet / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Lámina de Asbesto</td>
+                        <td class="celda">{{ datosv.canttasb }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.canttasb / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Concreto (losa o Terraza)</td>
+                        <td class="celda">{{ datosv.canttcon }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.canttcon / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Teja americana (Shingle)</td>
+                        <td class="celda">{{ datosv.canttshi }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.canttshi / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosv.total }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.58 Material del piso</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Tipo</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Tierra</td>
+                        <td class="celda">{{ datosv.cantptie }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantptie / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Plancha de Cemento</td>
+                        <td class="celda">{{ datosv.cantppla }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantppla / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Madera rústica</td>
+                        <td class="celda">{{ datosv.cantpmad }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantpmad / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Ladrillo de barro</td>
+                        <td class="celda">{{ datosv.cantplad }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantplad / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Granito</td>
+                        <td class="celda">{{ datosv.cantpgra }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantpgra / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Cerámica</td>
+                        <td class="celda">{{ datosv.cantpcer }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantpcer / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Mosaico</td>
+                        <td class="celda">{{ datosv.cantpmos }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantpmos / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosv.total }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>    
+        <tr>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.59 Condición de la vivienda</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Condición</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Buena</td>
+                        <td class="celda">{{ datosv.cantcbue }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantcbue / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Regular</td>
+                        <td class="celda">{{ datosv.cantcreg }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantcreg / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Mala</td>
+                        <td class="celda">{{ datosv.cantcmal }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cantcmal / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosv.total }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.60 Tiene Cocina</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Si</td>
+                        <td class="celda">{{ datosv.cocinasi }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cocinasi / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>No</td>
+                        <td class="celda">{{ datosv.cocinano }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.cocinano / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosv.total }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.61 Ubicación Cocina</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Lugar</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Dentro de la vivienda</td>
+                        <td class="celda">{{ datosv.ubicdentro }}</td>
+                        <td class="celdad">{% if(datosv.cocinasi > 0) %}{{ ((datosv.ubicdentro / datosv.cocinasi)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Fuera de la vivienda</td>
+                        <td class="celda">{{ datosv.ubicfuera }}</td>
+                        <td class="celdad">{% if(datosv.cocinasi > 0) %}{{ ((datosv.ubicfuera / datosv.cocinasi)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>En el corredor</td>
+                        <td class="celda">{{ datosv.ubiccorre }}</td>
+                        <td class="celdad">{% if(datosv.cocinasi > 0) %}{{ ((datosv.ubiccorre / datosv.cocinasi)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosv.cocinasi }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top">
+                <table>
+                    {% set totcocinac = datosv.cocinacele + datosv.cocinacchi + datosv.cocinacker + datosv.cocinaclena + datosv.cocinaceco %}
+                    <tr><td colspan="3"><b>P.62 Que utiliza para Cocinar</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Tipo</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Electricidad</td>
+                        <td class="celda">{{ datosv.cocinacele }}</td>
+                        <td class="celdad">{% if(totcocinac > 0) %}{{ ((datosv.cocinacele / totcocinac)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Gas Volatil (Chimbo)</td>
+                        <td class="celda">{{ datosv.cocinacchi }}</td>
+                        <td class="celdad">{% if(totcocinac > 0) %}{{ ((datosv.cocinacchi / totcocinac)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Gas Kerosen</td>
+                        <td class="celda">{{ datosv.cocinacker }}</td>
+                        <td class="celdad">{% if(totcocinac > 0) %}{{ ((datosv.cocinacker / totcocinac)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Leña</td>
+                        <td class="celda">{{ datosv.cocinaclena }}</td>
+                        <td class="celdad">{% if(totcocinac > 0) %}{{ ((datosv.cocinaclena / totcocinac)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Eco Fogon</td>
+                        <td class="celda">{{ datosv.cocinaceco }}</td>
+                        <td class="celdad">{% if(totcocinac > 0) %}{{ ((datosv.cocinaceco / totcocinac)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ totcocinac }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    {% set totconsumea = datosv.consumoanot + datosv.consumoabot + datosv.consumoafil + datosv.consumoaher + datosv.consumoaclo %}
+                    <tr><td colspan="3"><b>P.63 Como consume el agua</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Tipo</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>No tratada</td>
+                        <td class="celda">{{ datosv.consumoanot }}</td>
+                        <td class="celdad">{% if(totconsumea > 0) %}{{ ((datosv.consumoanot / totconsumea)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Botellón</td>
+                        <td class="celda">{{ datosv.consumoabot }}</td>
+                        <td class="celdad">{% if(totconsumea > 0) %}{{ ((datosv.consumoabot / totconsumea)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Filtrada</td>
+                        <td class="celda">{{ datosv.consumoafil }}</td>
+                        <td class="celdad">{% if(totconsumea > 0) %}{{ ((datosv.consumoafil / totconsumea)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Hervida</td>
+                        <td class="celda">{{ datosv.consumoaher }}</td>
+                        <td class="celdad">{% if(totconsumea > 0) %}{{ ((datosv.consumoaher / totconsumea)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Clorada</td>
+                        <td class="celda">{{ datosv.consumoaclo }}</td>
+                        <td class="celdad">{% if(totconsumea > 0) %}{{ ((datosv.consumoaclo / totconsumea)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ totconsumea }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.64 Piezas por vivienda</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Piezas</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                        {% set totalpv = 0 %}
+                        {% for datospv in datospxv %}
+                            <tr>
+                                <td>{{ datospv.rango }}</td>
+                                <td class="celda">{{ datospv.cantidad }}</td>
+                                <td class="celdad">{{ datospv.porpiezas|round(2) }}</td>
+                            </tr>
+                            {% set totalpv = totalpv + datospv.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalpv }}</td>
+                            <td></td>
+                        </tr>
+                </table>
+            </td>
+        </tr>  
+        <tr>
+            <td style="vertical-align: top">
+            <table>
+                <tr><td colspan="3"><b>P.65 Baños por vivienda</b></td></tr>
+                <tr class="titulo-tabla">
+                    <td>Rango</td>
+                    <td>Cantidad</td>
+                    <td class="celda">%</td>
+                </tr>
+                    {% set totalbv = 0 %}
+                    {% for datosbv in datosbxv %}
+                        <tr>
+                            <td>{{ datosbv.rango }}</td>
+                            <td class="celda">{{ datosbv.cantidad }}</td>
+                            <td class="celdad">{{ datosbv.porbxviv|round(2) }}</td>
+                        </tr>
+                        {% set totalbv = totalbv + datosbv.cantidad %}
+                    {% endfor %}
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ totalbv }}</td>
+                        <td></td>
+                    </tr>
+            </table>
+            </td>
+            <td style="vertical-align: top">
+    <table>
+        <tr><td colspan="3"><b>P.66 Dormitorios por vivienda</b></td></tr>
+        <tr class="titulo-tabla">
+            <td>Rango</td>
+            <td>Cantidad</td>
+            <td class="celda">%</td>
+        </tr>
+            {% set totaldv = 0 %}
+            {% for datosdv in datosdxv %}
+                <tr>
+                    <td>{{ datosdv.rango }}</td>
+                    <td class="celda">{{ datosdv.cantidad }}</td>
+                    <td class="celdad">{{ datosdv.pordxviv|round(2) }}</td>
+                </tr>
+                {% set totaldv = totaldv + datosdv.cantidad %}
+            {% endfor %}
+            <tr class="piede-tabla borde-arriba">
+                <td>Total</td>
+                <td class="celda">{{ totaldv }}</td>
+                <td></td>
+            </tr>
+    </table>
+</td>
+<td style="vertical-align: top">
+    <table>
+        <tr><td colspan="3"><b>P.67 Personas por dormitorio</b></td></tr>
+        <tr class="titulo-tabla">
+            <td>Rango</td>
+            <td>Cantidad</td>
+            <td class="celda">%</td>
+        </tr>
+            {% set totalpd = 0 %}
+            {% for datospd in datospxd %}
+                <tr>
+                    <td>{{ datospd.rango }}</td>
+                    <td class="celda">{{ datospd.cantidad }}</td>
+                    <td class="celdad">{{ datospd.porpxdor|round(2) }}</td>
+                </tr>
+                {% set totalpd = totalpd + datospd.cantidad %}
+            {% endfor %}
+            <tr class="piede-tabla borde-arriba">
+                <td>Total</td>
+                <td class="celda">{{ totalpd }}</td>
+                <td></td>
+            </tr>
+    </table>
+</td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top">
+    <table>
+        <tr><td colspan="3"><b>P.68 Familias por vivienda</b></td></tr>
+        <tr class="titulo-tabla">
+            <td>Rango</td>
+            <td>Cantidad</td>
+            <td class="celda">%</td>
+        </tr>
+            {% set totalfv = 0 %}
+            {% for datosfv in datosfxv %}
+                <tr>
+                    <td>{{ datosfv.rango }}</td>
+                    <td class="celda">{{ datosfv.cantidad }}</td>
+                    <td class="celdad">{{ datosfv.porfxviv|round(2) }}</td>
+                </tr>
+                {% set totalfv = totalfv + datosfv.cantidad %}
+            {% endfor %}
+            <tr class="piede-tabla borde-arriba">
+                <td>Total</td>
+                <td class="celda">{{ totalfv }}</td>
+                <td></td>
+            </tr>
+    </table>
+</td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.69 Emigración</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Si</td>
+                        <td class="celda">{{ datosv.emigradosi }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.emigradosi / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>No</td>
+                        <td class="celda">{{ datosv.emigradono }}</td>
+                        <td class="celdad">{% if(datosv.total > 0) %}{{ ((datosv.emigradono / datosv.total)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosv.total }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.69.1 Razón por la que emigrarón</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Razones</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Economicas</td>
+                        <td class="celda">{{ datosv.razonmeco }}</td>
+                        <td class="celdad">{% if(datosv.emigradosi > 0) %}{{ ((datosv.razonmeco / datosv.emigradosi)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Violencia generalizada</td>
+                        <td class="celda">{{ datosv.razonmvio }}</td>
+                        <td class="celdad">{% if(datosv.emigradosi > 0) %}{{ ((datosv.razonmvio / datosv.emigradosi)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Reunificación familiar</td>
+                        <td class="celda">{{ datosv.razonmfam }}</td>
+                        <td class="celdad">{% if(datosv.emigradosi > 0) %}{{ ((datosv.razonmfam / datosv.emigradosi)*100)|round(2) }}{% endif %}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosv.emigradosi }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>    
+    </table>  
+</page>                  
+<page_footer>    
+<br/>  
+    <br/>
+     <table cellspacing="0" style="width: 100%; font-size: 6pt;">
+        <tbody>
+         <tr>
+            <th  align="center" style="width: 100%;" border="0" class="txt_titleheader">
+                <label class="txt_titleheader"></label>
+            </th>
+        </tr>
+        </tbody>
+    </table>
+</page_footer>
+{% endblock %}

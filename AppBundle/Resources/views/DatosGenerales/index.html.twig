@@ -1,0 +1,239 @@
+{% extends '::basemenu.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{asset('bundles/app/css/jquery.dataTables_themeroller.css')}}" />
+    <link rel="stylesheet" href="{{asset('bundles/app/css/focal.css')}}" />
+{% endblock %}      
+{% block header -%}
+    Datos Generales
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Agregar, nueva encuesta y datos
+    </small>
+{% endblock %}  
+{% block content -%}
+
+    <ul style="list-style: none; margin-left: 0">
+        <li>
+            <a class="btn btn-xs btn-app" href="{{ path('datosgenerales_new') }}">
+                <i class="ace-icon fa fa-plus-square align-top bigger-120"></i>Nueva
+            </a>
+            <a id="btnDatosD" class="btn btn-xs btn-app" href="#">
+                <i class="ace-icon fa fa-group align-top bigger-120"></i>Demográficos
+            </a>
+            <a id="btnDatosS" class="btn btn-xs btn-app" href="#">
+                <i class="ace-icon fa fa-user-md align-top bigger-120"></i>Salud
+            </a> 
+            <a id="btnDatosSP" class="btn btn-xs btn-app" href="#">
+                <i class="ace-icon fa fa-user-secret align-top bigger-120"></i>Seguridad
+            </a>  
+            <a id="btnDatosSPub" class="btn btn-xs btn-app" href="#">
+                <i class="ace-icon fa fa-phone align-top bigger-120"></i>Servicios
+            </a>
+            <a id="btnDatosSA" class="btn btn-xs btn-app" href="#">
+                <i class="ace-icon fa fa-shopping-basket align-top bigger-120"></i>Alimentaria
+            </a>                 
+            <a id="btnDatosE" class="btn btn-xs btn-app" href="#">
+                <i class="ace-icon fa fa-graduation-cap align-top bigger-120"></i>Educación
+            </a> 
+            <a id="btnDatosF" class="btn btn-xs btn-app" href="#">
+                <i class="ace-icon fa fa-cogs align-top bigger-120"></i>Laboral
+            </a>
+            <a id="btnDatosV" class="btn btn-xs btn-app" href="#">
+                <i class="ace-icon fa fa-home align-top bigger-120"></i>Vivienda
+            </a>
+            <a id="btnValidar" class="btn btn-xs btn-app" href="#">
+                <i class="ace-icon fa fa-check-square-o align-top bigger-120"></i>Validar
+            </a>     
+        </li>
+    </ul>
+    {% if is_granted('ROLE_SUPERV') %}            
+        <button class="btn btn-primary" style="margin-bottom: 10px" data-toggle="collapse" data-target="#buscar-pnl"><i class="ace-icon fa fa-search-plus align-top bigger-120"></i> Buscar ...</button>
+        <div id="buscar-pnl" class="form-group collapse">
+            <form id="frm-buscar" action="{{ path('datosgenerales_buscar') }}" method="get" name="frm-buscar">
+                <div class="form-group col-sm-12">
+                    <!--div class="row" style="margin-bottom: 5px">
+                        <label class="col-sm-2 " for="modal-nombre">Id. de Encuesta </label>
+                        <div class="col-sm-10">
+                            <input type="text" id="txt_idenc" name="idencuesta" class="form-control" placeholder="Id de la encuesta" />
+                        </div>
+                    </div -->
+                    <div class="row">
+                        <label class="col-sm-2" for="modal-nombre">No. de Boleta </label>
+                        <div class="col-sm-10">
+                            <input type="text" id="txt_idenc" name="numboleta" class="form-control" placeholder="Ingrese número de boleta validada" />
+                        </div>
+                    </div>
+                </div>    
+                <div class="modal-footer">
+                    <button type="button" id="btnCerrarBuscar" class="btn btn-sm btn-primary" data-toggle="collapse" data-target="#buscar-pnl">
+                            <i class="ace-icon fa fa-times"></i>
+                            Cancelar
+                    </button>
+
+                    <button id="btnBuscar" class="btn btn-sm btn-primary" >
+                            <i class="ace-icon fa fa-search-plus"></i>
+                            Buscar
+                    </button>
+                </div>
+            </form>    
+        </div> 
+    {% endif %}        
+    <div class="table-header">
+        Listado de encuestas pendientes de terminar
+    </div> 
+    <table id="dynamic-table" class="table table-striped table-bordered table-responsive table-hover">
+        <thead>
+            <tr>
+                <th class="center"></th>                
+                <!--th>Id</th -->
+                <th>No. Boleta</th>
+                <th>Comunidad</th>
+                <th>Encuestador</th>
+                <th>Entrevistado</th>
+                <th>Usuario</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td class="center">
+                    <label class="pos-rel">
+                        <input type="radio" value="{{ entity.idEnc }}" name="sel-enc" class="ace" />
+                        <span class="lbl"></span>
+                    </label>
+                </td>
+                <!--td><a href="{# path('datosgenerales_show', { 'id': entity.idEnc }) }}">{{ entity.idEnc #}</a></td -->
+                <td>{{ entity.numBoleta }}</td>
+                <td>{{ entity.nomColonia }}</td>
+                <td>{{ entity.nomEncuestador }}</td>
+                <td>{{ entity.nombreEntrevistado }}</td>
+                <td>{{ entity.usuarioCreacion }}</td>
+                <td>
+                <ul style="display: inline; padding-top: 5px; padding-left: 5px;">
+                    <li style="display: inline; list-style: none">
+                        <a style="padding-right:10px" href="{{ path('datosgenerales_show', { 'id': entity.idEnc }) }}" title="Ver la información">
+                            <i class="ace-icon fa fa-search-plus align-top bigger-120"></i>
+                        </a>
+                    </li>
+                    <li style="display: inline; list-style: none; padding-right: 6px">
+                        <a href="{{ path('datosgenerales_edit', { 'id': entity.idEnc }) }}" title="Editar encuesta">
+                            <i class="ace-icon fa fa-pencil align-top bigger-120"></i>
+                        </a>
+                    </li>
+                    {% if is_granted('ROLE_SUPERV') %} 
+                    <li style="display: inline; list-style: none; padding-right: 6px">
+                        <a class="borrarenc" data-idenc={{ entity.idEnc }} href="{{ path('datosgenerales_delete', { 'id': entity.idEnc }) }}" title="Borrar encuesta">
+                            <i class="ace-icon fa fa-trash-o align-top bigger-120"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li style="display: inline; list-style: none">
+                        <a href="{{ path('datosgenerales_validar', { 'id': entity.idEnc }) }}" title="Validar encuesta">
+                            <i class="ace-icon fa fa-check-circle-o align-top bigger-120"></i>
+                        </a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/app/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{ asset('bundles/app/js/jquery.dataTables.bootstrap.min.js')}}"></script> 
+    
+    <script type="text/javascript">
+        var table;
+        $(document).ready(function() {
+            table = $('#dynamic-table').DataTable({
+                language:{
+                    search: "Buscar",
+                    lengthMenu: "Mostrar _MENU_ registros",
+                    emptyTable: "No hay datos...",
+                    info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    infoFiltered: "(Filtrando de un total de _MAX_ registros)",
+                    paginate: {
+                        first: "Primero",
+                        previous: "Anterior",
+                        next: "Siguiente",
+                        last: "Ultimo"
+                    }
+                }
+            });
+        });
+        $(document).on("click","#dynamic-table tr td",function(){
+            if($(this).parent().find("input:radio").is(':checked')){
+                $(this).parent().css("background-color","");
+                $(this).parent().find("input:radio").prop("checked", false);  
+            } else {
+                $(".ace").each(function(){
+                    if($(this).is(':checked')) {
+                        $(this).parent().parent().parent().css("background-color","");
+                    }
+                });
+                $(this).parent().css("background-color","#CFE7F9");
+                $(this).parent().find("input:radio").prop("checked", true);         
+            }
+        });
+        
+        $('.borrarenc').click(function(e){
+           e.preventDefault(); 
+           var idenc = $(this).data("idenc");
+           var href = $(this).attr('href');
+           var resp = confirm("Esta seguro que desea borrar esta encuesta y todos sus registros relacionados!");
+           if(resp === true) {
+               window.location.href=href; 
+           }
+           
+        });
+        $('#btnDatosD, #btnDatosS, #btnDatosSP, #btnDatosSPub, #btnDatosSA, #btnDatosE, #btnDatosF, #btnDatosV, #btnValidar').click(function(e){
+            fila = $("#dynamic-table input[name='sel-enc']:radio");
+            if(fila.is(':checked')) {
+                valor = $("#dynamic-table input:radio[name='sel-enc']:checked").val();
+                e.preventDefault();
+                switch ($(this).attr('id')) {
+                    case 'btnDatosD':
+                        url = '/FocalAB/web/app_dev.php/datosdfamilia/'+valor;
+                        break;
+                    case 'btnDatosS':
+                        url = '/FocalAB/web/app_dev.php/datossgeneral/'+valor+'/index';
+                        break;
+                    case 'btnDatosSP':
+                        url = '/FocalAB/web/app_dev.php/datosseguridadpar/'+valor+'/index';
+                        break; 
+                    case 'btnDatosSPub':
+                        url = '/FocalAB/web/app_dev.php/datosserviciospub/'+valor+'/index';
+                        break; 
+                    case 'btnDatosSA':
+                        url = '/FocalAB/web/app_dev.php/datossegalimentaria/'+valor+'/index';
+                        break;     
+                    case 'btnDatosE':
+                        url = '/FocalAB/web/app_dev.php/datoseducacion/'+valor+'/index';
+                        break; 
+                    case 'btnDatosF':
+                        url = '/FocalAB/web/app_dev.php/datosfuerzaingresos/'+valor+'/index';
+                        break;    
+                    case 'btnDatosV':
+                        url = '/FocalAB/web/app_dev.php/datosvivienda/'+valor+'/index';
+                        break; 
+                    case 'btnValidar':
+                        url = '/FocalAB/web/app_dev.php/datosgenerales/'+valor+'/validar';
+                        break; 
+            }
+                
+                window.location.href=url;               
+            } else {
+                e.preventDefault();
+                alert("Seleccione una encuesta");
+            }
+        });
+    </script>    
+{% endblock %}

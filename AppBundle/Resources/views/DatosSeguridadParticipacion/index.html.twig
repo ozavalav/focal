@@ -1,0 +1,294 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{asset('bundles/app/css/jquery.dataTables_themeroller.css')}}" />
+    <link rel="stylesheet" href="{{asset('bundles/app/css/focal.css')}}" />
+{% endblock %}      
+{% block header -%}
+    C y D. Datos Seguridad y Participación
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Ingresar la información de seguridad y participación
+    </small>
+{% endblock %}
+{% block content -%}
+    <div class="row">
+        <div class="col-sm-6" style="float:left">
+            <h4>No. Boleta: {{ numboleta }}</h4>
+            <h4>Id Encuesta: {{ idenc }}</h4>
+        </div>
+        <div class="col-sm-6" style="text-align:right">
+            <ul style="list-style: none; margin-left: 0; padding-top: 10px; display:inline">
+                <li style="display:inline">
+                    <a id="btnAnterior" class="btn btn-md btn-primary" href="{{ path('datossgeneral',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-left align-top bigger-120"></i> Anterior
+                    </a> 
+                </li>
+                <li style="display:inline">
+                    <a id="btnSiguiente" class="btn btn-md btn-primary" href="{{ path('datosserviciospub',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-right align-top bigger-120"></i> Siguiente
+                    </a> 
+                </li>
+            </ul> 
+        </div>    
+    </div>
+     
+    {% for type, flash_messages in app.session.flashBag.all %}
+        {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endfor %}
+    <div>
+    {{ form_start(form) }} 
+    <table>
+        <tr>
+            <td colspan="2">
+                <div class="col-sm-12">
+                    <h3>C. Seguridad</h3>
+                </div>
+            </td>    
+        </tr>          
+        <tr>
+            <td colspan="2">    
+            <div class="col-sm-12 ">
+                {{ form_label(form.casosViolencia) }}
+            </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 10%">
+                <div class="col-sm-2">
+                    {{ form_widget(form.casosViolencia) }}
+                </div>
+            </td>
+            <td>
+                <div class="col-sm-4">
+                    {{ form_row(form.cantCasosViolencia) }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">    
+            <div class="col-sm-12 ">
+                {{ form_label(form.victimaViolencia) }}
+            </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="col-sm-2">
+                    {{ form_widget(form.victimaViolencia) }}
+                </div>
+            </td>
+            <td>
+                <div class="col-sm-4">
+                    {{ form_row(form.cantVictimaViolencia) }}
+                </div>
+            </td>
+        </tr>    
+        <tr>
+            <td colspan="2">    
+            <div class="col-sm-12 ">
+                {{ form_label(form.consideraSeguro) }}
+            </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" >
+                <div class="col-sm-2">
+                    {{ form_widget(form.consideraSeguro) }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">    
+                <div class="col-sm-12 ">
+                    <label>Escriba en orden de importancia del 1 al 6 los que considera más importante al menos importante:</label>
+                </div>
+            </td>
+        </tr>   
+        
+        <tr id="ordenseg" style="display:none">
+            <td colspan="2">               
+                    <div class="col-sm-2">
+                        {{ form_row(form.ordenRobo) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.ordenMaras) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.ordenDrogas) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.ordenCantinas) }}
+                    </div>  
+                    <div class="col-sm-2">
+                        {{ form_row(form.ordenPeleas) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.ordenViolaciones) }}
+                    </div>
+            </td>  
+        </tr> 
+    </table>
+    <table>            
+        <tr>
+            <td colspan="2">
+                <div class="col-sm-12">
+                    <h3>D. Participación y Expectativas</h3>
+                </div>
+            </td>    
+        </tr> 
+        <tr>
+            <td colspan="2">
+                <div class="col-sm-12">
+                    {{ form_label(form.cantHombresMiembros) }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="col-sm-5">
+                    {{ form_widget(form.cantHombresMiembros) }}
+                </div>
+            </td>    
+        </tr>    
+        <tr>
+            <td colspan="2">
+                <div class="col-sm-12">
+                    {{ form_label(form.cantMujeresMiembros) }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="col-sm-5">
+                    {{ form_widget(form.cantMujeresMiembros) }}
+                </div>
+            </td>
+        </tr>        
+    </table>     
+    <div style="padding-bottom: 10px"></div>    
+    {{ form_widget(form.idEnc,{'value': idenc,'type':'hidden'})}}          
+    {{ form_rest(form) }}    
+    {{ form_end(form) }}
+    </div>
+    <div id="msgboxval" style="color:red; display: none"></div> 
+    <ul>
+        <li>
+            <a href="{{ path('datosgenerales') }}">
+                Regresar al listado
+            </a>
+        </li>
+    </ul> 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            var p25  = $("input:radio[name='focal_appbundle_datosseguridadparticipacion[casosViolencia]']:checked").val();
+            var p26  = $("input:radio[name='focal_appbundle_datosseguridadparticipacion[victimaViolencia]']:checked").val();
+            var p27  = $("input:radio[name='focal_appbundle_datosseguridadparticipacion[consideraSeguro]']:checked").val();
+            
+            if(p25==='1') {
+                $('#focal_appbundle_datosseguridadparticipacion_cantCasosViolencia').prop('disabled', false);
+            }
+            if(p26==='1') {
+                $('#focal_appbundle_datosseguridadparticipacion_cantVictimaViolencia').prop('disabled', false);
+            }
+            if(p27==='2') {
+               $('#ordenseg').show(); 
+            }
+            
+        });
+        
+        $('[name=focal_appbundle_datosseguridadparticipacion]').submit(function(e){
+            $('#focal_appbundle_datosseguridadparticipacion_submit').prop('disabled',true);
+        });
+        
+        $("input:radio[name='focal_appbundle_datosseguridadparticipacion[casosViolencia]']").on('change', function(){
+                var val = $(this).val();
+                if(val === '1') {
+                    $('#focal_appbundle_datosseguridadparticipacion_cantCasosViolencia').prop('disabled', false);
+                    $('#focal_appbundle_datosseguridadparticipacion_cantCasosViolencia').prop('required',true);
+                } else {
+                    $('#focal_appbundle_datosseguridadparticipacion_cantCasosViolencia').val('');
+                    $('#focal_appbundle_datosseguridadparticipacion_cantCasosViolencia').prop('required',false);
+                    $('#focal_appbundle_datosseguridadparticipacion_cantCasosViolencia').prop('disabled', true);
+                }
+        }); 
+        $("input:radio[name='focal_appbundle_datosseguridadparticipacion[victimaViolencia]']").on('change', function(){
+                var val = $(this).val();
+                if(val === '1') {
+                    $('#focal_appbundle_datosseguridadparticipacion_cantVictimaViolencia').prop('disabled', false);
+                    $('#focal_appbundle_datosseguridadparticipacion_cantVictimaViolencia').prop('required',true);
+                } else {
+                    $('#focal_appbundle_datosseguridadparticipacion_cantVictimaViolencia').val('');
+                    $('#focal_appbundle_datosseguridadparticipacion_cantVictimaViolencia').prop('required',false);
+                    $('#focal_appbundle_datosseguridadparticipacion_cantVictimaViolencia').prop('disabled', true);
+                }
+        }); 
+        $("input:radio[name='focal_appbundle_datosseguridadparticipacion[consideraSeguro]']").on('change', function(){
+                var val = $(this).val();
+                if(val === '2') {
+                    $('#ordenseg').show(); 
+                } else {
+                    $('#ordenseg').hide(); 
+                    $('#focal_appbundle_datosseguridadparticipacion_ordenRobo').val('');
+                    $('#focal_appbundle_datosseguridadparticipacion_ordenMaras').val('');
+                    $('#focal_appbundle_datosseguridadparticipacion_ordenDrogas').val('');
+                    $('#focal_appbundle_datosseguridadparticipacion_ordenCantinas').val('');
+                    $('#focal_appbundle_datosseguridadparticipacion_ordenPeleas').val('');
+                    $('#focal_appbundle_datosseguridadparticipacion_ordenViolaciones').val('');
+                }
+        }); 
+        
+        /* Valida los campos ingresados en orden de importancion: seguridad */
+        $("input[name^='focal_appbundle_datosseguridadparticipacion[orden']").on('change', function(){                
+            var valor = $(this).val();
+            var nombre = $(this).attr('id');
+
+            if(parseInt(valor) > 6 || parseInt(valor) < 1) {
+                $(this).val('');
+                alert('Solo ingresar valores del 1 al 6');
+            } else {
+                $("input[name^='focal_appbundle_datosseguridadparticipacion[orden']").each(function(){
+                    var valori = $(this).val();
+                    var nombrei = $(this).attr('id');
+                    if(nombre !== nombrei) {
+                        if(valor === valori){
+                            $('#'+nombrei).val('');
+                        }
+                    } 
+                });
+            }
+        }); 
+        
+        /* Valida que las cantidades ingresadas en hombres y mujeres esten de acuerdo a los datos en Familia */
+        
+        $('#focal_appbundle_datosseguridadparticipacion_submit').on('click', function(e){
+            var canth = $('#focal_appbundle_datosseguridadparticipacion_cantHombresMiembros').val();
+            var cantm = $('#focal_appbundle_datosseguridadparticipacion_cantMujeresMiembros').val();
+            var canthm18 = {{ canthm18|default(0) }};
+            var cantmm18 = {{ cantmm18|default(0) }};
+            
+            canth = parseInt((canth === ''?0:canth));
+            cantm = parseInt((cantm === ''?0:cantm));
+            if((canth > canthm18) || (cantm > cantmm18 )) {
+                $('#msgboxval').text('Cantidades de hombres y mujeres debe ser menor a lo ingresado en datos de Familia (Pregunta 12.)');
+                $('#msgboxval').show();
+                e.preventDefault();
+            } else {
+                $('#msgboxval').hide();
+            }
+        });
+    </script>    
+
+{% endblock %}

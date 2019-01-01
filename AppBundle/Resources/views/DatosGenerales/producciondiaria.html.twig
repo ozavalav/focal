@@ -1,0 +1,385 @@
+{% extends '::basemenu.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{asset('bundles/app/css/bootstrap-datepicker.min')}}" />
+
+{% endblock%}  
+{% block header -%}
+    Reporte de Frecuencia Simple
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Información de la encuesta línea base
+    </small>
+{% endblock %} 
+{% block content -%} 
+    <div id="msg_error" style="color: red; display: none" class="col-sm-12"><label id="lblerror"></label></div>
+            
+     <table border='0' style='width: 600px'>
+        <tr>
+            <td  style='width:25%; text-align: left;'>
+                <label>FECHA INICIO</label>
+            </td> 
+            <td  style='width:75%'> 
+                <input id="fecha-ini" class='form-control' style='width: 90%' type="text" value="" name='fecha-ini' maxlength="16"/> 
+            </td> 
+        </tr>
+         <tr>
+            <td  style='width:25%; text-align: left;'>
+                <label>FECHA FIN</label>
+            </td> 
+            <td  style='width:75%'> 
+                <input id="fecha-fin" class='form-control' style='width: 90%' type="text" value="" name='fecha-fin' maxlength="16"/> 
+            </td> 
+        </tr>
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_REPO') %}
+        <tr> 
+            <td   style='width:25%; text-align: left;'>
+                <label>DEPARTAMENTO</label>
+            </td>
+            <td    style='width:75%'> 
+                <select class='form-control number' style='width: 90%' name="departamento" id="departamento" >  
+                     <option value="00" selected="selected" >-- Seleccionar --</option> 
+                     {% for dep in departamentos %}
+                     <option value="{{ dep.codDepartamento }}" >{{ dep.nombre }}</option>
+                     {% endfor %}
+                </select>  
+            </td>
+        </tr>
+        <tr> 
+            <td   style='width:25%; text-align: left;'>
+                <label>MUNICIPIO</label>
+            </td>
+            <td    style='width:75%'> 
+                <select class='form-control number' style='width: 90%' name="municipio" id="municipio" >  
+                    <option value="0000" selected="selected" >-- Seleccionar--</option>  
+                </select>  
+            </td>
+        </tr>
+        <tr> 
+            <td   style='width:25%; text-align: left;'>
+                <label>COMUNIDAD</label>
+            </td>
+            <td    style='width:75%'> 
+                <select multiple class='form-control number' style='width: 90%' name="comunidad" id="comunidad" >  
+                    <option value="000000000000" selected="selected" >-- Seleccionar--</option>  
+                </select>  
+            </td>
+        </tr>
+        {% endif %}
+
+    </table>
+    <table width="100%" style="margin-top: 10px;" class="table-responsive" >
+        <tr style="border-bottom: thin solid blue; ">
+            <td>
+                <b>Imprimir</b>
+            </td>
+        </tr>    
+    </table>    
+    <div class="container">    
+        <div class="row"> 
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-primary" id ="btnprint" target="_blank" data-path="{{ path('reporteFSDemo_crearReporteFSDemo')}}">
+                    Datos Demográficos
+                </a>
+            </div>
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-primary" id ="btnprintFSS" target="_blank" data-path="{{ path('reporteFSSalud_crearReporteFSSauld')}}">
+                        Datos Salud
+                </a>
+            </div>
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-primary" id ="btnprintFSSeg" target="_blank" data-path="{{ path('reporteFSSeg_crearReporteFSSeg')}}">
+                        Datos Seguridad
+                </a>
+            </div>    
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-primary" id ="btnprintFSSrvP" target="_blank" data-path="{{ path('reporteFSSrvP_crearReporteFSSrvP')}}">
+                        Datos Srv. Publicos
+                </a>
+            </div>
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-primary" id ="btnprintFSSegA" target="_blank" data-path="{{ path('reporteFSSegA_crearReporteFSSegA')}}">
+                        Datos Seg. Alimentaria
+                </a>
+            </div>
+                
+        </div> 
+        <div class="row"> 
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-primary" id ="btnprintFSEdu" target="_blank" data-path="{{ path('reporteFSEdu_crearReporteFSEdu')}}">
+                        Datos Educación
+                </a>
+            </div>
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-primary" id ="btnprintFSTI" target="_blank" data-path="{{ path('reporteFSTraIng_crearReporteFSTraIng')}}">
+                        Datos Trabajo Ingresos
+                </a> 
+            </div>
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-primary" id ="btnprintFSSeg" target="_blank" data-path="{{ path('reporteFSViv_crearReporteFSViv')}}">
+                        Datos Vivienda
+                </a>
+            </div>    
+            <div class="col-md-2">    
+                
+            </div>
+            <div class="col-md-2">    
+                
+            </div>
+        </div>                 
+    </div> 
+    <table width="100%" style="margin-top: 10px;" class="table-responsive" >
+        <tr style="border-bottom: thin solid blue; ">
+            <td width="20%">
+                <b>Exportar Datos</b>
+            </td>
+            <td>
+                <div>
+                    <label class="radio-inline"><input value="1" type="radio" name="expforma" checked>CSV</label>
+                    <label class="radio-inline"><input value="2" type="radio" name="expforma">Excel</label>
+                </div>
+            </td>    
+        </tr>    
+    </table>    
+    <div class="container">    
+        <div class="row"> 
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-success" id ="btnexcel" target="_blank" data-path="{{ path('datosgenerales_sacarExcel')}}">
+                    Demográficos
+                </a>
+            </div>
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-success" id ="btnexcelfam" target="_blank" data-path="{{ path('datosgenerales_sacarExcelFam')}}">
+                    Familia
+                </a>
+            </div>
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-success" id ="btnexcelenfer" target="_blank" data-path="{{ path('datosgenerales_sacarExcelEnfer')}}">
+                    Enfermedades
+                </a>
+            </div>
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-success" id ="btnexcelSrvP" target="_blank" data-path="{{ path('datosgenerales_sacarExcelSrvP')}}">
+                    Srv. Públicos
+                </a>
+            </div>
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-success" id ="btnexcelEdu" target="_blank" data-path="{{ path('datosgenerales_sacarExcelEdu')}}">
+                    Educación
+                </a>
+            </div>        
+        </div>
+        <div class="row"> 
+            <div class="col-md-2" style="padding: 5px">    
+                <a class="btn btn-success" id ="btnexcelFIng" target="_blank" data-path="{{ path('datosgenerales_sacarExcelFIng')}}">
+                    Ingresos
+                </a>
+            </div>
+            <div class="col-md-2" style="padding: 5px">    
+                 
+            </div>
+            <div class="col-md-2" style="padding: 5px">    
+                
+            </div>    
+            <div class="col-md-2">    
+                
+            </div>
+            <div class="col-md-2">    
+                
+            </div>
+        </div>             
+    </div>
+             
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <!--script src="{-{ asset('bundles/app/js/locales/bootstrap-datepicker.es.min.js')}}"></script -->
+    <script src="{{ asset('bundles/app/js/bootstrap-datepicker.min.js')}}"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+             $('#fecha-ini').datepicker({
+                 format: 'yyyy-mm-dd'
+                 //language:'es'
+             });
+             $('#fecha-fin').datepicker({
+                 format: 'yyyy-mm-dd'
+                 //language:'es'
+             });
+             
+            $('#departamento').change(function(e) {
+                var valdepto = $(this).val();  
+                e.preventDefault(); 
+                  var param =  valdepto;
+                   url="/FocalAB/web/app_dev.php/aduser/buscarMunicipio/" + param;
+                  $.ajax({
+                    type:'POST',
+                    url:url,
+                    beforeSend: function(){
+                    $("#lblError").hide();	
+                    },
+                    dataType: 'json',
+                    success:function(data){
+                        if(data.message === 'false'){
+                            alert('false');
+                        }else{
+                             var ejercicio = "<option value='00'> -- seleccionar -- </option>";
+                             var comunidad = "<option value='000000000000'> -- seleccionar -- </option>";
+                             $.each(data, function(i) {
+                                ejercicio = ejercicio + "<option value='"+data[i].codMunicipio+"'>"+data[i].codMunicipio+ " - "+data[i].nombre+ "</option>";  
+                             });
+                             $('#municipio').html(ejercicio);
+                             $('#comunidad').html(comunidad);
+                             //$('#focal_appbundle_aduser_submit').prop('disabled', true);
+                        }
+                    }
+                });
+            });
+            
+            $('#municipio').change(function(e) {
+                var valmuni = $(this).val();  
+                e.preventDefault(); 
+                  var param =  valmuni;
+                   url="/FocalAB/web/app_dev.php/datosgenerales/buscarComunidad/" + param;
+                  $.ajax({
+                    type:'POST',
+                    url:url,
+                    beforeSend: function(){
+                    $("#lblError").hide();	
+                    },
+                    dataType: 'json',
+                    success:function(data){
+                        if(data.message === 'false'){
+                            alert('false');
+                        }else{
+                             var comunidad = "<option value='000000000000'> -- seleccionar -- </option>";
+                             $.each(data, function(i) {
+                                comunidad = comunidad + "<option value='"+data[i].codComunidad+"'>"+data[i].codComunidad+ " - "+data[i].nombre+ "</option>";  
+                             });
+                             $('#comunidad').html(comunidad);
+                        }
+                    }
+                });
+            });
+            
+             
+             $('[id ^= btnprint]').click(function (e) {
+                    $('#msg_error').hide();
+                    
+                    var id = $('#fecha-ini').val();//$("input:radio[name='seleccion']:checked").val();
+                    var id2 = $('#fecha-fin').val();
+                    var id3 = $('#departamento').val();
+                    var id4 = $('#municipio').val();
+                    var id5 = $('#comunidad').val();
+                    
+                    var path = $(this).data('path');
+                    
+                    var ok = true;
+
+                    if(typeof id === 'undefined') {
+                        id = '00';
+                    }
+                    if(typeof id2 === 'undefined') {
+                        id2 = '00';
+                    }
+                    if(id === "") {
+                        id = '00';
+                    }
+                    if(id2 === "") {
+                        id2 = '00';
+                    }
+                    
+                    if(typeof id4 === 'undefined') {
+                        id4 = '0000';
+                    }
+                    if(typeof id3 === 'undefined') {
+                        id3 = '00';
+                    }
+                    if(typeof id5 === 'undefined') {
+                        id5 = '000000000000';
+                    }
+                    
+                    if(ok) {
+                        var pah = "/" + id + "," + id2 + "," + id3 + "," + id4 + "," + id5;
+                        window.open(path+pah);
+                    } else {
+                        $('#lblerror').text(msg);
+                        $('#msg_error').show();
+                    }
+            }); 
+            
+            
+            
+            $('[id ^= btnexcel]').click(function (e) {
+                    $('#msg_error').hide();
+                    
+                    var id = $('#fecha-ini').val();//$("input:radio[name='seleccion']:checked").val();
+                    var id2 = $('#fecha-fin').val();
+                    var id3 = $('#departamento').val();
+                    var id4 = $('#municipio').val();
+                    var id5 = $('#comunidad').val();
+                    var id6 = $('input:radio[name=expforma]:checked').val();
+                    var path = $(this).data('path');
+                    
+                    var ok = true;
+
+                    if(typeof id === 'undefined') {
+                        id = '00';
+                    }
+                    if(typeof id2 === 'undefined') {
+                        id2 = '00';
+                    }
+                    if(id === "") {
+                        id = '00';
+                    }
+                    if(id2 === "") {
+                        id2 = '00';
+                    }
+                    
+                    if(typeof id4 === 'undefined') {
+                        id4 = '0000';
+                    }
+                    if(typeof id3 === 'undefined') {
+                        id3 = '00';
+                    }
+                    if(typeof id5 === 'undefined') {
+                        id5 = '000000000000';
+                    }
+                    
+                    if(ok) {
+                        var path = path + "/" + id + "," + id2 + "," + id3 + "," + id4 + "," + id6 + "," + id5;
+                        //$(location).attr('href', path + pah);
+                        window.open(path);
+                    } else {
+                        $('#lblerror').text(msg);
+                        $('#msg_error').show();
+                    }
+            }); 
+            //$('#focal_appbundle_datosgenerales_submit').prop('disabled',true);
+            //$('#msgbox').fadeout(3000);
+        });
+        /*validacion de las cantidades - ya no es necesaria - 24 Jun 2017 */
+        /*$('#focal_appbundle_datosgenerales_cantPersonasvivienda, #focal_appbundle_datosgenerales_cantPersonas523, #focal_appbundle_datosgenerales_cantPersonasm10').on('change',function(){
+          
+            var nvive = $('#focal_appbundle_datosgenerales_cantPersonasvivienda').val();
+            var n523 = $('#focal_appbundle_datosgenerales_cantPersonas523').val();
+            var nm10 = $('#focal_appbundle_datosgenerales_cantPersonasm10').val();
+            
+            var tpersonas = parseInt(n523) + parseInt(nm10);
+            
+            if ( parseInt(tpersonas) !== parseInt(nvive) ){
+               $('#focal_appbundle_datosgenerales_cantPersonasvivienda').css('border-color', 'red'); 
+               $('#focal_appbundle_datosgenerales_cantPersonas523').css('border-color', 'red'); 
+               $('#focal_appbundle_datosgenerales_cantPersonasm10').css('border-color', 'red');
+               $('#msg_cant').show();
+            } else {
+               $('#focal_appbundle_datosgenerales_cantPersonasvivienda').css('border-color', ''); 
+               $('#focal_appbundle_datosgenerales_cantPersonas523').css('border-color', ''); 
+               $('#focal_appbundle_datosgenerales_cantPersonasm10').css('border-color', '');
+               $('#msg_cant').hide();
+               $('#focal_appbundle_datosgenerales_submit').prop('disabled',false);
+            }
+            
+        });*/
+    </script> 
+{% endblock %}

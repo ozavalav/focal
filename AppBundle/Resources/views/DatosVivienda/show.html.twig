@@ -1,0 +1,212 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>DatosVivienda</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Idenc</th>
+                <td>{{ entity.idEnc }}</td>
+            </tr>
+            <tr>
+                <th>Coddepartamento</th>
+                <td>{{ entity.codDepartamento }}</td>
+            </tr>
+            <tr>
+                <th>Codmunicipio</th>
+                <td>{{ entity.codMunicipio }}</td>
+            </tr>
+            <tr>
+                <th>Codcomunidad</th>
+                <td>{{ entity.codComunidad }}</td>
+            </tr>
+            <tr>
+                <th>Tipovivienda</th>
+                <td>{{ entity.tipoVivienda }}</td>
+            </tr>
+            <tr>
+                <th>Tipotenencia</th>
+                <td>{{ entity.tipoTenencia }}</td>
+            </tr>
+            <tr>
+                <th>Tipodominio</th>
+                <td>{{ entity.tipoDominio }}</td>
+            </tr>
+            <tr>
+                <th>Sexotenencia</th>
+                <td>{{ entity.sexoTenencia }}</td>
+            </tr>
+            <tr>
+                <th>Problemavivienda</th>
+                <td>{{ entity.problemaVivienda }}</td>
+            </tr>
+            <tr>
+                <th>Problemarellano</th>
+                <td>{{ entity.problemaRellano }}</td>
+            </tr>
+            <tr>
+                <th>Materialvivienda</th>
+                <td>{{ entity.materialVivienda }}</td>
+            </tr>
+            <tr>
+                <th>Materialtecho</th>
+                <td>{{ entity.materialTecho }}</td>
+            </tr>
+            <tr>
+                <th>Materialpiso</th>
+                <td>{{ entity.materialPiso }}</td>
+            </tr>
+            <tr>
+                <th>Condicionvivienda</th>
+                <td>{{ entity.condicionVivienda }}</td>
+            </tr>
+            <tr>
+                <th>Tienecocina</th>
+                <td>{{ entity.tieneCocina }}</td>
+            </tr>
+            <tr>
+                <th>Ubicacioncocina</th>
+                <td>{{ entity.ubicacionCocina }}</td>
+            </tr>
+            <tr>
+                <th>Concinaconelec</th>
+                <td>{{ entity.concinaconElec }}</td>
+            </tr>
+            <tr>
+                <th>Concinaconchimbo</th>
+                <td>{{ entity.concinaconChimbo }}</td>
+            </tr>
+            <tr>
+                <th>Concinaconkerosen</th>
+                <td>{{ entity.concinaconKerosen }}</td>
+            </tr>
+            <tr>
+                <th>Concinaconlena</th>
+                <td>{{ entity.concinaconLena }}</td>
+            </tr>
+            <tr>
+                <th>Concinaconeco</th>
+                <td>{{ entity.concinaconEco }}</td>
+            </tr>
+            <tr>
+                <th>Consumoaguanotratada</th>
+                <td>{{ entity.consumoaguaNotratada }}</td>
+            </tr>
+            <tr>
+                <th>Consumoaguabotellon</th>
+                <td>{{ entity.consumoaguaBotellon }}</td>
+            </tr>
+            <tr>
+                <th>Consumoaguafiltrada</th>
+                <td>{{ entity.consumoaguaFiltrada }}</td>
+            </tr>
+            <tr>
+                <th>Consumoaguahervida</th>
+                <td>{{ entity.consumoaguaHervida }}</td>
+            </tr>
+            <tr>
+                <th>Consumoaguaclorada</th>
+                <td>{{ entity.consumoaguaClorada }}</td>
+            </tr>
+            <tr>
+                <th>Piezasvivienda</th>
+                <td>{{ entity.piezasVivienda }}</td>
+            </tr>
+            <tr>
+                <th>Banosvivienda</th>
+                <td>{{ entity.banosVivienda }}</td>
+            </tr>
+            <tr>
+                <th>Dormitoriosvivienda</th>
+                <td>{{ entity.dormitoriosVivienda }}</td>
+            </tr>
+            <tr>
+                <th>Personasxdormitorio</th>
+                <td>{{ entity.personasxDormitorio }}</td>
+            </tr>
+            <tr>
+                <th>Familiascasa</th>
+                <td>{{ entity.familiasCasa }}</td>
+            </tr>
+            <tr>
+                <th>Miembroemigrado</th>
+                <td>{{ entity.miembroEmigrado }}</td>
+            </tr>
+            <tr>
+                <th>Canthombres</th>
+                <td>{{ entity.cantHombres }}</td>
+            </tr>
+            <tr>
+                <th>Cantmujeres</th>
+                <td>{{ entity.cantMujeres }}</td>
+            </tr>
+            <tr>
+                <th>Cantotrospais</th>
+                <td>{{ entity.cantOtrospais }}</td>
+            </tr>
+            <tr>
+                <th>Cantcentroa</th>
+                <td>{{ entity.cantCentroa }}</td>
+            </tr>
+            <tr>
+                <th>Cantnortea</th>
+                <td>{{ entity.cantNortea }}</td>
+            </tr>
+            <tr>
+                <th>Cantsura</th>
+                <td>{{ entity.cantSura }}</td>
+            </tr>
+            <tr>
+                <th>Canteuropa</th>
+                <td>{{ entity.cantEuropa }}</td>
+            </tr>
+            <tr>
+                <th>Cantotros</th>
+                <td>{{ entity.cantOtros }}</td>
+            </tr>
+            <tr>
+                <th>Cantdentropais</th>
+                <td>{{ entity.cantDentropais }}</td>
+            </tr>
+            <tr>
+                <th>Razonmigracion</th>
+                <td>{{ entity.razonMigracion }}</td>
+            </tr>
+            <tr>
+                <th>Fechacreacion</th>
+                <td>{{ entity.fechaCreacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Usuariocreacion</th>
+                <td>{{ entity.usuarioCreacion }}</td>
+            </tr>
+            <tr>
+                <th>Usuarioultimamodificacion</th>
+                <td>{{ entity.usuarioUltimaModificacion }}</td>
+            </tr>
+            <tr>
+                <th>Fechaultimamodificacion</th>
+                <td>{{ entity.fechaUltimaModificacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('datosvivienda') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('datosvivienda_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

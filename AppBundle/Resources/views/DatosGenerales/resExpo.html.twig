@@ -1,0 +1,29 @@
+{% extends '::basemenu.html.twig' %}
+
+{% block header -%}
+    Resultados de la exportación - 
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        dar click para descargar
+    </small>
+{% endblock %} 
+   
+{% block content -%}
+
+    <div>El archivo de descargara automaticamente, en caso contrario utilice el siguiente link:</div>
+    
+    <div>
+        <a href="{{ asset('bundles/app/expofiles/' ~ archivo) }}">Descargar archivo </a> 
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var downloadUrl = "{{ asset('bundles/app/expofiles/' ~ archivo) }}";
+            setTimeout("window.location.assign('" + downloadUrl + "');", 1000);
+        });
+    </script>
+    
+{% endblock %}    

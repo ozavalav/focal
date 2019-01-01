@@ -1,0 +1,285 @@
+
+{% block stylesheets %}
+<style type="text/Css">
+<!--
+#body{
+	font-family:Verdana, Calibri, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	font-weight:400;
+	color:#000;
+}
+.small_font{
+	font-size:8px;
+	color:#666;
+}
+.bg_img{
+	background-color:#F5ECCE;
+	border-radius:5px;
+	height:50px;
+}
+.linea{
+	border-width:1px;
+	border-bottom:solid;
+	border-color:#666;
+}
+.txt_title{
+	font-size:16px;
+	font-weight:bold;
+}
+.txt_titleheader{
+	font-size:12px;
+	font-weight:bold;
+	color:#333;
+}
+.txt_titleheader_cotenido{
+	font-size:7px;
+}
+.celda {
+    text-align: center;
+}
+.celdad {
+    text-align: right;
+}
+.borde-arriba td {
+    border-top: 1px solid #000; 
+}
+.borde-abajo th {
+    border-bottom: 1px solid #000; 
+} 
+.titulo-grupo {
+    background-color: lightskyblue;
+    text-align: center;
+}
+.titulo-tabla {
+    background-color: lightgreen;
+}
+.piede-tabla {
+    background-color: lightgrey;
+}
+-->
+</style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+<page backtop="20mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 14px;" footer="page">
+<page_header>
+  <table cellspacing="0" border='0' align="center"  style="width: 100%; font-size: 12pt;">
+        <tbody>
+        <tr>
+            <th colspan='5' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                <label  class="txt_title">REPORTE - FRECUENCIA SIMPLE</label><br/>
+            </th> 
+        </tr> 
+        <tr style="width: 100%;"> 
+            <th class="txt_titleheader">Fecha Inicio: {{ fin == '00' ? "" : fin|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Fecha Final: {{ fin2 == '00' ? "" : fin2|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }} </th>
+            <th class="txt_titleheader">Municipio: {{ codmun }} - {{ nommun }}  </th>
+        </tr>  
+        <tr style="width: 100%;">    
+            <th colspan="4" class="txt_titleheader">
+                Comunidad: 
+                {% if cantcom <= 5 %}
+                    {% for ncom in dtnomcom %}
+                        {{ ncom.nombre }} / 
+                    {% endfor %} 
+                {% else %}
+                    Varias
+                {% endif %}
+            </th>
+        </tr>  
+   </tbody>
+    </table>
+</page_header>   
+    <table>
+        <tr>
+            <td class="titulo-grupo"><b>=== E. Datos Servicios Publicos ===</b></td>
+        </tr> 
+        <tr>
+            <td>
+                <table cellspacing="5">
+                    <thead>
+                    <tr><td colspan="17"><b>P.30 Servicios públicos que reciben</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td colspan="8"></td>
+                        <td colspan="9" style="text-align: center">Porcentajes</td>
+                    </tr>
+                    <tr class="titulo-tabla">
+                        <td>No.</td>
+                        <td>Servicio</td>
+                        <td>Total</td>
+                        <td>Reciben Si</td>
+                        <td class="celda">%</td>
+                        <td>Reciben No</td>
+                        <td class="celda">%</td>
+                        <td class="celda">-</td>
+                        <td class="celda">Bueno</td>
+                        <td class="celda">Regular</td>
+                        <td class="celda">Malo</td>
+                        <td class="celda">ND</td>
+                        <td class="celda">-</td>
+                        <td class="celda"> % B </td>
+                        <td class="celda"> % R </td>
+                        <td class="celda"> % M </td>
+                        <td class="celda"> % ND </td>
+                    </tr>
+                    
+                    </thead>
+                    <tbody>
+                        {#% set totals = 0 %}
+                        {% set totalssi = 0 %}
+                        {% set totalsno = 0 %#}
+                        {% set escretas = 0 %}
+                        {% set totalviv = 0 %}
+                        {% for datoss in datossrv %}
+                            <tr>
+                                <td class="celda">{{ datoss.idsrv }}</td>
+                                <td>{{ datoss.descripcion }}</td>
+                                <td class="celda">{{ datoss.total }}</td>
+                                <td class="celda">{{ datoss.rsi }}</td>
+                                <td class="celdad">{{ datoss.porsi|round(2) }}</td>
+                                <td class="celda">{{ datoss.rno }}</td>
+                                <td class="celdad">{{ datoss.porno|round(2) }}</td>
+                                <td></td>
+                                <td class="celda">{{ datoss.ebueno}}</td>
+                                <td class="celda">{{ datoss.eregular}}</td>
+                                <td class="celda">{{ datoss.emalo}}</td>
+                                <td class="celda">{% if datoss.idsrv not in [3, 10,11,12,14,15 ] %}{{ datoss.enulo}} {% endif %}</td>
+                                <td></td>
+                                <td class="celdad">{% if datoss.rsi > 0 and datoss.idsrv not in [3, 10,11,12,14,15 ] %} {{ ((datoss.ebueno / datoss.rsi)*100)|round(2) }} {% endif %}</td>
+                                <td class="celdad">{% if datoss.rsi > 0 and datoss.idsrv not in [3, 10,11,12,14,15 ] %} {{ ((datoss.eregular / datoss.rsi)*100)|round(2) }} {% endif %}</td>
+                                <td class="celdad">{% if datoss.rsi > 0 and datoss.idsrv not in [3, 10,11,12,14,15 ] %} {{ ((datoss.emalo / datoss.rsi)*100)|round(2) }} {% endif %}</td> 
+                                <td class="celdad">{% if datoss.rsi > 0 and datoss.idsrv not in [3, 10,11,12,14,15 ] %} {{ ((datoss.enulo / datoss.rsi)*100)|round(2) }} {% endif %}</td> 
+                            </tr>
+                            {% if datoss.idsrv in [7,8,9] %} {% set escretas = escretas + datoss.rsi %} {% set totalviv = datoss.total %} {% endif %}
+                            {#% set totals = totals + datoss.total %}
+                            {% set totalssi = totalssi + datoss.rsi %}
+                            {% set totalsno = totalsno + datoss.rno %#}
+                        {% endfor %}
+                        <!--tr class="borde-arriba">
+                            <td>Total</td>
+                            <td></td>
+                            <td class="celda">{#{ totals }}</td>
+                            <td class="celda">{{ totalssi }}</td>
+                            <td></td>
+                            <td class="celda">{{ totalsno }#}</td>
+                            <td></td>
+                            
+                        </tr -->
+                    </tbody>    
+                </table>    
+            </td>
+        </tr>
+        <tr>
+            <td class="titulo-tabla">Disposición de escretas: {% if totalviv > 0 %}Total: {{escretas}} - Porcentaje: {{ ((escretas/totalviv)*100) | round(2)  }}{% endif %} </td>
+        </tr>
+        <tr>
+            <td>
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="17"><b>P.30.1 Dias de la semana que reciben el servicio</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Dias</td>
+                        <td>Pozo P.</td>
+                        <td class="celda">%</td>
+                        <td>Pozo C.</td>
+                        <td class="celda">%</td>
+                        <td>Agua Rio</td>
+                        <td class="celda">%</td>
+                        <td>Acued.</td>
+                        <td class="celda">%</td>
+                        <td>LLave P.</td>
+                        <td class="celda">%</td>
+                        <td>Reser.</td>
+                        <td class="celda">%</td>
+                        <td>Recol.</td>
+                        <td class="celda">%</td>
+                        <td>Aseo C.</td>
+                        <td class="celda">%</td>
+                    </tr>   
+                    </thead>
+                    <tbody>
+                        {% set tsrv1 = 0 %}
+                        {% set tsrv2 = 0 %}
+                        {% set tsrv3 = 0 %}
+                        {% set tsrv4 = 0 %}
+                        {% set tsrv5 = 0 %}
+                        {% set tsrv6 = 0 %}
+                        {% set tsrv11 = 0 %}
+                        {% set tsrv12 = 0 %}
+                        {% for datossd in datossrvd %}
+                            <tr>
+                            <td>{{ datossd.cantdias }}</td>
+                            <td class="celda">{{ datossd.srv1 }}</td>
+                            <td class="celdad">{{ datossd.porsrv1|round(2) }}</td>
+                            <td class="celda">{{ datossd.srv2 }}</td>
+                            <td class="celdad">{{ datossd.porsrv2|round(2) }}</td>
+                            <td class="celda">{{ datossd.srv3 }}</td>
+                            <td class="celdad">{{ datossd.porsrv3|round(2) }}</td>
+                            <td class="celda">{{ datossd.srv4 }}</td>
+                            <td class="celdad">{{ datossd.porsrv4|round(2) }}</td>
+                            <td class="celda">{{ datossd.srv5 }}</td>
+                            <td class="celdad">{{ datossd.porsrv5|round(2) }}</td>
+                            <td class="celda">{{ datossd.srv6 }}</td>
+                            <td class="celdad">{{ datossd.porsrv6|round(2) }}</td>
+                            <td class="celda">{{ datossd.srv11 }}</td>
+                            <td class="celdad">{{ datossd.porsrv11|round(2) }}</td>
+                            <td class="celda">{{ datossd.srv12 }}</td>
+                            <td class="celdad">{{ datossd.porsrv12|round(2) }}</td>
+                            </tr>
+                            
+                            {% set tsrv1 = tsrv1 + datossd.srv1 %}
+                            {% set tsrv2 = tsrv2 + datossd.srv2 %}
+                            {% set tsrv3 = tsrv3 + datossd.srv3 %}
+                            {% set tsrv4 = tsrv4 + datossd.srv4 %}
+                            {% set tsrv5 = tsrv5 + datossd.srv5 %}
+                            {% set tsrv6 = tsrv6 + datossd.srv6 %}
+                            {% set tsrv11 = tsrv11 + datossd.srv11 %}
+                            {% set tsrv12 = tsrv12 + datossd.srv12 %}
+                            
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ tsrv1 }}</td>
+                            <td></td>
+                            <td class="celda">{{ tsrv2 }}</td>
+                            <td></td>
+                            <td class="celda">{{ tsrv3 }}</td>
+                            <td></td>
+                            <td class="celda">{{ tsrv4 }}</td>
+                            <td></td>
+                            <td class="celda">{{ tsrv5 }}</td>
+                            <td></td>
+                            <td class="celda">{{ tsrv6 }}</td>
+                            <td></td>
+                            <td class="celda">{{ tsrv11 }}</td>
+                            <td></td>
+                            <td class="celda">{{ tsrv12 }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+        </tr>        
+    </table>   
+</page>                  
+<page_footer>    
+<br/>  
+    <br/>
+     <table cellspacing="0" style="width: 100%; font-size: 6pt;">
+        <tbody>
+         <tr>
+            <th  align="center" style="width: 100%;" border="0" class="txt_titleheader">
+                <label class="txt_titleheader"></label>
+            </th>
+        </tr>
+        </tbody>
+    </table>
+</page_footer>
+{% endblock %}

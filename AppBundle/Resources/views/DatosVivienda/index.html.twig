@@ -1,0 +1,514 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{asset('bundles/app/css/jquery.dataTables_themeroller.css')}}" />
+    <link rel="stylesheet" href="{{asset('bundles/app/css/focal.css')}}" />
+{% endblock %}      
+{% block header -%}
+    I. Datos Vivienda
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Ingresar la información de la vivienda
+    </small>
+{% endblock %}
+{% block content -%}
+    <div class="row">
+        <div class="col-sm-6" style="float:left">
+            <h4>No. Boleta: {{ numboleta }}</h4>
+            <h4>Id Encuesta: {{ idenc }}</h4>
+        </div>
+        <div class="col-sm-6" style="text-align:right">
+            <ul style="list-style: none; margin-left: 0; padding-top: 10px; display:inline">
+                <li style="display:inline">
+                    <a id="btnAnterior" class="btn btn-md btn-primary" href="{{ path('datosfuerzaingresos',{'idenc': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-left align-top bigger-120"></i> Anterior
+                    </a> 
+                </li>
+                <li style="display:inline">
+                    <a id="btnSiguiente" class="btn btn-md btn-primary" href="{{ path('datosgenerales_validar',{'id': idenc}) }}">
+                        <i class="ace-icon fa fa-chevron-circle-right align-top bigger-120"></i> Siguiente
+                    </a> 
+                </li>
+            </ul> 
+        </div>    
+    </div>
+    {% for type, flash_messages in app.session.flashBag.all %}
+        {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endfor %}
+     
+    <div>
+    {{ form_start(form) }} 
+    <table class="table" style="width: 100%">         
+        <tr>
+            <td colspan="3">    
+            <div class="col-sm-12 ">
+                {{ form_row(form.tipoVivienda) }}
+            </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="col-sm-6">
+                    {{ form_row(form.tipoTenencia) }}
+                </div>
+            </td>
+            <td>
+                <div id="divtd" style="display:none" class="col-sm-6">
+                    {{ form_row(form.tipoDominio) }}
+                </div>
+            </td>
+            <td>
+                <div id="divst" style="display:none" class="col-sm-6">
+                    {{ form_row(form.sexoTenencia) }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">    
+            <div class="col-sm-12 ">
+                <label>55. ¿Cuales son los problema principales de la vivienda?</label>
+            </div>
+            </td>
+        </tr>  
+        <tr>
+            <td colspan="3">
+                <div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.pvSinrepello) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.pvPisotierra) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.pvCielofalso) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.pvEstructural) }}
+                    </div>  
+                    <div class="col-sm-2">
+                        {{ form_row(form.pvTechomalo) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.pvNinguno) }}
+                    </div>
+                </div> 
+            </td>    
+        </tr>
+           
+        <tr>
+            <!--td>    
+            <!--div class="col-sm-12 ">
+                {-{ form_row(form.problemaVivienda) }}
+            </div>
+            </td -->
+            <td colspan="3">
+                <div id="divpr" style="display:none" class="col-sm-12">
+                    {{ form_row(form.problemaRepello) }}
+                </div>
+            </td>
+        </tr>  
+        <tr>
+            <td colspan="3">    
+            <div class="col-sm-12 ">
+                {{ form_row(form.materialVivienda) }}
+            </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">    
+            <div class="col-sm-12 ">
+                {{ form_row(form.materialTecho) }}
+            </div>
+            </td>
+        </tr>        
+        <tr>
+            <td colspan="3">    
+            <div class="col-sm-12 ">
+                {{ form_row(form.materialPiso) }}
+            </div>
+            </td>
+        </tr> 
+        <tr>
+            <td colspan="3">    
+            <div class="col-sm-12 ">
+                {{ form_row(form.condicionVivienda) }}
+            </div>
+            </td>
+        </tr>  
+        <tr>
+            <td>    
+            <div class="col-sm-12 ">
+                {{ form_row(form.tieneCocina) }}
+            </div>
+            </td>
+
+            <td>    
+            <div id="divtc" class="col-sm-12" style="display:none">
+                {{ form_row(form.ubicacionCocina) }}
+            </div>
+            </td>
+            <td>
+            </td>    
+        </tr>     
+        <tr>
+            <td colspan="3">    
+            <div class="col-sm-12 ">
+                <label>62. ¿Frecuentemente que utiliza para cocinar?</label>
+            </div>
+            </td>
+        </tr>  
+        <tr>
+            <td colspan="3">
+                <div id="utlcocina" style="display:block">
+                    <div class="col-sm-2">
+                        {{ form_row(form.concinaconElec) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.concinaconChimbo) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.concinaconKerosen) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.concinaconLena) }}
+                    </div>  
+                    <div class="col-sm-2">
+                        {{ form_row(form.concinaconEco) }}
+                    </div>
+                </div> 
+            </td>    
+        </tr>
+        <tr>
+            <td colspan="3">    
+            <div class="col-sm-12 ">
+                <label>63. ¿Generalmente como consume el Agua?</label>
+            </div>
+            </td>
+        </tr>         
+        <tr>
+            <td colspan="3">
+                <div id="consumoagua" style="display:block">
+                    <div class="col-sm-2">
+                        {{ form_row(form.consumoaguaNotratada) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.consumoaguaBotellon) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.consumoaguaFiltrada) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_row(form.consumoaguaHervida) }}
+                    </div>  
+                    <div class="col-sm-2">
+                        {{ form_row(form.consumoaguaClorada) }}
+                    </div>
+                </div> 
+            </td>    
+        </tr>  
+        <tr>
+            <td>    
+            <div>
+                {{ form_label(form.piezasVivienda) }}
+            </div>
+            </td>
+            <td>    
+            <div>
+                {{ form_widget(form.piezasVivienda) }}
+            </div>
+            </td>
+        <tr>
+            <td>    
+            <div>
+                {{ form_label(form.banosVivienda) }}
+            </div>
+            </td>
+            <td>    
+            <div>
+                {{ form_widget(form.banosVivienda) }}
+            </div>
+            </td>
+        </tr>
+        <tr>
+            <td>    
+            <div>
+                {{ form_label(form.dormitoriosVivienda) }}
+            </div>
+            </td>
+            <td>    
+            <div>
+                {{ form_widget(form.dormitoriosVivienda) }}
+            </div>
+            </td>            
+        </tr>   
+        <tr>
+            <td>    
+            <div>
+                {{ form_label(form.personasxDormitorio) }}
+            </div>
+            </td>
+            <td>    
+            <div>
+                {{ form_widget(form.personasxDormitorio) }}
+            </div>
+            </td>            
+        </tr>
+        <tr>
+            <td>    
+            <div>
+                {{ form_label(form.familiasCasa) }}
+            </div>
+            </td>
+            <td>
+            <div>
+                {{ form_widget(form.familiasCasa) }}
+            </div>    
+            </td>
+        </tr>                 
+        <tr>
+            <td colspan="3">    
+            <div class="col-sm-12 ">
+                {{ form_row(form.miembroEmigrado) }}
+            </div>
+            </td>
+        </tr>
+    </table>    
+    <table id="tblemi" style="width:100%; display:none">    
+       <tr>
+            <td>    
+            <div class="col-sm-6 ">
+                {{ form_row(form.cantHombres) }}
+            </div>
+            </td>
+            <td>    
+            <div class="col-sm-6 ">
+                {{ form_row(form.cantMujeres) }}
+            </div>
+            </td>            
+        </tr>
+        <tr>
+            <td colspan="2">    
+            <div class="col-sm-12 ">
+                {{ form_row(form.cantOtrospais) }}
+            </div>
+            </td>
+        </tr>
+        <tr>
+            <td>    
+            <div class="col-sm-12 ">
+                {{ form_row(form.cantCentroa) }}
+            </div>
+            </td>
+            <td>    
+            <div class="col-sm-12 ">
+                {{ form_row(form.cantNortea) }}
+            </div>
+            </td>
+            <td>    
+            <div class="col-sm-12 ">
+                {{ form_row(form.cantSura) }}
+            </div>
+            </td>
+        </tr>  
+        <tr>
+            <td>    
+            <div class="col-sm-12 ">
+                {{ form_row(form.cantEuropa) }}
+            </div>
+            </td>
+            <td>    
+            <div class="col-sm-12 ">
+                {{ form_row(form.cantOtros) }}
+            </div>
+            </td>
+        </tr> 
+        <tr>
+            <td colspan="2">    
+            <div class="col-sm-12 ">
+                {{ form_row(form.cantDentropais) }}
+            </div>
+            </td>
+        </tr>   
+        <tr>
+            <td colspan="3">    
+            <div class="col-sm-12 ">
+                {{ form_row(form.razonMigracion) }}
+            </div>
+            </td>
+        </tr>            
+    </table> 
+    <div id="msgboxval" style="color:red; display: none"></div>               
+    <div style="padding-bottom: 10px"></div>    
+    {{ form_widget(form.idEnc,{'value': idenc,'type':'hidden'})}}          
+    {{ form_rest(form) }}    
+    {{ form_end(form) }}
+    </div>
+    <ul>
+        <li>
+            <a href="{{ path('datosgenerales') }}">
+                Regresar al listado
+            </a>
+        </li>
+    </ul> 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            var p54  = $("input:radio[name='focal_appbundle_datosvivienda[tipoTenencia]']:checked").val();
+            //var p55  = $("input:radio[name='focal_appbundle_datosvivienda[problemaVivienda]']:checked").val();
+            var p55  = $("#focal_appbundle_datosvivienda_pvSinrepello").is(':checked');
+            var p69  = $("input:radio[name='focal_appbundle_datosvivienda[miembroEmigrado]']:checked").val();
+            var p60  = $("input:radio[name='focal_appbundle_datosvivienda[tieneCocina]']:checked").val();
+
+            if(p54==='1') {
+                $('#divtd').show();
+                $('#divst').show();
+            }
+            if(p60==='1') {
+                $('#divtc').show();
+            }
+            if(p55) {
+                $('#divpr').show();
+            }
+            if(p69==='1') {
+               $('#tblemi').show(); 
+            }
+            
+        });
+        
+        $('[name=focal_appbundle_datosvivienda]').submit(function(e){
+            $('#focal_appbundle_datosvivienda_submit').prop('disabled',true);
+        });
+        /* Valida las cantidades de migracion a fuera y dentro del pais */
+        $('#focal_appbundle_datosvivienda_submit').on('click', function(e){
+            var p69  = $("input:radio[name='focal_appbundle_datosvivienda[miembroEmigrado]']:checked").val();
+            if(p69==='1') {
+                var canth = $('#focal_appbundle_datosvivienda_cantHombres').val();
+                var cantm = $('#focal_appbundle_datosvivienda_cantMujeres').val();
+                var cantop = $('#focal_appbundle_datosvivienda_cantOtrospais').val();
+                var cantdp = $('#focal_appbundle_datosvivienda_cantDentropais').val();
+
+                canth = parseInt((canth === ''?0:canth));
+                cantm = parseInt((cantm === ''?0:cantm));
+                cantop = parseInt((cantop === ''?0:cantop));
+                cantdp = parseInt((cantdp === ''?0:cantdp));
+
+                if(((canth + cantm) !== (cantop + cantdp)) || (canth + cantm) <=0 ) {
+                    $('#msgboxval').text('Cantidades de Hombres y Mujeres debe ser igual a las cantidades dentro y fuera del país');
+                    $('#msgboxval').show();
+                    e.preventDefault();
+                } else {
+                     $('#msgboxval').hide();
+                }
+            }
+        });
+        
+        $("input:radio[name='focal_appbundle_datosvivienda[tieneCocina]']").on('change', function(){
+            var val = $(this).val();
+            if(val === '1') {
+                $('#divtc').show();     
+                $("input:radio[name='focal_appbundle_datosvivienda[ubicacionCocina]']").prop('required', true);
+            } else {
+                $('#divtc').hide();
+                $("input:radio[name='focal_appbundle_datosvivienda[ubicacionCocina]']").prop('required', false);
+                $("input:radio[name='focal_appbundle_datosvivienda[ubicacionCocina]']").prop('checked', false);
+                
+            }
+        });
+        
+        
+        $("input:radio[name='focal_appbundle_datosvivienda[tipoTenencia]']").on('change', function(){
+            var val = $(this).val();
+            if(val === '1') {
+                $('#divtd').show();
+                $('#divst').show();     
+                $("input:radio[name='focal_appbundle_datosvivienda[tipoDominio]']").prop('required', true);
+                $("input:radio[name='focal_appbundle_datosvivienda[sexoTenencia]']").prop('required', true);
+            } else {
+                $('#divtd').hide();
+                $('#divst').hide();
+                $('#focal_appbundle_datosseguridadparticipacion_cantCasosViolencia').val('');
+                $("input:radio[name='focal_appbundle_datosvivienda[tipoDominio]']").prop('required', false);
+                $("input:radio[name='focal_appbundle_datosvivienda[tipoDominio]']").prop('checked', false);
+                $("input:radio[name='focal_appbundle_datosvivienda[sexoTenencia]']").prop('required', false);
+                $("input:radio[name='focal_appbundle_datosvivienda[sexoTenencia]']").prop('checked', false);
+                
+            }
+        }); 
+        //$("input:radio[name='focal_appbundle_datosvivienda[problemaVivienda]']").on('change', function(){
+        $("#focal_appbundle_datosvivienda_pvSinrepello").on('change', function(){ 
+            
+            var val = $(this).is(':checked');
+            if(val) {
+                $('#divpr').show();     
+                $("input:radio[name='focal_appbundle_datosvivienda[problemaRepello]']").prop('required', true);
+            } else {
+                $('#divpr').hide();     
+                $("input:radio[name='focal_appbundle_datosvivienda[problemaRepello]']").prop('required', false);
+                $("input:radio[name='focal_appbundle_datosvivienda[problemaRepello]']").prop('checked', false);
+            }
+        }); 
+        
+       $("#focal_appbundle_datosvivienda_pvNinguno").on('change', function(){ 
+            
+            var val = $(this).is(':checked');
+            if(val) {
+                $('#focal_appbundle_datosvivienda_pvSinrepello, \n\
+                    #focal_appbundle_datosvivienda_pvPisotierra, \n\
+                    #focal_appbundle_datosvivienda_pvCielofalso, \n\
+                    #focal_appbundle_datosvivienda_pvEstructural, \n\
+                    #focal_appbundle_datosvivienda_pvTechomalo').prop('checked', false).prop('disabled', true);
+                $('#divpr').hide();     
+                $("input:radio[name='focal_appbundle_datosvivienda[problemaRepello]']").prop('required', false);
+                $("input:radio[name='focal_appbundle_datosvivienda[problemaRepello]']").prop('checked', false);
+            } else {
+                $('#focal_appbundle_datosvivienda_pvSinrepello, \n\
+                    #focal_appbundle_datosvivienda_pvPisotierra, \n\
+                    #focal_appbundle_datosvivienda_pvCielofalso, \n\
+                    #focal_appbundle_datosvivienda_pvEstructural, \n\
+                    #focal_appbundle_datosvivienda_pvTechomalo').prop('checked', false).prop('disabled', false);
+            }
+        }); 
+        
+        $('#focal_appbundle_datosvivienda_pvSinrepello, \n\
+                    #focal_appbundle_datosvivienda_pvPisotierra, \n\
+                    #focal_appbundle_datosvivienda_pvCielofalso, \n\
+                    #focal_appbundle_datosvivienda_pvEstructural, \n\
+                    #focal_appbundle_datosvivienda_pvTechomalo').on('change', function(){
+            $('#focal_appbundle_datosvivienda_pvNinguno').prop('checked', false);
+        });
+        
+        
+        $("input:radio[name='focal_appbundle_datosvivienda[miembroEmigrado]']").on('change', function(){
+                var val = $(this).val();
+                if(val === '1') {
+                    $('#tblemi').show(); 
+                    $("input:radio[name='focal_appbundle_datosvivienda[razonMigracion]']").prop('required',true);
+                } else {
+                    $('#tblemi').hide(); 
+                    $('#focal_appbundle_datosvivienda_cantHombres').val(0);
+                    $('#focal_appbundle_datosvivienda_cantMujeres').val(0);
+                    $('#focal_appbundle_datosvivienda_cantOtrospais').val(0);
+                    $('#focal_appbundle_datosvivienda_cantCentroa').val(0);
+                    $('#focal_appbundle_datosvivienda_cantNortea').val(0);
+                    $('#focal_appbundle_datosvivienda_cantSura').val(0);
+                    $('#focal_appbundle_datosvivienda_cantEuropa').val(0);
+                    $('#focal_appbundle_datosvivienda_cantOtros').val(0);
+                    $('#focal_appbundle_datosvivienda_cantDentropais').val(0);
+                    $("input:radio[name='focal_appbundle_datosvivienda[razonMigracion]']").prop('checked',false);
+                    $("input:radio[name='focal_appbundle_datosvivienda[razonMigracion]']").prop('required',false);
+                }
+        });         
+    </script>    
+
+{% endblock %}

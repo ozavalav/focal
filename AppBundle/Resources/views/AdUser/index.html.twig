@@ -1,0 +1,228 @@
+{% extends '::basemenu.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{asset('bundles/app/css/jquery.dataTables_themeroller.css')}}" />
+    <link rel="stylesheet" href="{{asset('bundles/app/css/focal.css')}}" />
+{% endblock %}    
+{% block header -%}
+    Listado de usuarios del sistema
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Agregar, modificar y eliminar información
+    </small>
+{% endblock %}   
+
+{% block content -%}
+<ul style="list-style: none; margin-left: 0">
+    <li>
+        <a class="btn btn-md btn-success" href="{{ path('aduser_new') }}">
+            <i class="ace-icon fa fa-plus-square align-top bigger-120"></i> Nuevo 
+        </a>
+    </li>
+</ul> 
+<div class="table-header">
+Resultados de los usuarios en su municipio
+</div>
+{% if is_granted('ROLE_ADMIN') %}
+    <label>Filtrar por municipio: </label>
+    <div style="padding-bottom: 25px;" class="form-group">
+        <label class="col-md-2 control-label">Departamento:</label>
+        <div class="col-md-4">
+            <select id="coddepartamento" class="form-control" name="departamento">
+                <option value="0">-- Selecionar --</option>
+                {% for dep in departamentos %}
+                    <option value="{{ dep.codDepartamento}}">{{ dep.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <label class="col-sm-2 control-label">Municipio: </label>
+        <div class="col-sm-4">
+            <select id="codmunicipio" class="form-control" name="codmunicipio">
+                <option value="0">-- Selecionar --</option>
+            </select>
+        </div>
+    </div> 
+{% endif %}            
+          
+<table id="dynamic-table" class="table table-striped table-bordered table-hover" >
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre Usuario</th>
+            <th>Cuenta</th>
+            <th>Activo</th>
+            <th>CodMunicipio</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for entity in entities %}    
+        <tr>
+            <td><a href="{{ path('aduser_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+            <td>{{ entity.nombreUsuario }}</td>
+            <td>{{ entity.username }}</td>
+            <td>{% if(entity.isActive == 1) %}Activo{%else%}Inactivo{%endif%}</td>
+            <td>{{ entity.codMunicipio }}</td>
+            <td>
+                <div class="hidden-sm hidden-xs action-buttons">
+                    <a class="blue" href="{{ path('aduser_show', { 'id': entity.id }) }}">
+                            <i class="oz-icon-v fa fa-search-plus bigger-130"></i>
+                    </a>
+
+                    <a class="green" href="{{ path('aduser_edit', { 'id': entity.id }) }}">
+                            <i class="oz-icon-e fa fa-pencil bigger-130"></i>
+                    </a>
+
+                    <a id="btnBorrar" class="red" data-idu="{{ entity.id }}" href="#">
+                            <i class="oz-icon-b fa fa-trash-o bigger-130"></i>
+                    </a>
+                </div>
+
+                <div class="hidden-md hidden-lg">
+                    <div class="inline pos-rel">
+                        <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">
+                                <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                        </button>
+
+                        <ul class="oz-dropdown-menu dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                            <li>
+                                <a href="{{ path('aduser_show', { 'id': entity.id }) }}" class="tooltip-info" data-rel="tooltip" title="View">
+                                    <span class="blue">
+                                        <i class="oz-icon-v fa fa-search-plus bigger-120"></i>
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ path('aduser_edit', { 'id': entity.id }) }}" class="tooltip-success" data-rel="tooltip" title="Edit">
+                                    <span class="green">
+                                        <i class="oz-icon-e fa fa-pencil-square-o bigger-120"></i>
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a id="btnBorrar" data-idu="{{ entity.id }}" href="#" class="tooltip-error" data-rel="tooltip" title="Delete">
+                                    <span class="red">
+                                        <i class="oz-icon-b fa fa-trash-o bigger-120"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </td>
+        </tr>  
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+    
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/app/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{ asset('bundles/app/js/jquery.dataTables.bootstrap.min.js')}}"></script> 
+    
+    <script type="text/javascript">
+        var table;
+        
+        $.fn.dataTable.ext.search.push(
+        function( settings, data, dataIndex ) {
+                var fil1  = $('#codmunicipio').val();
+                var muni = data[4];
+
+                if ( muni === fil1 || fil1 === "0" || typeof(fil1) === "undefined" )
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
+        $(document).ready(function() {
+            table = $('#dynamic-table').DataTable({
+                "columnDefs": [
+                    {
+                        "targets": [ 4 ],
+                        "visible": false,
+                        "searchable": true
+                    }
+                ],
+                language:{
+                    search: "Buscar",
+                    lengthMenu: "Mostrar _MENU_ registros",
+                    emptyTable: "No hay datos...",
+                    info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    infoFiltered: "(Filtrando de un total de _MAX_ registros)",
+                    paginate: {
+                        first: "Primero",
+                        previous: "Anterior",
+                        next: "Siguiente",
+                        last: "Ultimo"
+                    }
+                }
+            });
+            $('#idmuni').keyup( function() {
+                table.draw();
+            });
+        });
+        $('#codmunicipio').change(function(){
+            table.draw();
+        });
+        $('#coddepartamento').change(function(e) {
+            var valdepto = $(this).val();  
+            e.preventDefault(); 
+              var param =  valdepto;
+               url="/Focal/web/app_dev.php/aduser/buscarMunicipio/" + param;
+              $.ajax({
+                type:'POST',
+                url:url,
+                beforeSend: function(){
+                $("#lblError").hide();	
+                },
+                dataType: 'json',
+                success:function(data){
+                    if(data.message === 'false'){
+                        alert('false');
+                    }else{
+                         var ejercicio = "<option value=''> -- seleccionar -- </option>";
+                         $.each(data, function(i) {
+                            ejercicio = ejercicio + "<option value='"+data[i].codMunicipio+"'>"+data[i].codMunicipio+ " - "+data[i].nombre+ "</option>";  
+                         });
+                         $('#codmunicipio').html(ejercicio);
+                         //$('#focal_appbundle_aduser_submit').prop('disabled', true);
+                    }
+                }
+            });
+        });
+
+        $("a[id*='btnBorrar']").click(function(e){
+            
+            e.preventDefault();
+            var idUser = $(this).data("idu");
+            var estadop = 2; //2 = inactivo 
+            var url = '/Focal/web/app_dev.php/aduser/cambioestado/'+ idUser + "&&" + estadop; 
+
+            $.ajax({
+                type:'POST',
+                url:url,
+                beforeSend: function(){
+                    $("#lblError").hide();
+                },
+                dataType: 'json',
+                success:function(data){
+                    if(data.message == 'false'){
+                        alert(data.razon);
+                    }else{
+                        alert("Se cambio el estado del usuario");
+                        var filactual = $("[data-idu='" + idUser + "']").parents('td'); 
+                        table.row(filactual.parents('tr')).remove().draw();
+                    }
+                }
+            });  
+        });     
+    </script>    
+{% endblock %}    

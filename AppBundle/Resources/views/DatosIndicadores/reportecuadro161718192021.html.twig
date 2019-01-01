@@ -1,0 +1,587 @@
+
+{% block stylesheets %}
+    <style type="text/Css">
+
+        #body{
+            font-family:Arial, Helvetica, sans-serif;
+            font-size:11px;
+            font-weight:400;
+            color:#000;
+        }
+        .small_font{
+            font-size:8px;
+            color:#666;
+        }
+        .bg_img{
+            background-color:#F5ECCE;
+            border-radius:5px;
+            height:50px;
+        }
+        .linea{
+            border-width:1px;
+            border-bottom:solid;
+            border-color:#666;
+        }
+        .txt_title{
+            font-size:16px;
+            font-weight:bold;
+        }
+        .txt_titleheader{
+            font-size:10px;
+            font-weight:bold;
+            color:#333;
+        }
+        .txt_titleheader_cotenido{
+            font-size:7px;
+        }
+        .celda {
+            text-align: center;
+        }
+        .celdad {
+            text-align: right;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+    <page backtop="30mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 11px;">
+        <page_header>
+            <table cellspacing="0" border='0' align="center"  style="width: 90%; font-size: 6pt;">
+                <tbody>
+                    <tr>
+                        <th colspan="4"  style="width: 100%; text-align: center; padding-bottom: 3px;" align="center" class="txt_title"></th>
+                    </tr><br/><br/>
+                <tr>
+                    <th colspan='4' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                        <label  class="txt_titleheader">Cuadro # 16, 17, 18, 19, 20, 21</label>
+                    </th> 
+                </tr> 
+                <tr>
+                    <th colspan='4' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                        <label  class="txt_titleheader">Principales indicadores socioeconómicos en el marco de los ODS y PN</label>
+                    </th> 
+                </tr>
+                <tr>
+                    <th colspan='4'  border="0" align="left" class="txt_titleheader"> 
+                    </th> 
+                </tr> 
+                <tr> 
+                    <th  style="width: 22%;" border="0" align="left"class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }} 
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Municipio:  {{ codmun }} - {{ nommun }}
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Fecha inicio: {{fin|date('Y-m-d')}} 
+                    </th>
+                    <th   style="width: 22%;" border="0" align="left"class="txt_titleheader">Fecha Fin: {{fin2|date('Y-m-d')}}  
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan='4'  border="0" align="left" class="txt_titleheader"> 
+                        Tipo tasa de cambio: {{ tasa }}
+                    </th> 
+                </tr> 
+                </tbody>
+            </table>
+            <br/>
+
+            <table cellspacing="0" align="center"  border='1' style="width: 90%; text-align: center; font-size: 6pt;">
+                <thead>
+                    <tr>
+                        <th  style="width: 5%; background: #E7E7E7;"  align="center" ># ORDEN</th>
+                        <th  style="width: 20%; background: #E7E7E7;"  align="center" >CLIENTE</th>
+                        <th  style="width: 40%; background: #E7E7E7;"  align="center" >TRABAJO ORDENADO</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >MOTOR</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >DEPARTAMENTO</th>
+                        <th  style="width: 10%; background: #E7E7E7;"  align="center" >RECIBIDO</th>
+                        <th  style="width: 5%; background: #E7E7E7;"  align="center" >FECHA</th>
+                    </tr>
+                </thead>
+                <tbody>  
+                </tbody>
+            </table>
+
+        </page_header> 
+        <page_footer>  
+
+            <table cellspacing="0" border ="1" style="width: 100%; font-size: 6pt;">
+                <tbody>
+
+
+                </tbody>
+            </table>
+        </page_footer>
+
+
+
+
+        <p><strong>Fuerza de Trabajo:</strong></p>
+        <table style="height: 20px; width: 633px;">
+            <tbody>
+                <tr>
+                    <td style="width: 633px;">
+                        <p style="text-align: justify;"><span style="color: #ff0000;">(Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionar la opci&oacute;n # 15 &ldquo;Agrupaci&oacute;n de profesiones y oficios de los miembros de la Poblaci&oacute;n en Edad de Trabajar (mayores de 10 a&ntilde;os)&rdquo;)</span></p>
+                        <p style="text-align: justify;"><span style="color: #ff0000;">Deben de clasificar cada puesto de trabajo, de acuerdo a las agrupaciones de profesiones u oficios:</span><br /><span style="color: #ff0000;"> Ej. En la agrupaci&oacute;n #1 Profesionales Universitarios, revisar la opci&oacute;n # 15, determinar las profesiones universitarias y sumar cuantas personas est&aacute;n dentro de determinada profesi&oacute;n (Ing. Civiles 2; Ing. Industriales 1; Lic. En Derecho 2; Lic. En Educaci&oacute;n B&aacute;sica 23; y as&iacute; sucesivamente para cada profesional universitario identificado en el municipio, se suman cada uno de ellos y se coloca en el total. El mismo proceso se debe de hacer para cada agrupaci&oacute;n.</span></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>&nbsp;</p>
+        <table style="height: 20px; width: 632px;">
+            <tbody>
+                <tr>
+                    <td style="width: 628px;">
+                        <p style="text-align: center;"><strong>Cuadro # 16</strong><br /><strong> Agrupaci&oacute;n de profesiones y oficios de los miembros de la Poblaci&oacute;n en Edad de Trabajar (mayores de 10 a&ntilde;os)</strong></p>
+                        <p>Para cada grupo de profesi&oacute;n u oficio, debe de codificarlo para generar los datos para este cuadro, como por ejemplo: 01 profesionales universitarios; 02 profesionales de secundaria/t&eacute;cnicos; 03 obreros...10 Discapacitados...</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="width: 633.390625px;" border="q">
+            <tbody>
+                <tr>
+                    <td style="width: 480px; text-align: center;" colspan="1" rowspan="2">
+                        <p><strong>Profesi&oacute;n u oficio</strong></p>
+                    </td>
+                    <td style="width: 147.390625px; text-align: center;" colspan="2" rowspan="1">
+                        <p><strong>Cantidad</strong></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 75px; text-align: center;">
+                        <p><strong>Total</strong></p>
+                    </td>
+                    <td style="width: 72.390625px; text-align: center;">
+                        <p><strong>%</strong></p>
+                    </td>
+                </tr>
+                {% set totp = 0 %}
+                {% for dt in dtocu %}
+                    <tr>
+                        <td style="width: 480px;">
+                            <p>{{ dt.ncate }}. {{ dt.categoria }}</p>
+                        </td>
+                        <td class="celda" style="width: 75px;">{{dt.cantidad}}</td>
+                        <td class="celdad" style="width: 72.390625px;">{{ dt.portot }}</td>
+                    </tr>
+                    {% set totp = totp + dt.cantidad %}
+                {% endfor %}
+                <tr>
+                    <td style="width: 480px;">
+                        <p><strong>TOTAL</strong></p>
+                    </td>
+                    <td class="celda" style="width: 75px;">{{ totp }}</td>
+                    <td style="width: 72.390625px;">&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Fuente: Elaboraci&oacute;n propia con base a censo l&iacute;nea base levantado en el municipio</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <table style="height: 18px;" width="633">
+            <tbody>
+                <tr>
+                    <td style="width: 622.3345336914063px;"><span style="color: #ff0000;">(Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionar la opci&oacute;n # 16 &ldquo;Agrupaci&oacute;n de las ocupaciones de la Poblaci&oacute;n en Edad de Trabajar (mayores de 10 a&ntilde;os&rdquo;)</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="text-align: center;"><strong>Cuadro # 17</strong><br /><strong> Agrupaci&oacute;n de las ocupaciones de la Poblaci&oacute;n en Edad de Trabajar (mayores de 10 a&ntilde;os)</strong></p>
+        <table style="width: 674px;" border="1">
+            <tbody>
+                <tr>
+                    <td style="text-align: center; width: 262px;" colspan="1" rowspan="2">
+                        <p><strong>Ocupaci&oacute;n (PET)</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 102px;" colspan="2" rowspan="1">
+                        <p><strong>Cantidad</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 192.89703369140625px;" colspan="2" rowspan="1">
+                        <p><strong>Trabajan PEA</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 98.10296630859375px;" colspan="2" rowspan="1">
+                        <p><strong>PEI</strong></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; width: 61px;">
+                        <p><strong>Total</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 41px;">
+                        <p><strong>%</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 81px;">
+                        <p><strong>Si (ocupada)</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 111.89703369140625px;">
+                        <p><strong>No (desocupad a)</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 48.10296630859375px;">
+                        <p><strong>#</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 50px;">
+                        <p><strong>%</strong></p>
+                    </td>
+                </tr>
+                {% set totp = 0 %}
+                {% set tpeao = 0 %}
+                {% set tpead = 0 %}
+                {% set tpei = 0 %}
+                {% for dt in dtocu %}
+                    <tr>
+                        <td style="width: 262px;">
+                            <p>{{ dt.ncate }}. {{ dt.categoria }}</p>
+                        </td>
+                        <td class="celda" style="width: 61px;">{{ dt.cantidad }}</td>
+                        <td class="celdad" style="width: 41px;">{{ dt.portot }}</td>
+                        <td class="celda" style="width: 81px;">{{ dt.peao }}</td>
+                        <td class="celda" style="width: 111.89703369140625px;">{{ dt.pead }}</td>
+                        <td class="celda" style="width: 48.10296630859375px;">{{ dt.pei }}</td>
+                        <td class="celdad" style="width: 50px;">{{ dt.porpei }}</td>
+                    </tr>
+                    {% set totp = totp + dt.cantidad %}
+                    {% set tpeao = tpeao + dt.peao %}
+                    {% set tpead = tpead + dt.pead %}
+                    {% set tpei = tpei + dt.pei %}
+                {% endfor %}
+                <tr>
+                    <td style="width: 262px;">
+                        <p>TOTAL</p>
+                    </td>
+                    <td class="celda" style="width: 61px;">{{ totp }}</td>
+                    <td style="width: 41px;">&nbsp;</td>
+                    <td class="celda" style="width: 81px;">{{ tpeao }}</td>
+                    <td class="celda" style="width: 111.89703369140625px;">{{ tpead }}</td>
+                    <td class="celda" style="width: 48.10296630859375px;">{{ tpei }}</td>
+                    <td style="width: 50px;">&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Fuente: Elaboraci&oacute;n propia con base a censo l&iacute;nea base levantado en el municipio</p>
+        <p>&nbsp;<strong style="text-align: center;">Ingresos:</strong></p>
+        <div class="layoutArea">
+            <div class="column" style="text-align: center;">
+                <table style="height: 26px;" width="672">
+                    <tbody>
+                        <tr>
+                            <td style="width: 661.323486328125px;"><span style="color: #ff0000;">(Para llenar este cuadro hay que ir al programa y en informes municipales, seleccionar la opci&oacute;n # 17 &ldquo;Hogares con ingresos mensuales seg&uacute;n rangos&rdquo; o ir al cuadro de frecuencia simple y copiar los datos de la tabla # 39)</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><strong>Cuadro # 18</strong><br /><strong> Hogares con ingresos mensuales seg&uacute;n rangos</strong></p>
+            </div>
+        </div>
+        <table style="width: 663px;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 466.9999694824219px; text-align: center;" colspan="1" rowspan="2">
+                        <p><strong>Rangos de ingresos</strong></p>
+                    </td>
+                    <td class="celda" style="width: 179.00003051757813px; text-align: center;" colspan="2" rowspan="1">
+                        <p><strong>Hogares</strong></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="celda" style="width: 98.00003051757813px; text-align: center;">
+                        <p><strong>Total</strong></p>
+                    </td>
+                    <td class="celda" style="width: 81px; text-align: center;">
+                        <p><strong>%</strong></p>
+                    </td>
+                </tr>
+                
+                {% set toth = 0 %}
+                {% for dt in dtrifam %}
+                    <tr>
+                        <td style="width: 466.9999694824219px;">
+                            <p>{{ dt.rangoingreso }}</p>
+                        </td>
+                        <td class="celda" style="width: 98.00003051757813px;">
+                            <p>{{ dt.cantidad }}</p>
+                        </td>
+                        <td class="celdad" style="width: 81px;">
+                            <p>{{ dt.portot|round(2) }}</p>
+                        </td>
+                    </tr>
+                    {% set toth = toth + dt.cantidad %}
+                {% endfor %}
+                
+                <tr>
+                    <td style="width: 466.9999694824219px;">
+                        <p>Total</p>
+                    </td>
+                    <td class="celda" style="width: 98.00003051757813px;">
+                        <p>{{ toth }}</p>
+                    </td>
+                    <td style="width: 81px;">
+                        <p></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Fuente: Elaboraci&oacute;n propia con base a censo l&iacute;nea base levantado en el municipio</p>
+        <p>&nbsp;</p>
+        <p style="text-align: center;"><strong>Cuadro # 19</strong><br /><strong> Personas con ingresos mensuales según rangos y sexo</strong></p>
+        <table style="width: 634px;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 428px; text-align: center;" colspan="1" rowspan="2">
+                        <p><strong>Rangos de ingresos</strong></p>
+                    </td>
+                    <td style="width: 197px; text-align: center;" colspan="4" rowspan="1">
+                        <p><strong>personas</strong></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50px; text-align: center;">
+                        <p><strong>H</strong></p>
+                    </td>
+                    <td style="width: 47.95953369140625px; text-align: center;">
+                        <p><strong>%</strong></p>
+                    </td>
+                    <td style="width: 50.04046630859375px; text-align: center;">
+                        <p><strong>M</strong></p>
+                    </td>
+                    <td style="width: 49px; text-align: center;">
+                        <p><strong>%</strong></p>
+                    </td>
+                </tr>
+
+                {% for dt in dtriper %}
+                    <tr>
+                        <td style="width: 428px;">
+                            <p>{{ dt.rangoi }}</p>
+                        </td>
+                        <td class="celda" style="width: 50px;">{{ dt.canth }}</td>
+                        <td class="celdad" style="width: 47.95953369140625px;">{% if(dtript.canth) > 0 %}{{ (( dt.canth / dtript.canth )*100)|round(2) }}{% endif %}</td>
+                        <td class="celda" style="width: 50.04046630859375px;">{{ dt.cantm }}</td>
+                        <td class="celdad" style="width: 49px;">{% if(dtript.cantm) > 0 %}{{ (( dt.cantm / dtript.cantm )*100)|round(2) }}{% endif %}</td>
+                    </tr>
+
+                {% endfor %}
+                <tr>
+                    <td style="width: 428px;">
+                        <p>Total</p>
+                    </td>
+                    <td class="celda" style="width: 50px;">{{ dtript.canth }}</td>
+                    <td style="width: 47.95953369140625px;">&nbsp;</td>
+                    <td class="celda" style="width: 50.04046630859375px;">{{ dtript.cantm }}</td>
+                    <td style="width: 49px;">&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Fuente: Elaboración propia con base a censo línea base levantado en el municipio</p>
+        <table style="height: 5px;" width="633">
+            <tbody>
+                <tr>
+                    <td style="width: 622.3345336914063px;"><span style="color: #ff0000;">Para el llenado de este cuadro se debe de hace lo siguiente, del cuadro anterior, se deben de agrupar el número de hogares, de acuerdo a los rangos de de ingresos diarios mostrados en la tabla 18, calcular el porcentaje del total de hogares.</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>&nbsp;</p>
+        <p style="text-align: center;"><strong>Cuadro # 20</strong><br /><strong> Ingresos promedios a nivel de hogares Menores a US$ 1.00 diario *_/</strong></p>
+        <table style="width: 629px;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 139px;" colspan="1" rowspan="2">
+                        <p><strong>Ingresos diarios (en Lempiras)</strong></p>
+                    </td>
+                    <td class="celda" style="width: 101px;" colspan="2" rowspan="1">
+                        <p><strong>Hogares</strong></p>
+                    </td>
+                    <td style="width: 165px;" colspan="1" rowspan="2">
+                        <p><strong>Ingreso promedio diario per cápita por hogar (US$)</strong></p>
+                    </td>
+                    <td style="width: 197px;" colspan="1" rowspan="2">
+                        <p><strong>% acumulado hogares con &lt; 1.25 US$ per cápita x día</strong></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="celda" style="width: 52.213226318359375px;">
+                        <p><strong>Total</strong></p>
+                    </td>
+                    <td class="celda" style="width: 48.786773681640625px;">
+                        <p><strong>%</strong></p>
+                    </td>
+                </tr>
+                {% set ppxh = 0 %}
+                {% if totviv > 0 %}{% set ppxh = (dtript.totalp / totviv)|round(2) %} {% endif %}
+                {% set toth = 0 %}
+                {% set pora = 0 %}
+                {% for dt in dtipxh %}
+                    {% set pora = pora + dt.portot %}
+                    <tr>
+                        <td style="width: 139px;">
+                            <p>{{ dt.rangoingreso }}</p>
+                        </td>
+                        <td class="celda" style="width: 52.213226318359375px;">
+                            <p>{{ dt.cantidad }}</p>
+                        </td>
+                        <td class="celdad" style="width: 48.786773681640625px;">
+                            <p>{{ dt.portot }}</p>
+                        </td>
+                        <td class="celda"  style="width: 165px;">
+                            <p>
+                                {% if loop.index == 1 %}
+                                    {% if ppxh > 0 %}{{ (1000 / 30 / tasa / ppxh)|round(4) }}{% endif %}
+                                {% elseif loop.index == 2 %}
+                                    {% if ppxh > 0 %}{{ (3000 / 30 / tasa / ppxh)|round(4) }}{% endif %}
+                                {% elseif loop.index == 3 %}
+                                    {% if ppxh > 0 %}{{ (6000 / 30 / tasa / ppxh)|round(4) }}{% endif %} 
+                                {% elseif loop.index == 4 %}
+                                    {% if ppxh > 0 %}{{ (14000 / 30 / tasa / ppxh)|round(4) }}{% endif %}    
+                                {% elseif loop.index == 5 %}
+                                    {% if ppxh > 0 %}{{ (20000 / 30 / tasa / ppxh)|round(4) }}{% endif %}    
+                                {% endif %}    
+                            </p>
+                        </td>
+                        <td class="celdad" style="width: 197px;">
+                            <p>{{ pora }}</p>
+                        </td>
+                    </tr>
+                    {% set toth = toth + dt.cantidad %}
+                    
+                {% endfor %}
+                
+                <tr>
+                    <td style="width: 139px;">
+                        <p>TOTAL</p>
+                    </td>
+                    <td class="celda" style="width: 52.213226318359375px;">
+                        <p>{{ toth }}</p>
+                    </td>
+                    <td class="celdad" style="width: 48.786773681640625px;">
+                        <p>{{ pora }}</p>
+                    </td>
+                    <td style="width: 165px;">&nbsp;</td>
+                    <td style="width: 197px;">&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Fuente: Elaboración propia con base a censo línea base levantado en el municipio<br /> *_/ Se estima el dólar a Lps. {{ tasa }} y el promedio de personas que trabajan por hogar es de: {% if totviv > 0 %}{{ (dtript.totalp / totviv)|round(2) }}{% endif %}</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p style="text-align: center;"><strong>Cuadro # 21</strong><br /><strong> Ingreso promedio diario individual y per cápita de la PEA Ocupada</strong></p>
+        <table style="width: 695px;" border="1">
+            <tbody>
+                <tr>
+                    <td style="text-align: center; width: 142px;" colspan="1" rowspan="2">
+                        <p><strong>Rango de ingresos mensuales (en Lps)</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 91px;" colspan="2" rowspan="1">
+                        <p><strong># Personas (PEA ocupada)</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 130px;" colspan="1" rowspan="2">
+                        <p><strong>Ingreso promedio diario individual (en US$)</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 152px;" colspan="1" rowspan="2">
+                        <p><strong>Ingreso promedio hogar per cápita (US$)</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 106px;" colspan="1" rowspan="2">
+                        <p><strong>% acumulado &lt; 1.25 US$ día</strong></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; width: 48.70219421386719px;">
+                        <p><strong>Total</strong></p>
+                    </td>
+                    <td style="text-align: center; width: 42.29780578613281px;">
+                        <p><strong>%</strong></p>
+                    </td>
+                </tr>
+                {% set ppcixh = 0 %}
+                {% set ppxh = 0 %}
+                {% if totviv > 0 %}{% set ppcixh = (dtpea.peao / totviv)|round(2) %} {% endif %}
+                {% if totviv > 0 %}{% set ppxh = (dtript.totalp / totviv)|round(2) %}{% endif %}
+                {% set totp = 0 %}
+                {% set pora = 0 %}
+                {% for dt in dtipxp %}
+                    {% set pora = pora + dt.portot %}
+                    <tr>
+                        <td style="width: 142px;">
+                            <p>{{ dt.rangoi }}</p>
+                        </td>
+                        <td class="celda" style="width: 48px;">
+                            <p>{{ dt.cantper }}</p>
+                        </td>
+                        <td class="celdad" style="width: 42px;">
+                            <p>{{ dt.portot }}</p>
+                        </td>
+                        <td class="celda"  style="width: 130px;">
+                            <p>
+                                {% if loop.index == 1 %}
+                                    {% if ppxh > 0 %}{{ ((((750 / 30) * ppcixh) / ppxh) / tasa)|round(4) }}{% endif %}
+                                {% elseif loop.index == 2 %}
+                                    {% if ppxh > 0 %}{{ ((((1500 / 30) * ppcixh) / ppxh) / tasa)|round(4) }}{% endif %}
+                                {% elseif loop.index == 3 %}
+                                    {% if ppxh > 0 %}{{ ((((3000 / 30) * ppcixh) / ppxh) / tasa)|round(4) }}{% endif %}
+                                {% elseif loop.index == 4 %}
+                                    {% if ppxh > 0 %}{{ ((((6000 / 30) * ppcixh) / ppxh) / tasa)|round(4) }}{% endif %}    
+                                {% elseif loop.index == 5 %}
+                                    {% if ppxh > 0 %}{{ ((((14000 / 30) * ppcixh) / ppxh) / tasa)|round(4) }}{% endif %}
+                                {% elseif loop.index == 6 %}
+                                    {% if ppxh > 0 %}{{ ((((20000 / 30) * ppcixh) / ppxh) / tasa)|round(4) }}{% endif %}     
+                                {% endif %}    
+                            </p>
+                        </td>
+                        <td class="celdad" style="width: 152px;">
+                            <p></p>
+                        </td>
+                        <td class="celdad" style="width: 106px;">
+                            <p></p>
+                        </td>
+                    </tr>
+                    {% set totp = totp + dt.cantper %}
+                    
+                {% endfor %}
+                
+                <tr>
+                    <td style="width: 142px;">
+                        <p>TOTAL</p>
+                    </td>
+                    <td class="celda" style="width: 48.70219421386719px;">{{ totp }}</td>
+                    <td style="width: 42.29780578613281px;">&nbsp;</td>
+                    <td style="width: 130px;">&nbsp;</td>
+                    <td style="width: 152px;">&nbsp;</td>
+                    <td style="width: 106px;">&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Fuente: Elaboración propia con base a censo línea base levantado en el municipio</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>                    
+
+
+    </page>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

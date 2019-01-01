@@ -1,0 +1,84 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>DatossEdadvacunas</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Idenc</th>
+                <td>{{ entity.idEnc }}</td>
+            </tr>
+            <tr>
+                <th>Coddepartamento</th>
+                <td>{{ entity.codDepartamento }}</td>
+            </tr>
+            <tr>
+                <th>Codmunicipio</th>
+                <td>{{ entity.codMunicipio }}</td>
+            </tr>
+            <tr>
+                <th>Codcomunidad</th>
+                <td>{{ entity.codComunidad }}</td>
+            </tr>
+            <tr>
+                <th>Rango</th>
+                <td>{{ entity.rango }}</td>
+            </tr>
+            <tr>
+                <th>Cantpersonas</th>
+                <td>{{ entity.cantPersonas }}</td>
+            </tr>
+            <tr>
+                <th>Canthombres</th>
+                <td>{{ entity.cantHombres }}</td>
+            </tr>
+            <tr>
+                <th>Cantmujeres</th>
+                <td>{{ entity.cantMujeres }}</td>
+            </tr>
+            <tr>
+                <th>Cantcompleta</th>
+                <td>{{ entity.cantCompleta }}</td>
+            </tr>
+            <tr>
+                <th>Cantincompleta</th>
+                <td>{{ entity.cantIncompleta }}</td>
+            </tr>
+            <tr>
+                <th>Fechacreacion</th>
+                <td>{{ entity.fechaCreacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Usuariocreacion</th>
+                <td>{{ entity.usuarioCreacion }}</td>
+            </tr>
+            <tr>
+                <th>Usuarioultimamodificacion</th>
+                <td>{{ entity.usuarioUltimaModificacion }}</td>
+            </tr>
+            <tr>
+                <th>Fechaultimamodificacion</th>
+                <td>{{ entity.fechaUltimaModificacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('datossedadvacunas') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('datossedadvacunas_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

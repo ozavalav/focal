@@ -1,0 +1,23 @@
+{% extends '::basemenu.html.twig' %}
+{% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block header -%}
+    Editar Profesines
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Editar información de las profesiones
+    </small>
+{% endblock %} 
+{% block content -%} 
+
+    {{ form(edit_form) }}
+
+    <ul class="record_actions">
+    <li>
+        <a href="{{ path('adprofesiones') }}">
+            Regresar al listado
+        </a>
+    </li>
+</ul>
+{% endblock %}
+

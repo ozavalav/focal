@@ -1,0 +1,210 @@
+{% extends '::basemenu.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{asset('bundles/app/css/bootstrap-datepicker.min')}}" />
+{% endblock%}  
+{% block header -%}
+    Cuadro #1
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Línea Base Demográfica y Socioeconómica del Municipio
+    </small>
+{% endblock %} 
+{% block content -%} 
+    <div id="msg_error" style="color: red; display: none" class="col-sm-12"><label id="lblerror"></label></div>
+            
+     <table border='0' style='width: 600px'>
+        <tr>
+            <td  style='width:25%; text-align: left;'>
+                <label>FECHA INICIO</label>
+            </td> 
+            <td  style='width:75%'> 
+                <input id="fecha-ini" class='form-control' style='width: 90%' type="text" value="" name='fecha-ini' maxlength="16"/> 
+            </td> 
+        </tr>
+         <tr>
+            <td  style='width:25%; text-align: left;'>
+                <label>FECHA FIN</label>
+            </td> 
+            <td  style='width:75%'> 
+                <input id="fecha-fin" class='form-control' style='width: 90%' type="text" value="" name='fecha-fin' maxlength="16"/> 
+            </td> 
+        </tr>
+        <tr>
+            <td  style='width:25%; text-align: left;'>
+                <label>TASA DE CAMBIO</label>
+            </td> 
+            <td  style='width:75%'> 
+                <input id="tasa" class='form-control' style='width: 90%' type="text" required value="0" name='tasa' maxlength="16" onkeypress="return filterFloat(event,this);"/> 
+            </td> 
+        </tr>
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_REPO') %}
+        <tr> 
+            <td   style='width:25%; text-align: left;'>
+                <label>DEPARTAMENTO</label>
+            </td>
+            <td    style='width:75%'> 
+                <select class='form-control number' style='width: 90%' name="departamento" id="departamento" >  
+                     <option value="00" selected="selected" >-- Seleccionar --</option> 
+                     {% for dep in departamentos %}
+                     <option value="{{ dep.codDepartamento }}" >{{ dep.nombre }}</option>
+                     {% endfor %}
+                </select>  
+            </td>
+        </tr>
+        <tr> 
+            <td   style='width:25%; text-align: left;'>
+                <label>MUNICIPIO</label>
+            </td>
+            <td    style='width:75%'> 
+                <select class='form-control number' style='width: 90%' name="municipio" id="municipio" >  
+                    <option value="0000" selected="selected" >-- Seleccionar--</option>  
+                </select>  
+            </td>
+        </tr>
+        <tr> 
+            <td   style='width:25%; text-align: left;'>
+                <label>COMUNIDAD</label>
+            </td>
+            <td    style='width:75%'> 
+                <select multiple class='form-control number' style='width: 90%' name="comunidad" id="comunidad" >  
+                    <option value="000000000000" selected="selected" >-- Seleccionar--</option>  
+                </select>  
+            </td>
+        </tr>
+        {% endif %}
+
+    </table>           
+    <div style="padding-top: 15px" class="col-lg-12">    
+        <a class="btn btn-primary" id ="btnprint" target="_blank" data-path="{{ path('datosindicadores')}}">
+            Imprimir reporte
+        </a>
+    </div>              
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <!--script src="{-{ asset('bundles/app/js/locales/bootstrap-datepicker.es.min.js')}}"></script -->
+    <script src="{{ asset('bundles/app/js/bootstrap-datepicker.min.js')}}"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+             $('#fecha-ini').datepicker({
+                 format: 'yyyy-mm-dd'
+                 //language:'es'
+             });
+             $('#fecha-fin').datepicker({
+                 format: 'yyyy-mm-dd'
+                 //language:'es'
+             });
+             
+            $('#departamento').change(function(e) {
+                var valdepto = $(this).val();  
+                e.preventDefault(); 
+                  var param =  valdepto;
+                   url="/Focal/web/app_dev.php/aduser/buscarMunicipio/" + param;
+                  $.ajax({
+                    type:'POST',
+                    url:url,
+                    beforeSend: function(){
+                    $("#lblError").hide();	
+                    },
+                    dataType: 'json',
+                    success:function(data){
+                        if(data.message === 'false'){
+                            alert('false');
+                        }else{
+                             var ejercicio = "<option value='00'> -- seleccionar -- </option>";
+                             var comunidad = "<option value='000000000000'> -- seleccionar -- </option>";
+                             $.each(data, function(i) {
+                                ejercicio = ejercicio + "<option value='"+data[i].codMunicipio+"'>"+data[i].codMunicipio+ " - "+data[i].nombre+ "</option>";  
+                             });
+                             $('#municipio').html(ejercicio);
+                             $('#comunidad').html(comunidad);
+                             //$('#focal_appbundle_aduser_submit').prop('disabled', true);
+                        }
+                    }
+                });
+            });
+            
+            $('#municipio').change(function(e) {
+                var valmuni = $(this).val();  
+                e.preventDefault(); 
+                  var param =  valmuni;
+                   url="/Focal/web/app_dev.php/datosgenerales/buscarComunidad/" + param;
+                  $.ajax({
+                    type:'POST',
+                    url:url,
+                    beforeSend: function(){
+                    $("#lblError").hide();	
+                    },
+                    dataType: 'json',
+                    success:function(data){
+                        if(data.message === 'false'){
+                            alert('false');
+                        }else{
+                             var comunidad = "<option value='000000000000'> -- seleccionar -- </option>";
+                             $.each(data, function(i) {
+                                comunidad = comunidad + "<option value='"+data[i].codComunidad+"'>"+data[i].codComunidad+ " - "+data[i].nombre+ "</option>";  
+                             });
+                             $('#comunidad').html(comunidad);
+                        }
+                    }
+                });
+            });
+            
+             
+             $('#btnprint').click(function (e) {
+                    $('#msg_error').hide();
+                    
+                    var id = $('#fecha-ini').val();//$("input:radio[name='seleccion']:checked").val();
+                    var id2 = $('#fecha-fin').val();
+                    var id3 = $('#departamento').val();
+                    var id4 = $('#municipio').val();
+                    var id5 = $('#comunidad').val();
+                    var id6 = $('#tasa').val();
+                    var path = $(this).data('path');
+                    
+                    var ok = true;
+
+                    if(typeof id === 'undefined') {
+                        id = '00';
+                    }
+                    if(typeof id2 === 'undefined') {
+                        id2 = '00';
+                    }
+                    if(id === "") {
+                        id = '00';
+                    }
+                    if(id2 === "") {
+                        id2 = '00';
+                    }
+                    if (id6 === "" || parseInt(id6) === 0 || typeof id6 === 'undefined')  {
+                        ok = false;
+                    }
+                    
+                    if(typeof id4 === 'undefined') {
+                        id4 = '0000';
+                    }
+                    if(typeof id3 === 'undefined') {
+                        id3 = '00';
+                    }
+                    if(typeof id5 === 'undefined') {
+                        id5 = '000000000000';
+                    }
+                        
+                    /*if(id === "" || id2 === "") {
+                        ok = false;
+                        msg = "Las fechas no pueden quedar vacias"
+                    }*/
+                    if(ok) {
+                        var pah = "crearReporteCuadro1/" + id + "," + id2 + "," + id3 + "," + id4  + "," + id6 + "," + id5;
+                        //$(location).attr('href', path + pah);
+                        window.open(path+pah);
+                    } else {
+                        $('#lblerror').text("Ingrese la tasa de cambio para el reporte");
+                        $('#msg_error').show();
+                    }
+            }); 
+        });
+    </script> 
+{% endblock %}

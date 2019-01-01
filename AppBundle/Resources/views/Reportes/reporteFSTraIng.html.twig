@@ -1,0 +1,761 @@
+
+{% block stylesheets %}
+<style type="text/Css">
+<!--
+#body{
+	font-family:Verdana, Calibri, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	font-weight:400;
+	color:#000;
+}
+.small_font{
+	font-size:8px;
+	color:#666;
+}
+.bg_img{
+	background-color:#F5ECCE;
+	border-radius:5px;
+	height:50px;
+}
+.linea{
+	border-width:1px;
+	border-bottom:solid;
+	border-color:#666;
+}
+.txt_title{
+	font-size:16px;
+	font-weight:bold;
+}
+.txt_titleheader{
+	font-size:12px;
+	font-weight:bold;
+	color:#333;
+}
+.txt_titleheader_cotenido{
+	font-size:7px;
+}
+.celda {
+    text-align: center;
+}
+.celdad {
+    text-align: right;
+}
+.borde-arriba td {
+    border-top: 1px solid #000; 
+}
+.borde-abajo th {
+    border-bottom: 1px solid #000; 
+} 
+.titulo-grupo {
+    background-color: lightskyblue;
+    text-align: center;
+}
+.titulo-tabla {
+    background-color: lightgreen;
+}
+.piede-tabla {
+    background-color: lightgrey;
+}
+-->
+</style>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block content %}
+<page backtop="20mm" backimg="" backbottom="10mm" backleft="0mm" backright="0mm" pagegroup="new" style="font-size: 14px;" footer="page">
+<page_header>
+  <table cellspacing="0" border='0' align="center"  style="width: 100%; font-size: 12pt;">
+        <tbody>
+        <tr>
+            <th colspan='5' style="width: 100%;" border="0" align="center"class="txt_titleheader">
+                <label  class="txt_title">REPORTE - FRECUENCIA SIMPLE</label><br/>
+            </th> 
+        </tr> 
+        <tr style="width: 100%;"> 
+            <th class="txt_titleheader">Fecha Inicio: {{ fin == '00' ? "" : fin|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Fecha Final: {{ fin2 == '00' ? "" : fin2|date('Y-m-d') }} </th>
+            <th class="txt_titleheader">Departamento: {{ coddep }} - {{ nomdep }} </th>
+            <th class="txt_titleheader">Municipio: {{ codmun }} - {{ nommun }}  </th>
+        </tr>  
+        <tr style="width: 100%;">    
+            <th colspan="4" class="txt_titleheader">
+                Comunidad: 
+                {% if cantcom <= 5 %}
+                    {% for ncom in dtnomcom %}
+                        {{ ncom.nombre }} / 
+                    {% endfor %} 
+                {% else %}
+                    Varias
+                {% endif %}
+            </th>
+        </tr>  
+   </tbody>
+    </table>
+</page_header>   
+    <table>
+        <tr>
+            <td class="titulo-grupo"><b>=== H. Datos Fuerza de Trabajo e Ingresos ===</b></td>
+        </tr> 
+        <tr>
+            <td>
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="7"><b>P.41 Fuerza de ingresos por rango de edad</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Rango edad</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                        <td>Cant. Hombres</td>
+                        <td class="celda">%</td>
+                        <td>Cant. Mujeres</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totali = 0 %}
+                        {% set totalih = 0 %}
+                        {% set totalim = 0 %}
+                        {% for datosire in datosrnge %}
+                            <tr>
+                                <td>{{ datosire.rangoedad }}</td>
+                                <td class="celda">{{ datosire.cantrane }}</td>
+                                <td class="celdad">{{ datosire.portot|round(2) }}</td>
+                                <td class="celda">{{ datosire.canth }}</td>
+                                <td class="celdad">{{ datosire.porhom|round(2) }}</td>
+                                <td class="celda">{{ datosire.cantm }}</td>
+                                <td class="celdad">{{ datosire.pormuj|round(2) }}</td>
+                            </tr>
+                            {% set totali = totali + datosire.cantrane %}
+                            {% set totalih= totalih + datosire.canth %}
+                            {% set totalim = totalim + datosire.cantm %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totali }}</td>
+                            <td></td>
+                            <td class="celda">{{ totalih }}</td>
+                            <td></td>
+                            <td class="celda">{{ totalim }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table>    
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table style="width: 100%">
+                    <thead>
+                    <tr><td colspan="7"><b>P.41.1 Rango de ingresos (sin remesas)</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Rango ingresos</td>
+                        <td>Cantidad Total</td>
+                        <td class="celda">%</td>
+                        <td>Cantidad Hombres</td>
+                        <td class="celda">%</td>
+                        <td>Cantidad Mujeres</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set totalsr = 0 %}
+                        {% set totalsrh = 0 %}
+                        {% set totalsrm = 0 %}
+                        {% for datossr in datossinr %}
+                            <tr>
+                                <td>{{ datossr.rangoingreso }}</td>
+                                <td class="celda">{{ datossr.cantper }}</td>
+                                <td class="celdad">{{ datossr.portot|round(2) }}</td>
+                                <td class="celda">{{ datossr.canth }}</td>
+                                <td class="celdad">{{ datossr.porhom|round(2) }}</td>
+                                <td class="celda">{{ datossr.cantm }}</td>
+                                <td class="celdad">{{ datossr.pormuj|round(2) }}</td>
+                            </tr>
+                            {% set totalsr = totalsr + datossr.cantper %}
+                            {% set totalsrh= totalsrh + datossr.canth %}
+                            {% set totalsrm = totalsrm + datossr.cantm %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalsr }}</td>
+                            <td></td>
+                            <td class="celda">{{ totalsrh }}</td>
+                            <td></td>
+                            <td class="celda">{{ totalsrm }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>    
+                </table> 
+            </td>
+        </tr>
+    </table> 
+    <table>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td colspan="3"><b>P.42 Ocupaciones</b></td>
+                    </tr> 
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Empleados</td>
+                        <td class="celda">{{ datosocu.oempleado }}</td>
+                        <td class="celdad">{{ datosocu.porempleado|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Cuenta Propia</td>
+                        <td class="celda">{{ datosocu.ocuentap }}</td>
+                        <td class="celdad">{{ datosocu.porcuentap|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>NC</td>
+                        <td class="celda">{{ datosocu.oninguna }}</td>
+                        <td class="celdad">{{ datosocu.poroninguna|round(2) }}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosocu.oempleado + datosocu.ocuentap + datosocu.oninguna }}</td>
+                        <td></td>
+                    </tr>
+                    
+                </table>    
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td colspan="3"><b>P.43 Sectores de Empleo</b></td>
+                    </tr> 
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Comercial</td>
+                        <td class="celda">{{ datosocu.scomercial }}</td>
+                        <td class="celdad">{{ datosocu.porcomercial|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Industrial</td>
+                        <td class="celda">{{ datosocu.sindustrial }}</td>
+                        <td class="celdad">{{ datosocu.porindustrial|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Servicios</td>
+                        <td class="celda">{{ datosocu.sservicio }}</td>
+                        <td class="celdad">{{ datosocu.porservicio|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>NC</td>
+                        <td class="celda">{{ datosocu.sninguna }}</td>
+                        <td class="celdad">{{ datosocu.porsninguna|round(2) }}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosocu.scomercial + datosocu.sindustrial + datosocu.sservicio + datosocu.sninguna }}</td>
+                        <td></td>
+                    </tr>
+                </table>    
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td colspan="3"><b>P.44 Sectores de Cuenta Propia</b></td>
+                    </tr> 
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Primario</td>
+                        <td class="celda">{{ datosocu.spprimario }}</td>
+                        <td class="celdad">{{ datosocu.porprimario|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Secundario</td>
+                        <td class="celda">{{ datosocu.spsecundario }}</td>
+                        <td class="celdad">{{ datosocu.porsecundario|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Terciario</td>
+                        <td class="celda">{{ datosocu.spterciario }}</td>
+                        <td class="celdad">{{ datosocu.porterciario|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>NC</td>
+                        <td class="celda">{{ datosocu.spninguna }}</td>
+                        <td class="celdad">{{ datosocu.porspninguna|round(2) }}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosocu.spprimario + datosocu.spsecundario + datosocu.spterciario + datosocu.spninguna }}</td>
+                        <td></td>
+                    </tr>
+                </table>    
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td colspan="3"><b>P.45 Genera Empleo en el sector</b></td>
+                    </tr> 
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Si</td>
+                        <td class="celda">{{ datosocu.generaesi }}</td>
+                        <td class="celdad">{{ datosocu.porgeneraesi|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>No</td>
+                        <td class="celda">{{ datosocu.generaeno }}</td>
+                        <td class="celdad">{{ datosocu.porgeneraeno|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>NC</td>
+                        <td class="celda">{{ datosocu.generaen }}</td>
+                        <td class="celdad">{{ datosocu.porgeneraen|round(2) }}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosocu.generaesi + datosocu.generaeno + datosocu.generaen }}</td>
+                        <td></td>
+                    </tr>
+                </table> 
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td colspan="3"><b>P.46 Cuanto Empleo Genera el Sector</b></td>
+                    </tr> 
+                    <tr class="titulo-tabla">
+                        <td>Rango</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>1 a 5</td>
+                        <td class="celda">{{ datosocu.e1a5 }}</td>
+                        <td class="celdad">{{ datosocu.pore1a5|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>6 a 10</td>
+                        <td class="celda">{{ datosocu.e6a10 }}</td>
+                        <td class="celdad">{{ datosocu.pore6a10|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>11 a 15</td>
+                        <td class="celda">{{ datosocu.e11a15 }}</td>
+                        <td class="celdad">{{ datosocu.pore11a15|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>16 a 20</td>
+                        <td class="celda">{{ datosocu.e16a20 }}</td>
+                        <td class="celdad">{{ datosocu.pore16a20|round(2) }}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosocu.e1a5 + datosocu.e6a10 + datosocu.e11a15  + datosocu.e16a20 }}</td>
+                        <td></td>
+                    </tr>
+                </table> 
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td colspan="3"><b>P.47 Miembros de organizaciones</b></td>
+                    </tr> 
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                    <tr>
+                        <td>Si</td>
+                        <td class="celda">{{ datosocu.miembrosi }}</td>
+                        <td class="celdad">{{ datosocu.pormiembrosi|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>No</td>
+                        <td class="celda">{{ datosocu.miembrono }}</td>
+                        <td class="celdad">{{ datosocu.pormiembrono|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>NC</td>
+                        <td class="celda">{{ datosocu.miembrosin }}</td>
+                        <td class="celdad">{{ datosocu.pormiembrosin|round(2) }}</td>
+                    </tr>
+                    <tr class="piede-tabla borde-arriba">
+                        <td>Total</td>
+                        <td class="celda">{{ datosocu.miembrosi + datosocu.miembrono + datosocu.miembrosin }}</td>
+                        <td></td>
+                    </tr>
+                </table> 
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="vertical-align: top">
+                <table cellspacing="5">
+                    <tr><td colspan="4"><b>P.48 Instituciones de apoyo al sector</b></td></tr>
+                    {% set numcol = 1 %}
+                    <tr>
+                    {% for datosi in datosinst %}
+                        <td>{{ datosi.inst }}</td>
+                        {% set numcol = numcol + 1 %}
+
+                        {% if numcol == 4 %}
+                           </tr> 
+                           <tr>
+                           {% set numcol = 1 %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if numcol < 4 %}</tr>{% endif %}
+                </table>
+            </td>
+        </tr>  
+        <tr>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.49 Prestamos en la Familia</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                        {% set totalpf = 0 %}
+                        {% for datospf in datospref %}
+                            <tr>
+                                <td>{{ datospf.prestamo }}</td>
+                                <td class="celda">{{ datospf.cantidad }}</td>
+                                <td class="celdad">{{ datospf.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalpf = totalpf + datospf.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalpf }}</td>
+                            <td></td>
+                        </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.49.1 Prestamo por sexo</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Sexo</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                        {% set totalpfx = 0 %}
+                        {% for datospfx in datosprefx %}
+                            <tr>
+                                <td>{{ datospfx.sexoprestamo }}</td>
+                                <td class="celda">{{ datospfx.cantidad }}</td>
+                                <td class="celdad">{{ datospfx.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalpfx = totalpfx + datospfx.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalpfx }}</td>
+                            <td></td>
+                        </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.50 Reciben Remesas</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                        {% set totalrr = 0 %}
+                        {% for datosrr in datosrecr %}
+                            <tr>
+                                <td>{{ datosrr.remesas }}</td>
+                                <td class="celda">{{ datosrr.cantidad }}</td>
+                                <td class="celdad">{{ datosrr.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalrr = totalrr + datosrr.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalrr }}</td>
+                            <td></td>
+                        </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.50.1 Rango de ingreso por Remesas</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Rango</td>
+                        <td>Cantidad</td>
+                        <td>%</td>
+                    </tr>
+                        {% set totalrir = 0 %}
+                        {% for datosrir in datosrngir %}
+                            <tr>
+                                <td>{{ datosrir.rangoremesas }}</td>
+                                <td class="celda">{{ datosrir.cantremesas }}</td>
+                                <td class="celdad">{{ datosrir.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalrir = totalrir + datosrir.cantremesas %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalrir }}</td>
+                            <td></td>
+                        </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.51 Rango ingreso familiar</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Rango</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                        {% set totalrif = 0 %}
+                        {% for datosrif in datosrngifam %}
+                            <tr>
+                                <td>{{ datosrif.rangoingreso }}</td>
+                                <td class="celda">{{ datosrif.cantidad }}</td>
+                                <td class="celdad">{{ datosrif.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalrif = totalrif + datosrif.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalrif }}</td>
+                            <td></td>
+                        </tr>
+                </table>
+            </td>    
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>P.52 Ingreso ajusta para</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Tiempos</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                        {% set totaliat = 0 %}
+                        {% for datosiat in datosingat %}
+                            <tr>
+                                <td>{{ datosiat.tiempos }}</td>
+                                <td class="celda">{{ datosiat.cantidad }}</td>
+                                <td class="celdad">{{ datosiat.portot|round(2) }}</td>
+                            </tr>
+                            {% set totaliat = totaliat + datosiat.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totaliat }}</td>
+                            <td></td>
+                        </tr>
+                </table>
+            </td>    
+        </tr>
+        <tr>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>Fuerza de trabajo por sexo</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Sexo</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                        {% set totalftx = 0 %}
+                        {% for datosftx in datosfuetx %}
+                            <tr>
+                                <td>{{ datosftx.sexo }}</td>
+                                <td class="celda">{{ datosftx.cantidad }}</td>
+                                <td class="celdad">{{ datosftx.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalftx = totalftx + datosftx.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalftx }}</td>
+                            <td></td>
+                        </tr>
+                </table>
+            </td>         
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>Fuerza de trabajo que trabajan</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Respuesta</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                        {% set totalftt = 0 %}
+                        {% for datosftt in datosfuett %}
+                            <tr>
+                                <td>{{ datosftt.trabaja }}</td>
+                                <td class="celda">{{ datosftt.cantidad }}</td>
+                                <td class="celdad">{{ datosftt.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalftt = totalftt + datosftt.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalftt }}</td>
+                            <td></td>
+                        </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>Fuerza de trabajo estado civil</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Estado civil</td>
+                        <td>Cantidad</td>
+                        <td class="celda">%</td>
+                    </tr>
+                        {% set totalfte = 0 %}
+                        {% for datosfte in datosfuete %}
+                            <tr>
+                                <td>{{ datosfte.estadocivil }}</td>
+                                <td class="celda">{{ datosfte.cantidad }}</td>
+                                <td class="celdad">{{ datosfte.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalfte = totalfte + datosfte.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalfte }}</td>
+                            <td></td>
+                        </tr>
+                </table>
+            </td>
+        </tr> 
+        <tr> 
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="4"><b>Personas con ingreso por genero</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Genero</td>
+                        <td>Cantidad</td>
+                        <td>Promedio ingreso</td>
+                        <td class="celda">%</td>
+                    </tr>
+                        {% set totalpt = 0 %}
+                        {% for datospt in datosptxs %}
+                            <tr>
+                                <td>{{ datospt.genero }}</td>
+                                <td class="celda">{{ datospt.cantidad }}</td>
+                                <td class="celda">{{ datospt.promedio }}</td>
+                                <td class="celdad">{{ datospt.portot|round(2) }}</td>
+                            </tr>
+                            {% set totalpt = totalpt + datospt.cantidad %}
+                        {% endfor %}
+                        <tr class="piede-tabla borde-arriba">
+                            <td>Total</td>
+                            <td class="celda">{{ totalpt }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr><td colspan="3"><b>Fuerza de trabajo Emergente</b></td></tr>
+                    <tr class="titulo-tabla">
+                        <td>Hombres</td>
+                        <td>Mujeres</td>
+                        <td>Total</td>
+                    </tr>
+                    <tr>
+                        <td>{{ datosfte.hombres }}</td>
+                        <td>{{ datosfte.mujeres }}</td>
+                        <td>{{ datosfte.total }}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr> 
+        <tr>
+        </tr> 
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>    
+    </table> 
+    <table>
+        <tr><td colspan="3"><b>Listado de profesiones</b></td></tr>
+        <tr class="titulo-tabla">
+            <td>Profesion</td>
+            <td>Cantidad</td>
+            <td class="celda">%</td>
+        </tr>
+            {% set totallp = 0 %}
+            {% for datoslp in datoslstp %}
+                <tr>
+                    <td>{{ datoslp.profesion }}</td>
+                    <td class="celda">{{ datoslp.cantidad }}</td>
+                    <td class="celdad">{{ datoslp.portot|round(2) }}</td>
+                </tr>
+                {% set totallp = totallp + datoslp.cantidad %}
+            {% endfor %}
+            <tr class="piede-tabla borde-arriba">
+                <td>Total</td>
+                <td class="celda">{{ totallp }}</td>
+                <td></td>
+            </tr>
+    </table> 
+    <table>
+        <tr><td colspan="3"><b>Listado de ocupaciones</b></td></tr>
+        <tr class="titulo-tabla">
+            <td>Ocupacion</td>
+            <td>Cantidad</td>
+            <td class="celda">%</td>
+        </tr>
+            {% set totallo = 0 %}
+            {% for datoslo in datoslsto %}
+                <tr>
+                    <td>{{ datoslo.ocupacion }}</td>
+                    <td class="celda">{{ datoslo.cantidad }}</td>
+                    <td class="celdad">{{ datoslo.portot|round(2) }}</td>
+                </tr>
+                {% set totallo = totallo + datoslo.cantidad %}
+            {% endfor %}
+            <tr class="piede-tabla borde-arriba">
+                <td>Total</td>
+                <td class="celda">{{ totallo }}</td>
+                <td></td>
+            </tr>
+    </table> 
+</page>                  
+<page_footer>    
+<br/>  
+    <br/>
+     <table cellspacing="0" style="width: 100%; font-size: 6pt;">
+        <tbody>
+         <tr>
+            <th  align="center" style="width: 100%;" border="0" class="txt_titleheader">
+                <label class="txt_titleheader"></label>
+            </th>
+        </tr>
+        </tbody>
+    </table>
+</page_footer>
+{% endblock %}
