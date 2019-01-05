@@ -38,18 +38,14 @@ class ReporteFSSegAController extends Controller
         
         $rngfecha = "";
         $rngfechae = "";
-        $rngfechaf = "";
+        $rngfechag = "";
         if($strIni != '' && $strFin != '') {
             $rngfecha = "and fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechae = "and e.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
-            $rngfechaf = "and f.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
+            $rngfechag = "and g.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
         }
         
-        $codCom = "";
-        $codCome = "";
-        $codComf = "";
-        $codCol = "";
-
+        
         $codDep = $session->get('_cod_departamento');
         $codMun = $session->get('_cod_municipio');
         $nomDep = $session->get('_nombre_departamento');
@@ -71,12 +67,17 @@ class ReporteFSSegAController extends Controller
         $cantcom = count($comtmp);
         $strcom = implode("','", $comtmp);
             
+        $codCom = "";
+        $codCome = "";
+        $codComf = "";
+        $codColg = "";
+        
         if($fin5 != '000000000000') {
             
             $codCom = " and cod_comunidad in ('" . $strcom . "')";
             $codCome = " and e.cod_comunidad in ('" . $strcom ."')";
             $codComf = " and f.cod_comunidad in ('" . $strcom ."')";
-            $codCol = " and f.cod_colonia in ('" . $strcom. "')";
+            $codColg = " and g.cod_colonia in ('" . $strcom. "')";
 
         }
         $codComsa = " cod_comunidad in ('" . $strcom . "')";
@@ -90,21 +91,22 @@ class ReporteFSSegAController extends Controller
 
 /* Trabajan la tierra */
         $query = "select 
- case 
+case 
   when trabajo_tierra = 1 then 'SI' 
   when trabajo_tierra = 2 then 'NO'
  end trabajatierra, 
  count(*) cantidad,
  round(count(*)::decimal * 100 / nullif((select count(*) from datos_seg_alimentaria where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) portot   
- from datos_seg_alimentaria 
-where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+ from datos_generales g join datos_seg_alimentaria a
+ on (g.id_enc = a.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
 group by trabajo_tierra
 order by trabajo_tierra
 ";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha,$codColg, $rngfechag );
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datostrat = $stmt->fetchAll();         
 
@@ -114,12 +116,13 @@ $query = "select
  sum(cant_mujeres) cantm,
  round(sum(cant_hombres)::decimal * 100 / nullif((select sum(coalesce(cant_hombres,0) + coalesce(cant_mujeres,0)) from datos_seg_alimentaria where trabajo_tierra = 1 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) porhom,   
  round(sum(cant_mujeres)::decimal * 100 / nullif((select sum(coalesce(cant_hombres,0) + coalesce(cant_mujeres,0)) from datos_seg_alimentaria where trabajo_tierra = 1 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) pormuj   
- from datos_seg_alimentaria 
-where trabajo_tierra=1 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-        $query = sprintf($query,$codCom, $rngfecha);
+ from datos_generales g join datos_seg_alimentaria a
+ on (g.id_enc = a.id_enc and g.periodo = :per and trabajo_tierra=1 and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)";
+        $query = sprintf($query,$codCom, $rngfecha, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datosttx = $stmt->fetchAll();
         
@@ -127,15 +130,16 @@ where trabajo_tierra=1 and cod_departamento = :dep and cod_municipio = :mun %1\$
 $query = "select coalesce(cant_hombres,0) + coalesce(cant_mujeres,0) personas,
 count(*) cantidad,
 round(count(*)::decimal * 100 / nullif((select count(*) from datos_seg_alimentaria where trabajo_tierra = 1 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) portot   
-from datos_seg_alimentaria 
-where trabajo_tierra=1 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+from datos_generales g join datos_seg_alimentaria a
+ on (g.id_enc = a.id_enc and g.periodo = :per and trabajo_tierra=1 and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
 group by
 coalesce(cant_hombres,0) + coalesce(cant_mujeres,0)
 order by 1";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha,$codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datospertt = $stmt->fetchAll(); 
         
@@ -152,15 +156,16 @@ $query = "select
  end tipotenencia, 
  count(*) cantidad,
  round(count(*)::decimal * 100 / nullif((select count(*) from datos_seg_alimentaria where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) portot   
- from datos_seg_alimentaria 
-where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+ from datos_generales g join datos_seg_alimentaria a
+ on (g.id_enc = a.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
 group by tipo_tenencia
 order by tipo_tenencia
 ";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha,$codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datostipott = $stmt->fetchAll();
         
@@ -173,15 +178,16 @@ $query = "select
  end tipodominio, 
  count(*) cantidad,
  round(count(*)::decimal * 100 / nullif((select count(*) from datos_seg_alimentaria where tipo_tenencia = 1 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) portot   
- from datos_seg_alimentaria 
-where tipo_tenencia = 1 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+ from datos_generales g join datos_seg_alimentaria a
+ on (g.id_enc = a.id_enc and g.periodo = :per and tipo_tenencia = 1 and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s) 
 group by dominio
 order by dominio
 ";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha,$codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datosttdom = $stmt->fetchAll();
         
@@ -194,15 +200,16 @@ $query = "select
  end producealimento, 
  count(*) cantidad,
  round(count(*)::decimal * 100 / nullif((select count(*) from datos_seg_alimentaria where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) portot   
- from datos_seg_alimentaria 
-where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+ from datos_generales g join datos_seg_alimentaria a
+ on (g.id_enc = a.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
 group by produce_alimento
 order by produce_alimento
 ";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha,$codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$codMun);
         $stmt->execute();
         $datosproa = $stmt->fetchAll();        
         
@@ -214,15 +221,16 @@ $query = "select
  end producesuficiente,
  count(*) cantidad,
  round(count(*)::decimal * 100 / nullif((select count(*) from datos_seg_alimentaria where produce_alimento = 1 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) portot   
- from datos_seg_alimentaria 
-where  produce_alimento = 1 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+ from datos_generales g join datos_seg_alimentaria a
+ on (g.id_enc = a.id_enc and g.periodo = :per and produce_alimento = 1 and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
 group by produce_suficiente
 order by produce_suficiente
 ";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha,$codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datospaauto = $stmt->fetchAll();
         
@@ -235,15 +243,16 @@ $query = "select
  end produceexcedente, 
  count(*) cantidad,
  round(count(*)::decimal * 100 / nullif((select count(*) from datos_seg_alimentaria where produce_alimento = 1 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) portot   
- from datos_seg_alimentaria 
-where  produce_alimento = 1 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+ from datos_generales g join datos_seg_alimentaria a
+ on (g.id_enc = a.id_enc and g.periodo = :per and produce_alimento = 1 and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
 group by excedente
 order by excedente
 ";   
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha,$codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datosobte = $stmt->fetchAll();        
         
@@ -289,13 +298,14 @@ $query = "select
 	sum(coalesce(cant_domesticos,0)) cdomesticos,
 	sum(case when cant_domesticos > 0 then 1 else 0 end) ccdomesticos,
 	round(sum(case when cant_domesticos > 0 then 1 else 0 end)::decimal * 100 / nullif(sum(case when tiene_animales = 1 then 1 else 0 end),0),2) pcdomesticos
-from datos_seg_alimentaria 
-where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+from datos_generales g join datos_seg_alimentaria a
+ on (g.id_enc = a.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s)
 ";   
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datostie = $stmt->fetchAll();          
 

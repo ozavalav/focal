@@ -38,18 +38,13 @@ class ReporteFSSrvPController extends Controller
         
         $rngfecha = "";
         $rngfechae = "";
-        $rngfechaf = "";
+        $rngfechag = "";
         if($strIni != '' && $strFin != '') {
             $rngfecha = "and fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechae = "and e.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
-            $rngfechaf = "and f.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
+            $rngfechag = "and g.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
         }
         
-        $codCom = "";
-        $codCome = "";
-        $codComf = "";
-        $codCol = "";
-
         $codDep = $session->get('_cod_departamento');
         $codMun = $session->get('_cod_municipio');
         $nomDep = $session->get('_nombre_departamento');
@@ -70,13 +65,17 @@ class ReporteFSSrvPController extends Controller
         $comtmp = explode(",", $fin5);
         $cantcom = count($comtmp);
         $strcom = implode("','", $comtmp);
-            
+        
+        $codCom = "";
+        $codCome = "";
+        $codComf = "";
+        $codColg = "";
         if($fin5 != '000000000000') {
             
             $codCom = " and cod_comunidad in ('" . $strcom . "')";
             $codCome = " and e.cod_comunidad in ('" . $strcom ."')";
             $codComf = " and f.cod_comunidad in ('" . $strcom ."')";
-            $codCol = " and f.cod_colonia in ('" . $strcom. "')";
+            $codColg = " and g.cod_colonia in ('" . $strcom. "')";
 
         }
         $codComsa = " cod_comunidad in ('" . $strcom . "')";
@@ -95,20 +94,21 @@ sum(case when reciben = 2 then 1 else 0 end) rno,
 sum(case when reciben = 1 then 1 else 0 end)::decimal * 100 / nullif((sum(case when reciben = 1 then 1 else 0 end) + sum(case when reciben = 2 then 1 else 0 end)),0) porsi,
 sum(case when reciben = 2 then 1 else 0 end)::decimal * 100 / nullif((sum(case when reciben = 1 then 1 else 0 end) + sum(case when reciben = 2 then 1 else 0 end)),0) porno,
 sum(case when reciben = 1 then 1 else 0 end) + sum(case when reciben = 2 then 1 else 0 end) total,
-nullif(sum(case when reciben = 1 and estado = 1 then 1 else 0 end),0) ebueno,
-nullif(sum(case when reciben = 1 and estado = 2 then 1 else 0 end),0) eregular,
-nullif(sum(case when reciben = 1 and estado = 3 then 1 else 0 end),0) emalo,
-sum(case when reciben = 1 and estado is null then 1 else 0 end) enulo
+nullif(sum(case when reciben = 1 and s.estado = 1 then 1 else 0 end),0) ebueno,
+nullif(sum(case when reciben = 1 and s.estado = 2 then 1 else 0 end),0) eregular,
+nullif(sum(case when reciben = 1 and s.estado = 3 then 1 else 0 end),0) emalo,
+sum(case when reciben = 1 and s.estado is null then 1 else 0 end) enulo
 from 
-datos_serviciospub s inner join ad_servicios_publicos c on (s.id_servicio = c.id and cod_departamento = :dep and cod_municipio = :mun )
-where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+datos_generales g join datos_serviciospub s on (g.id_enc = s.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s) 
+inner join ad_servicios_publicos c on (s.id_servicio = c.id )
 group by id_servicio, descripcion
 order by id_servicio
 ";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datossrv = $stmt->fetchAll();
         
@@ -154,14 +154,15 @@ round(sum(case when id_servicio = 12 then 1 else 0 end)::decimal * 100 /
   nullif((select count(*) 
   from datos_serviciospub 
   where reciben = 1 and id_servicio = 12 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) porsrv12
-from datos_serviciospub
-where id_servicio in (1,2,3,4,5,6,11,12) and reciben = 1 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+from datos_generales g join datos_serviciospub s
+on(g.id_enc = s.id_enc and g.periodo = :per and id_servicio in (1,2,3,4,5,6,11,12) and reciben = 1 and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
 group by cant_dias
 order by cant_dias";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datossrvd = $stmt->fetchAll();        
 

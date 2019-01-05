@@ -85,7 +85,7 @@
         <tr style="width: 100%;">    
             <th colspan="4" class="txt_titleheader">
                 Comunidad: 
-                {% if cantcom <= 5 %}
+                {% if cantcom > 1 and cantcom <= 5  %}
                     {% for ncom in dtnomcom %}
                         {{ ncom.nombre }} / 
                     {% endfor %} 

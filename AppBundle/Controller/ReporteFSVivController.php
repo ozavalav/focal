@@ -38,18 +38,13 @@ class ReporteFSVivController extends Controller
         
         $rngfecha = "";
         $rngfechae = "";
-        $rngfechaf = "";
+        $rngfechag = "";
         if($strIni != '' && $strFin != '') {
             $rngfecha = "and fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechae = "and e.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
-            $rngfechaf = "and f.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
+            $rngfechag = "and g.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
         }
         
-        $codCom = "";
-        $codCome = "";
-        $codComf = "";
-        $codCol = "";
-
         $codDep = $session->get('_cod_departamento');
         $codMun = $session->get('_cod_municipio');
         $nomDep = $session->get('_nombre_departamento');
@@ -70,13 +65,18 @@ class ReporteFSVivController extends Controller
         $comtmp = explode(",", $fin5);
         $cantcom = count($comtmp);
         $strcom = implode("','", $comtmp);
-            
+        
+        $codCom = "";
+        $codCome = "";
+        $codComf = "";
+        $codColg = "";
+        
         if($fin5 != '000000000000') {
             
             $codCom = " and cod_comunidad in ('" . $strcom . "')";
             $codCome = " and e.cod_comunidad in ('" . $strcom ."')";
             $codComf = " and f.cod_comunidad in ('" . $strcom ."')";
-            $codCol = " and f.cod_colonia in ('" . $strcom. "')";
+            $codColg = " and g.cod_colonia in ('" . $strcom. "')";
 
         }
         $codComsa = " cod_comunidad in ('" . $strcom . "')";
@@ -158,12 +158,13 @@ class ReporteFSVivController extends Controller
             sum(consumoagua_filtrada) consumoafil,
             sum(consumoagua_clorada) consumoaclo,
             count(*) total
-           from datos_vivienda d
-           where d.cod_departamento = :dep and d.cod_municipio = :mun %1\$s %2\$s";
-        $query = sprintf($query,$codCom, $rngfecha);
+           from datos_generales g join datos_vivienda d
+           on (g.id_enc = d.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s)";
+        $query = sprintf($query,$codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datosv = $stmt->fetchAll();
         
@@ -180,8 +181,8 @@ case
  end rango,
  count(*) cantidad,
  round(count(*)::decimal*100 / nullif((select count(*) from datos_vivienda where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) porpiezas
-from datos_vivienda 
-where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+from datos_generales g join datos_vivienda d
+     on (g.id_enc = d.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
 group by
 case
   when piezas_vivienda = 0 then 'a. Ninguna' 
@@ -192,10 +193,11 @@ case
   else 'NC'
  end 
 order by 1";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datospxv = $stmt->fetchAll();
 
@@ -210,8 +212,8 @@ case
  end rango,
  count(*) cantidad,
  round(count(*)::decimal*100 / nullif((select count(*) from datos_vivienda where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) porbxviv
-from datos_vivienda 
-where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+from datos_generales g join datos_vivienda d
+     on (g.id_enc = d.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
 group by
 case
   when banos_vivienda = 0 then 'a. Sin baño' 
@@ -222,10 +224,11 @@ case
  end 
 order by 1
 ";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datosbxv = $stmt->fetchAll();
         
@@ -240,8 +243,8 @@ case
  end rango,
  count(*) cantidad,
  round(count(*)::decimal*100 / nullif((select count(*) from datos_vivienda where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) pordxviv
-from datos_vivienda 
-where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+from datos_generales g join datos_vivienda d
+     on (g.id_enc = d.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
 group by
 case
   when dormitorios_vivienda = 0 then 'a. Sin dormitorios' 
@@ -251,10 +254,11 @@ case
   else 'NC'
  end 
 order by 1";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datosdxv = $stmt->fetchAll();        
         
@@ -269,8 +273,8 @@ case
  end rango,
  count(*) cantidad,
  round(count(*)::decimal*100 / nullif((select count(*) from datos_vivienda where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) porpxdor
-from datos_vivienda 
-where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+from datos_generales g join datos_vivienda d
+     on (g.id_enc = d.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
 group by
 case
   when personasx_dormitorio = 0 then 'a. Ninguna' 
@@ -280,10 +284,11 @@ case
   else 'NC'
  end 
 order by 1";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datospxd = $stmt->fetchAll();  
         
@@ -298,8 +303,8 @@ case
  end rango,
  count(*) cantidad,
  round(count(*)::decimal*100 / nullif((select count(*) from datos_vivienda where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) porfxviv
-from datos_vivienda 
-where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+from datos_generales g join datos_vivienda d
+     on (g.id_enc = d.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
 group by
 case
   when familias_casa = 0 then 'a. Ninguna' 
@@ -309,10 +314,11 @@ case
   else 'NC'
  end 
 order by 1";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datosfxv = $stmt->fetchAll();         
 

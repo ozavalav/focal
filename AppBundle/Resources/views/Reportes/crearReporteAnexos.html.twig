@@ -99,7 +99,7 @@
             </td>
             <td  colspan="3" style="width: 50%;" border="0" align="left"class="txt_titleheader">
                 Comunidad: 
-                {% if cantcom <= 3 %}
+                {% if cantcom > 1 and cantcom <= 5 %}
                     {% for ncom in dtnomcom %}
                         {{ ncom.nombre }} / 
                     {% endfor %} 

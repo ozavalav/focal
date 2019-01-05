@@ -39,17 +39,15 @@ class ReporteFSEduController extends Controller
         $rngfecha = "";
         $rngfechae = "";
         $rngfechaf = "";
+        $rngfechag = "";
         if($strIni != '' && $strFin != '') {
             $rngfecha = "and fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechae = "and e.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechaf = "and f.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
+            $rngfechag = "and g.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
         }
         
-        $codCom = "";
-        $codCome = "";
-        $codComf = "";
-        $codCol = "";
-
+        
         $codDep = $session->get('_cod_departamento');
         $codMun = $session->get('_cod_municipio');
         $nomDep = $session->get('_nombre_departamento');
@@ -70,13 +68,17 @@ class ReporteFSEduController extends Controller
         $comtmp = explode(",", $fin5);
         $cantcom = count($comtmp);
         $strcom = implode("','", $comtmp);
-            
+        
+        $codCom = "";
+        $codCome = "";
+        $codComf = "";
+        $codColg = "";
         if($fin5 != '000000000000') {
             
             $codCom = " and cod_comunidad in ('" . $strcom . "')";
             $codCome = " and e.cod_comunidad in ('" . $strcom ."')";
             $codComf = " and f.cod_comunidad in ('" . $strcom ."')";
-            $codCol = " and f.cod_colonia in ('" . $strcom. "')";
+            $codColg = " and g.cod_colonia in ('" . $strcom. "')";
 
         }
         $codComsa = " cod_comunidad in ('" . $strcom . "')";
@@ -127,16 +129,18 @@ class ReporteFSEduController extends Controller
      nullif((select count(*) from datos_educacion where estudia = 2 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2) pornoest,
   sum(case when (e.estudia = 2 or e.estudia is null) and f.sexo = 1 then 1 else 0 end) noestudiah,
   sum(case when (e.estudia = 2 or e.estudia is null) and f.sexo = 2 then 1 else 0 end) noestudiam   
-from datos_educacion e inner join datosd_familia f on (e.id_familia = f.id and f.cod_departamento = :dep and f.cod_municipio = :mun )   
+from datos_generales g join datos_educacion e on (g.id_enc = e.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %5\$s %6\$s ) 
+inner join datosd_familia f on (e.id_familia = f.id and f.cod_departamento = :dep and f.cod_municipio = :mun )   
 where
  e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s
 group by e.grado
 order by e.grado
 ";
-        $query = sprintf($query,$codCom, $rngfecha,$codCome, $rngfechae);
+        $query = sprintf($query,$codCom, $rngfecha,$codCome, $rngfechae,$codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datosedu = $stmt->fetchAll();   
         
@@ -189,7 +193,8 @@ order by e.grado
  datosd_familia f on (e.id_familia = f.id and f.cod_departamento = :dep and f.cod_municipio = :mun and f.sexo = 2 and f.edad > 4 and e.estudia = 2 %3\$s %4\$s) 
  where e.cod_departamento = :dep and e.cod_municipio = :mun),0),2) pornem
 from 
-datos_educacion e inner join datosd_familia f on (e.id_familia = f.id and f.cod_departamento = :dep and f.cod_municipio = :mun and f.edad > 4 %3\$s %4\$s)
+datos_generales g join datos_educacion e on (g.id_enc = e.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %7\$s %8\$s)
+inner join datosd_familia f on (e.id_familia = f.id and f.cod_departamento = :dep and f.cod_municipio = :mun and f.edad > 4 %3\$s %4\$s)
 where f.edad > 4
 and e.cod_departamento = :dep and e.cod_municipio = :mun %5\$s %6\$s
 group by --f.edad, 
@@ -207,10 +212,11 @@ case
    when (f.edad >=65 ) then '11. de 65 años y mas'
  end
 order by 1";
-        $query = sprintf($query,$codCom, $rngfecha, $codComf, $rngfechaf, $codCome, $rngfechae);
+        $query = sprintf($query,$codCom, $rngfecha, $codComf, $rngfechaf, $codCome, $rngfechae, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datosestr = $stmt->fetchAll();
         
@@ -289,7 +295,8 @@ sum(case
 	else 0 end)
 from datos_educacion e join datosd_familia f on (f.id = e.id_familia and f.cod_departamento = :dep and f.cod_municipio = :mun %3\$s %4\$s)
 where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s),0),2) portot
-from datos_educacion e join datosd_familia f on (f.id = e.id_familia and f.cod_departamento = :dep and f.cod_municipio = :mun %3\$s %4\$s)
+from datos_generales g join datos_educacion e on (g.id_enc = e.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %5\$s %6\$s) 
+join datosd_familia f on (f.id = e.id_familia and f.cod_departamento = :dep and f.cod_municipio = :mun %3\$s %4\$s)
 where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s
 group by grado
 having sum(case 
@@ -308,10 +315,11 @@ having sum(case
 	else 0 end) > 0
 order by 1
 ";
-        $query = sprintf($query,$codCom, $rngfecha, $codCome, $rngfechae);
+        $query = sprintf($query,$codCom, $rngfecha, $codCome, $rngfechae, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datosefe = $stmt->fetchAll();        
 
@@ -464,7 +472,8 @@ sum(case
 	else 0 end)
 from datos_educacion e join datosd_familia f on (f.id = e.id_familia and f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s)
 where e.cod_departamento = :dep and e.cod_municipio = :mun),0),2) portot
-from datos_educacion e join datosd_familia f on (f.id = e.id_familia and f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s)
+from datos_generales g join datos_educacion e on (g.id_enc = e.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %5\$s %6\$s) 
+join datosd_familia f on (f.id = e.id_familia and f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s)
 where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s
 group by case
    when (f.edad >=1 and f.edad <=4) then '1. de 1 a 4 años'
@@ -494,10 +503,11 @@ having sum(case
 	when estudia = 1 and grado = 12 and edad > 18 then 1            
 	else 0 end) > 0
 order by 1";
-        $query = sprintf($query,$codComf, $rngfechaf, $codCome, $rngfechae);
+        $query = sprintf($query,$codComf, $rngfechaf, $codCome, $rngfechae, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datosefrxr = $stmt->fetchAll(); 
         

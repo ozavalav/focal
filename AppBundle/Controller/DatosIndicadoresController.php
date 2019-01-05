@@ -302,21 +302,20 @@ class DatosIndicadoresController extends Controller
         $rngfecha = "";
         $rngfechae = "";
         $rngfechaf = "";
+        $rngfechag = "";
         if($strIni != '' && $strFin != '') {
             $rngfecha = "and fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechaf = "and f.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechae = "and e.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
+            $rngfechag = "and g.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
         }
 
-        $codCom = "";
-        $codCome = "";
-        $codComf = "";
-        $codCol = "";
-
+        
         $codDep = $session->get('_cod_departamento');
         $codMun = $session->get('_cod_municipio');
         $nomDep = $session->get('_nombre_departamento');
         $nomMun = $session->get('_nombre_municipio');
+        $periodo = $session->get('_periodo');
 
         if($fin3 != '00') {
             $codDep = $fin3;
@@ -333,12 +332,17 @@ class DatosIndicadoresController extends Controller
         $cantcom = count($comtmp);
         $strcom = implode("','", $comtmp);
 
+        $codCom = "";
+        $codCome = "";
+        $codComf = "";
+        $codColg = "";
+        
         if($fin5 != '000000000000') {
 
             $codCom = " and cod_comunidad in ('" . $strcom . "')";
             $codCome = " and e.cod_comunidad in ('" . $strcom ."')";
             $codComf = " and f.cod_comunidad in ('" . $strcom ."')";
-            $codCol = " and f.cod_colonia in ('" . $strcom. "')";
+            $codColg = " and g.cod_colonia in ('" . $strcom. "')";
 
         }  
         $codComsa = " cod_comunidad in ('" . $strcom . "')";
@@ -351,23 +355,26 @@ class DatosIndicadoresController extends Controller
         /* Numero de viviendas encuestadas */
             $query = "select 
             count(*) as total
-            from datos_generales f
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCol, $rngfecha);
+            from datos_generales g
+            where periodo = :per and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
+            $query = sprintf($query,$codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtviv = $stmt->fetchAll();
             $totviv = $dtviv[0]['total'];
             
         /* Numero de personas ingresadas de la comunidad */
-            $query = "select count(*) totalper from datosd_familia
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCom, $rngfecha);
+            $query = "select count(*) totalper 
+                from datos_generales g join datosd_familia f
+            on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s)";
+            $query = sprintf($query,$codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtfamilia = $stmt->fetchAll();
         
@@ -375,12 +382,13 @@ class DatosIndicadoresController extends Controller
             $query = "select 
             sum(case when ingreso_ajusta = 1  then 1 else 0 end) tiempos3,
             sum(case when cant_ingresofam >=0 and cant_ingresofam <=(1.25 * %3\$d) then 1 else 0 end) rangoi1
-            from datos_fuerza_otros
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCom, $rngfecha, $fin6);
+            from datos_generales g join datos_fuerza_otros f
+            on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s)";
+            $query = sprintf($query,$codColg, $rngfechag, $fin6);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtingreso = $stmt->fetchAll();
             
@@ -389,12 +397,13 @@ class DatosIndicadoresController extends Controller
             sum(case when produce_alimento = 1 then 1 else 0 end) tproducen, 
             sum(case when produce_alimento = 1 and produce_suficiente = 1 then 1 else 0 end) tpconsumo,
             sum(case when tiene_huerto = 1 then 1 else 0 end) thuerto
-            from datos_seg_alimentaria 
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCom, $rngfecha);
+            from datos_generales g join datos_seg_alimentaria f
+            on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s)";
+            $query = sprintf($query,$codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtalimento = $stmt->fetchAll();
             
@@ -405,12 +414,13 @@ class DatosIndicadoresController extends Controller
             sum(case when id_enfermedad = 3 then cant_manifestaron else 0 end) paludismo,
             sum(case when id_enfermedad = 4 then cant_manifestaron else 0 end) dengueh,
             sum(case when id_enfermedad = 15 then cant_manifestaron else 0 end) tuber
-            from datoss_enfermedades
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCom, $rngfecha);
+            from datos_generales g join datoss_enfermedades f
+            on(g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s)";
+            $query = sprintf($query,$codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtenfermedad = $stmt->fetchAll();
         
@@ -424,12 +434,13 @@ class DatosIndicadoresController extends Controller
             sum(case when planifican = 1 and metodo = 6 then 1 else 0 end) operacion,
             sum(case when planifican = 1 and metodo = 7 then 1 else 0 end) implante,
             sum(case when planifican = 1 and metodo = 5 then 1 else 0 end) inyeccion
-            from datoss_general
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCom, $rngfecha);
+            from datos_generales g join datoss_general f
+            on(g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s)";
+            $query = sprintf($query,$codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtsalud = $stmt->fetchAll();
             
@@ -447,12 +458,14 @@ sum(case when (e.grado >= 2 and e.grado <= 7) and (f.edad >= 7 and f.edad <= 12)
 sum(case when (e.grado >= 2 and e.grado <= 7) and (f.edad >= 7 and f.edad <= 12) and estudia = 1 and f.sexo = 1 then 2 else 0 end) primaria_f, 
 sum(case when (e.grado = 8 ) and (f.edad >= 13 and f.edad <= 15) and estudia = 1 and f.sexo = 1 then 1 else 0 end) secundaria_m,
 sum(case when (e.grado = 8 ) and (f.edad >= 13 and f.edad <= 15) and estudia = 1 and f.sexo = 2 then 1 else 0 end) secundaria_f
-from datos_educacion e join datosd_familia f on (f.id = e.id_familia and f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s )
+from datos_generales g join datos_educacion e on (g.id_enc = e.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %5\$s %6\$s)
+join datosd_familia f on (f.id = e.id_familia and f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s )
 where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
-            $query = sprintf($query,$codComf, $rngfechaf, $codCome, $rngfechae);
+            $query = sprintf($query,$codComf, $rngfechaf, $codCome, $rngfechae, $codColg, $rngfechag );
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtedu = $stmt->fetchAll();    
             
@@ -462,12 +475,13 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
             sum(case when condicion_vivienda > 1 then 1 else 0 end) conregmal,
             sum(case when coalesce(banos_vivienda,0) = 0 then 1 else 0 end) nobanos,
             sum(case when dormitorios_vivienda = 1 then 1 else 0 end) undormitorio
-            from datos_vivienda
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCom, $rngfecha);
+            from datos_generales g join datos_vivienda f
+            on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s)";
+            $query = sprintf($query,$codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtvivienda = $stmt->fetchAll();
 
@@ -478,12 +492,13 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
             sum(case when id_servicio = 11 and coalesce(reciben,2) = 2 then 1 else 0 end) basurano,
             sum(case when id_servicio = 7 and coalesce(reciben,2) = 2 then 1 else 0 end) serviciono,
             sum(case when id_servicio = 13 and reciben = 1 then 1 else 0 end) energiasi
-            from datos_serviciospub
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCom, $rngfecha);
+            from datos_generales g join datos_serviciospub f on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
+            where f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s";
+            $query = sprintf($query,$codComf, $rngfechaf, $codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtsrvpub = $stmt->fetchAll();
             
@@ -494,12 +509,13 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
             sum(case when ocupacion = 2 and sectorp = 2 then 1 else 0 end) secundario,
             sum(case when ocupacion = 2 and sectorp = 3 then 1 else 0 end) terciario,
             sum(case when ocupacion = 2 and generaemp = 1 then 1 else 0 end) generaemp
-            from datos_fuerza_otros
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCom, $rngfecha);
+            from datos_generales g join datos_fuerza_otros f
+            on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s)";
+            $query = sprintf($query,$codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtfuerzat = $stmt->fetchAll();  
          
@@ -508,12 +524,13 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
             sum(case when coalesce(casos_violencia,0) = 1 then 1 else 0 end) casosvio,
             sum(case when coalesce(victima_violencia,0) = 1 then 1 else 0 end) victimavio,
             sum(case when coalesce(considera_seguro,0) = 1 then 1 else 0 end) tsiseguro
-            from datos_seguridad_participacion 
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCom, $rngfecha);
+            from datos_generales g join datos_seguridad_participacion p
+            on (g.id_enc = p.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s)";
+            $query = sprintf($query,$codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtseg = $stmt->fetchAll();      
             
@@ -579,23 +596,20 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         $rngfechae = "";
         $rngfechaf = "";
         $rngfechar = "";
+        $rngfechag = "";
         if($strIni != '' && $strFin != '') {
             $rngfecha = "and fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechaf = "and f.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechae = "and e.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechar = "and r.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
+            $rngfechag = "and g.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
         }
-
-        $codCom = "";
-        $codComr = "";
-        $codCome = "";
-        $codComf = "";
-        $codCol = "";
-
+        
         $codDep = $session->get('_cod_departamento');
         $codMun = $session->get('_cod_municipio');
         $nomDep = $session->get('_nombre_departamento');
         $nomMun = $session->get('_nombre_municipio');
+        $periodo = $session->get('_periodo');
 
         if($fin3 != '00') {
             $codDep = $fin3;
@@ -612,13 +626,18 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         $cantcom = count($comtmp);
         $strcom = implode("','", $comtmp);
 
+        $codCom = "";
+        $codComr = "";
+        $codCome = "";
+        $codComf = "";
+        $codColg = "";
         if($fin5 != '000000000000') {
 
             $codCom = " and cod_comunidad in ('" . $strcom . "')";
             $codCome = " and e.cod_comunidad in ('" . $strcom ."')";
             $codComf = " and f.cod_comunidad in ('" . $strcom ."')";
             $codComr = " and r.cod_comunidad in ('" . $strcom ."')";
-            $codCol = " and f.cod_colonia in ('" . $strcom. "')";
+            $codColg = " and g.cod_colonia in ('" . $strcom. "')";
 
         }  
         $codComsa = " cod_comunidad in ('" . $strcom . "')";
@@ -631,23 +650,27 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         /* Numero de viviendas encuestadas */
             $query = "select 
             count(*) as total
-            from datos_generales f
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCol, $rngfecha);
+            from datos_generales g
+            where g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s";
+            $query = sprintf($query,$codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtviv = $stmt->fetchAll();
             $totviv = $dtviv[0]['total'];
             
         /* Numero de personas ingresadas de la comunidad */
-            $query = "select count(*) totalper from datosd_familia
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCom, $rngfecha);
+            $query = "select count(*) totalper 
+            from datos_generales g join datosd_familia f
+            on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
+            where f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s";
+            $query = sprintf($query,$codComf, $rngfechaf, $codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtfamilia = $stmt->fetchAll();
             
@@ -661,13 +684,15 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
 	coalesce(round((sum(r.cant_hombres)::decimal*100) / nullif((select sum(cant_hombres) from datosd_rangos where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2),0) porh, 
 	coalesce(sum(r.cant_mujeres),0) cantm, 
 	coalesce(round((sum(r.cant_mujeres)::decimal*100) / nullif((select sum(cant_mujeres) from datosd_rangos where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),0),2),0) porm 
-        from datosd_rangos r right join ad_rangosedad a on (a.id = r.rango and r.cod_departamento = :dep and cod_municipio = :mun %3\$s %4\$s)
+        from datos_generales g join datosd_rangos r on (g.id_enc = r.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %5\$s %6\$s)
+        right join ad_rangosedad a on (a.id = r.rango and r.cod_departamento = :dep and r.cod_municipio = :mun %3\$s %4\$s)
         group by a.id
         order by a.id";
-        $query = sprintf($query,$codCom, $rngfecha,$codComr, $rngfechar);
+        $query = sprintf($query,$codCom, $rngfecha,$codComr, $rngfechar, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $datosrng = $stmt->fetchAll();
         
@@ -677,13 +702,15 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         a.descripcion,
         sum(case when e.cant_manifestaron > 0 then 1 else 0 end) cantmani,
         coalesce(sum(e.cant_manifestaron),0) cantper
-        from datoss_enfermedades e right join ad_enfermedades a on (a.id = e.id_enfermedad and e.cod_departamento = :dep and e.cod_municipio = :mun %1\$s %2\$s)
+        from datos_generales g join datoss_enfermedades e on (g.id_enc = e.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s) 
+        right join ad_enfermedades a on (a.id = e.id_enfermedad and e.cod_departamento = :dep and e.cod_municipio = :mun %1\$s %2\$s)
         group by a.id
         order by a.id";
-        $query = sprintf($query,$codCome, $rngfechae);
+        $query = sprintf($query,$codCome, $rngfechae, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $dtenfe = $stmt->fetchAll();
         
@@ -699,12 +726,13 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         coalesce(round(sum(cant_completa)::decimal*100/nullif((select sum(cant_completa) from datoss_edadvacunas where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s ),0) ,2),0) porvc,  
         sum(cant_incompleta) vinc,
         coalesce(round(sum(cant_incompleta)::decimal*100/nullif((select sum(cant_incompleta) from datoss_edadvacunas where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s ) ,0),2),0) porvi
-        from datoss_edadvacunas where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+        from datos_generales g join datoss_edadvacunas v on (g.id_enc = v.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
         group by rango";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codCom, $rngfecha, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $dtvac = $stmt->fetchAll();
 
@@ -760,23 +788,21 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         }
 
         $rngfecha = "";
-        $rngfechae = "";
+        $rngfechav = "";
         $rngfechaf = "";
+        $rngfechag = "";
         if($strIni != '' && $strFin != '') {
             $rngfecha = "and fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechaf = "and f.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
-            $rngfechae = "and e.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
+            $rngfechav = "and v.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
+            $rngfechag = "and g.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
         }
-
-        $codCom = "";
-        $codCome = "";
-        $codComf = "";
-        $codCol = "";
-
+        
         $codDep = $session->get('_cod_departamento');
         $codMun = $session->get('_cod_municipio');
         $nomDep = $session->get('_nombre_departamento');
         $nomMun = $session->get('_nombre_municipio');
+        $periodo = $session->get('_periodo');
 
         if($fin3 != '00') {
             $codDep = $fin3;
@@ -793,12 +819,17 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         $cantcom = count($comtmp);
         $strcom = implode("','", $comtmp);
 
+        $codCom = "";
+        $codComv = "";
+        $codComf = "";
+        $codColg = "";
+        
         if($fin5 != '000000000000') {
 
             $codCom = " and cod_comunidad in ('" . $strcom . "')";
-            $codCome = " and e.cod_comunidad in ('" . $strcom ."')";
+            $codComv = " and v.cod_comunidad in ('" . $strcom ."')";
             $codComf = " and f.cod_comunidad in ('" . $strcom ."')";
-            $codCol = " and f.cod_colonia in ('" . $strcom. "')";
+            $codColg = " and g.cod_colonia in ('" . $strcom. "')";
 
         }  
         $codComsa = " cod_comunidad in ('" . $strcom . "')";
@@ -811,12 +842,13 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         /* Numero de viviendas encuestadas */
             $query = "select 
             count(*) as total
-            from datos_generales f
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCol, $rngfecha);
+            from datos_generales g
+            where g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s";
+            $query = sprintf($query,$codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtviv = $stmt->fetchAll();
             $totviv = $dtviv[0]['total'];
@@ -826,14 +858,16 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         f.id_servicio, s.descripcion, 
         sum(case when f.reciben = 1 then 1 else 0 end ) treciben,
         sum(case when f.reciben = 1 then cant_dias else 0 end ) tdias
-        from datos_serviciospub f join ad_servicios_publicos s on (s.id = f.id_servicio)
+        from datos_generales g join datos_serviciospub f on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
+        join ad_servicios_publicos s on (s.id = f.id_servicio)
         where f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s
         group by id_servicio, s.descripcion
         order by 1";
-        $query = sprintf($query,$codComf, $rngfechaf);
+        $query = sprintf($query,$codComf, $rngfechaf, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $dtsrvp = $stmt->fetchAll();
         
@@ -849,8 +883,9 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
           when piezas_vivienda > 6 then 'Mas de 6 piezas'
         end piezas,
         count(*) cantp 
-        from datos_vivienda
-        where piezas_vivienda > 0 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+        from datos_generales g join datos_vivienda v
+        on (g.id_enc = v.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
+        where piezas_vivienda > 0 and v.cod_departamento = :dep and v.cod_municipio = :mun %1\$s %2\$s
         group by
         case 
             when piezas_vivienda = 1 then '1 una pieza' 
@@ -862,10 +897,11 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
             when piezas_vivienda > 6 then 'Mas de 6 piezas'
         end
         order by 1";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codComv, $rngfechav, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $dtpiviv = $stmt->fetchAll();
 
@@ -881,8 +917,9 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
           when dormitorios_vivienda > 6 then 'Mas de seis piezas'
         end dorm,
         count(*) cantdorm 
-        from datos_vivienda
-        where dormitorios_vivienda > 0 and cod_departamento = :dep and cod_municipio = :mun  %1\$s %2\$s
+        from datos_generales g join datos_vivienda v
+        on (g.id_enc = v.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
+        where dormitorios_vivienda > 0 and v.cod_departamento = :dep and v.cod_municipio = :mun  %1\$s %2\$s
         group by 
         case 
           when dormitorios_vivienda = 1 then '1 una pieza' 
@@ -894,10 +931,11 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
           when dormitorios_vivienda > 6 then 'Mas de seis piezas'
         end
         order by 1";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codComv, $rngfechav, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $dtdoviv = $stmt->fetchAll();
         
@@ -910,8 +948,9 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
           when familias_casa > 3 then '4 Viviendas con cuatro y mas familias'
         end fam,
         count(*) cantfam 
-        from datos_vivienda
-        where coalesce(familias_casa,0) > 0 and cod_departamento = :dep and cod_municipio = :mun  %1\$s %2\$s
+        from datos_generales g join datos_vivienda v
+        on (g.id_enc = v.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
+        where coalesce(familias_casa,0) > 0 and v.cod_departamento = :dep and v.cod_municipio = :mun  %1\$s %2\$s
         group by 
         case 
           when familias_casa = 1 then '1 Viviendas con una familia' 
@@ -920,10 +959,11 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
           when familias_casa > 3 then '4 Viviendas con cuatro y mas familias'
         end
         order by 1";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codComv, $rngfechav, $codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $dtfamviv = $stmt->fetchAll();
         
@@ -938,8 +978,8 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
           when banos_vivienda > 3 then '4 Viviendas con cuatro y mas baños'
         end banos,
         count(*) cantbanos 
-        from datos_vivienda
-        where cod_departamento = :dep and cod_municipio = :mun  %1\$s %2\$s
+        from datos_generales g join datos_vivienda v
+        on (g.id_enc = v.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s)
         group by 
         case 
           when coalesce(banos_vivienda,0) = 0 then '0 Viviendas sin baños' 
@@ -949,10 +989,11 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
           when banos_vivienda > 3 then '4 Viviendas con cuatro y mas baños'
         end
         order by 1";
-        $query = sprintf($query,$codCom, $rngfecha);
+        $query = sprintf($query,$codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $dtbanviv = $stmt->fetchAll();
         
@@ -963,12 +1004,13 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         sum(case when concinacon_kerosen = 1 then 1 else 0 end) tcocker,
         sum(case when concinacon_lena = 1 then 1 else 0 end) tcoclen,
         sum(case when concinacon_eco = 1 then 1 else 0 end) tcoceco
-        from datos_vivienda
-        where cod_departamento = :dep and cod_municipio = :mun  %1\$s %2\$s";
-        $query = sprintf($query,$codCom, $rngfecha);
+        from datos_generales g join datos_vivienda v
+        on (g.id_enc = v.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s)";
+        $query = sprintf($query,$codColg, $rngfechag);
         $stmt = $em->getConnection()->prepare($query);
         $stmt->bindValue('dep',$codDep);
         $stmt->bindValue('mun',$codMun);
+        $stmt->bindValue('per',$periodo);
         $stmt->execute();
         $dtcomcoc = $stmt->fetchAll();
         
@@ -1028,23 +1070,20 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         $rngfechar = "";
         $rngfechae = "";
         $rngfechaf = "";
+        $rngfechag = "";
         if($strIni != '' && $strFin != '') {
             $rngfecha = "and fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechaf = "and f.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechae = "and e.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechar = "and r.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
+            $rngfechag = "and g.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
         }
-
-        $codCom = "";
-        $codComr = "";
-        $codCome = "";
-        $codComf = "";
-        $codCol = "";
-
+        
         $codDep = $session->get('_cod_departamento');
         $codMun = $session->get('_cod_municipio');
         $nomDep = $session->get('_nombre_departamento');
         $nomMun = $session->get('_nombre_municipio');
+        $periodo = $session->get('_periodo');
 
         if($fin3 != '00') {
             $codDep = $fin3;
@@ -1061,13 +1100,19 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         $cantcom = count($comtmp);
         $strcom = implode("','", $comtmp);
 
+        $codCom = "";
+        $codComr = "";
+        $codCome = "";
+        $codComf = "";
+        $codColg = "";
+        
         if($fin5 != '000000000000') {
 
             $codCom = " and cod_comunidad in ('" . $strcom . "')";
             $codComr = " and r.cod_comunidad in ('" . $strcom . "')";
             $codCome = " and e.cod_comunidad in ('" . $strcom ."')";
             $codComf = " and f.cod_comunidad in ('" . $strcom ."')";
-            $codCol = " and f.cod_colonia in ('" . $strcom. "')";
+            $codColg = " and g.cod_colonia in ('" . $strcom. "')";
 
         }  
         $codComsa = " cod_comunidad in ('" . $strcom . "')";
@@ -1080,12 +1125,13 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         /* Numero de viviendas encuestadas */
             $query = "select 
             count(*) as total
-            from datos_generales f
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCol, $rngfecha);
+            from datos_generales g
+            where g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s";
+            $query = sprintf($query,$codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtviv = $stmt->fetchAll();
             $totviv = $dtviv[0]['total'];
@@ -1190,12 +1236,14 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
             sum(case when e.grado = 10 and e.estudia = 1 and f.sexo = 2 then 1 else 0 end) unef,
             sum(case when e.grado = 10 and e.estudia = 2 and f.sexo = 1 then 1 else 0 end) unenm,
             sum(case when e.grado = 10 and e.estudia = 2 and f.sexo = 2 then 1 else 0 end) unenf
-            from datos_educacion e join datosd_familia f on (f.id = e.id_familia and f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s )
+            from datos_generales g join datos_educacion e on (g.id_enc = e.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %5\$s %6\$s)
+            join datosd_familia f on (f.id = e.id_familia and f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s )
             where e.cod_departamento = :dep and e.cod_municipio = :mun  %3\$s %4\$s";
-            $query = sprintf($query,$codComf, $rngfechaf, $codCome, $rngfechae);
+            $query = sprintf($query,$codComf, $rngfechaf, $codCome, $rngfechae, $codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtdie = $stmt->fetchAll();   
 
@@ -1242,12 +1290,14 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
             sum(case when e.estudia = 1 and f.sexo = 1 then 1 else 0 end) te5a23em,
             sum(case when e.estudia = 1 and f.sexo = 2 then 1 else 0 end) te5a23ef,
             sum(case when e.estudia = 1 then 1 else 0 end) te5a23e
-            from datos_educacion e join datosd_familia f on (f.id = e.id_familia and f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s )
+            from datos_generales g join datos_educacion e on (g.id_enc = e.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %5\$s %6\$s)
+            join datosd_familia f on (f.id = e.id_familia and f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s )
             where e.cod_departamento = :dep and e.cod_municipio = :mun  %3\$s %4\$s";
-            $query = sprintf($query,$codComf, $rngfechaf, $codCome, $rngfechae);
+            $query = sprintf($query,$codComf, $rngfechaf, $codCome, $rngfechae, $codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtcober = $stmt->fetchAll(); 
             
@@ -1261,14 +1311,16 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
             coalesce(round((sum(r.cant_hombres_leen + r.cant_mujeres_leen)::decimal*100) / (select sum(cant_hombres_leen + cant_mujeres_leen) from datosd_rangos where rango > 4 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s ),2),0) porpobleen, 
             coalesce(sum((r.cant_hombres + r.cant_mujeres) - (r.cant_hombres_leen + r.cant_mujeres_leen)),0) pobnleen, 
             coalesce(round(sum((r.cant_hombres + cant_mujeres) - (r.cant_hombres_leen + r.cant_mujeres_leen))::decimal*100 / (select sum((cant_hombres + cant_mujeres) - (cant_hombres_leen + cant_mujeres_leen)) from datosd_rangos where rango > 4 and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s ) ,2),0) porpobnleen
-            from datosd_rangos r right join ad_rangosedad a on (a.id = r.rango and r.cod_departamento = :dep and cod_municipio = :mun %3\$s %4\$s)
+            from datos_generales g join datosd_rangos r on (g.id_enc = r.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %5\$s %6\$s)
+            right join ad_rangosedad a on (a.id = r.rango and r.cod_departamento = :dep and r.cod_municipio = :mun %3\$s %4\$s)
             where r.rango > 4
             group by a.id
             order by a.id;";
-            $query = sprintf($query,$codCom, $rngfecha, $codComr, $rngfechar);
+            $query = sprintf($query,$codCom, $rngfecha, $codComr, $rngfechar, $codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtrng = $stmt->fetchAll(); 
             
@@ -1326,25 +1378,21 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         $rngfechae = "";
         $rngfechaf = "";
         $rngfechai = "";
+        $rngfechag = "";
         if($strIni != '' && $strFin != '') {
             $rngfecha = "and fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechai = "and i.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechaf = "and f.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechae = "and e.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
             $rngfechar = "and r.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
+            $rngfechag = "and g.fecha_creacion between '".$strIni."'::date and '".$strFin."'::date ";
         }
-
-        $codCom = "";
-        $codComr = "";
-        $codCome = "";
-        $codComf = "";
-        $codComi = "";
-        $codCol = "";
-
+        
         $codDep = $session->get('_cod_departamento');
         $codMun = $session->get('_cod_municipio');
         $nomDep = $session->get('_nombre_departamento');
         $nomMun = $session->get('_nombre_municipio');
+        $periodo = $session->get('_periodo');
 
         if($fin3 != '00') {
             $codDep = $fin3;
@@ -1361,6 +1409,13 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         $cantcom = count($comtmp);
         $strcom = implode("','", $comtmp);
 
+        $codCom = "";
+        $codComr = "";
+        $codCome = "";
+        $codComf = "";
+        $codComi = "";
+        $codColg = "";
+        
         if($fin5 != '000000000000') {
 
             $codCom = " and cod_comunidad in ('" . $strcom . "')";
@@ -1368,7 +1423,7 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
             $codComr = " and r.cod_comunidad in ('" . $strcom . "')";
             $codCome = " and e.cod_comunidad in ('" . $strcom ."')";
             $codComf = " and f.cod_comunidad in ('" . $strcom ."')";
-            $codCol = " and f.cod_colonia in ('" . $strcom. "')";
+            $codColg = " and g.cod_colonia in ('" . $strcom. "')";
 
         }  
         $codComsa = " cod_comunidad in ('" . $strcom . "')";
@@ -1381,12 +1436,13 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
         /* Numero de viviendas encuestadas */
             $query = "select 
             count(*) as total
-            from datos_generales f
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCol, $rngfecha);
+            from datos_generales g
+            where g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %1\$s %2\$s";
+            $query = sprintf($query,$codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtviv = $stmt->fetchAll();
             $totviv = $dtviv[0]['total'];
@@ -1396,12 +1452,14 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
             count(*) total,    
             sum(case when sexo = 1 then 1 else 0 end ) thom,
             sum(case when sexo = 2 then 1 else 0 end ) tmuj
-            from datosd_familia
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s";
-            $query = sprintf($query,$codCom, $rngfecha);
+            from datos_generales g join datosd_familia f 
+            on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
+            where f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s";
+            $query = sprintf($query,$codComf, $rngfechaf, $codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtper = $stmt->fetchAll();
             $totper = $dtper[0]['total'];
@@ -1428,8 +1486,9 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
             sum(case when trabaja = 2 and ocupacion not in (21, 28, 63, 64, 83) then 1 else 0 end) pead,
             sum(case when ocupacion in (21, 28, 63, 64, 83) then 1 else 0 end) pei,
             round(sum(case when ocupacion in (21, 28, 63, 64, 83) then 1 else 0 end)::decimal * 100 / (select count(*) from datos_fuerza_ingresos where ocupacion in (21, 28, 63, 64, 83) and cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),2) porpei
-            from datos_fuerza_ingresos i join ad_ocupaciones o on i.ocupacion = o.id
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s
+            from datos_generales g join datos_fuerza_ingresos i on (g.id_enc = i.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
+            join ad_ocupaciones o on i.ocupacion = o.id
+            where i.cod_departamento = :dep and i.cod_municipio = :mun %3\$s %4\$s
             group by 
             o.categoria,
             case 
@@ -1446,10 +1505,11 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
              when o.categoria = 10 then 'Discapacitados - Jubilados - Pensionados - Rentistas'
             end
             order by 1";
-            $query = sprintf($query,$codCom, $rngfecha);
+            $query = sprintf($query,$codCom, $rngfecha, $codComi, $rngfechai, $codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtocu = $stmt->fetchAll();        
             
@@ -1469,8 +1529,8 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
             count(*) cantidad,
             round(count(*)::decimal * 100 / (select count(*) from datos_fuerza_otros where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),2) portot
            from 
-            datos_fuerza_otros f 
-           where f.cod_departamento = :dep and f.cod_municipio = :mun %3\$s %4\$s
+            datos_generales g join datos_fuerza_otros f 
+           on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
            group by
            case
               when (f.cant_ingresofam >=0 and f.cant_ingresofam <=1000) then '1. Ingresos menores a < 1000'
@@ -1484,10 +1544,11 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
               when (f.cant_ingresofam >=50001 ) then '9. Ingresos arriba de Lps. 50001 - y mas'
             end
            order by 1";
-            $query = sprintf($query,$codCom, $rngfecha, $codComf, $rngfechaf );
+            $query = sprintf($query,$codCom, $rngfecha, $codColg, $rngfechag );
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtrifam = $stmt->fetchAll();
             
@@ -1508,7 +1569,8 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
             sum(case when i.sexo = 1 then 1 else 0 end) canth,
             sum(case when i.sexo = 2 then 1 else 0 end) cantm
            from 
-            datos_fuerza_ingresos f inner join datosd_familia i on (f.id_familia = i.id and i.cod_departamento = :dep and i.cod_municipio = :mun %1\$s %2\$s )
+            datos_generales g join datos_fuerza_ingresos f on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %5\$s %6\$s)
+            inner join datosd_familia i on (f.id_familia = i.id and i.cod_departamento = :dep and i.cod_municipio = :mun %1\$s %2\$s )
            where f.trabaja = 1 and f.cod_departamento = :dep and f.cod_municipio = :mun %3\$s %4\$s
            group by
            case
@@ -1523,10 +1585,11 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
               when (f.ingresos >50000 ) then '9. Ingresos arriba de Lps. 50001 y mas'
             end
            order by 1";
-            $query = sprintf($query,$codComi, $rngfechai, $codComf, $rngfechaf );
+            $query = sprintf($query,$codComi, $rngfechai, $codComf, $rngfechaf, $codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtriper = $stmt->fetchAll();    
             
@@ -1535,13 +1598,14 @@ where e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s ";
 count(*) totalp,                
 sum(case when f.sexo = 1 then 1 else 0 end) canth,
 sum(case when f.sexo = 2 then 1 else 0 end) cantm
-from datos_fuerza_ingresos e inner join 
-datosd_familia f on (e.id_familia = f.id and f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s) 
+from datos_generales g join datos_fuerza_ingresos e on (g.id_enc = e.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
+inner join datosd_familia f on (e.id_familia = f.id and f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s) 
 where e.trabaja = 1 and e.cod_departamento = :dep and e.cod_municipio = :mun %3\$s %4\$s";
-            $query = sprintf($query,$codComf, $rngfechaf, $codCome, $rngfechae );
+            $query = sprintf($query,$codComf, $rngfechaf, $codCome, $rngfechae, $codColg, $rngfechag);
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtript = $stmt->fetchAll();      
 
@@ -1557,8 +1621,8 @@ where e.trabaja = 1 and e.cod_departamento = :dep and e.cod_municipio = :mun %3\
             count(*) cantidad,
             round(count(*)::decimal * 100 / (select count(*) from datos_fuerza_otros where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s),2) portot
            from 
-            datos_fuerza_otros f 
-           where f.cod_departamento = :dep and f.cod_municipio = :mun %3\$s %4\$s
+            datos_generales g join datos_fuerza_otros f 
+           on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
            group by
            case
               when (f.cant_ingresofam >=0 and f.cant_ingresofam <=2000) then '1. Ingresos 0 a 2000'
@@ -1568,10 +1632,11 @@ where e.trabaja = 1 and e.cod_departamento = :dep and e.cod_municipio = :mun %3\
               when (f.cant_ingresofam >20000 ) then '5. Ingresos de Lps. 20001 en adelante'
             end
            order by 1";
-            $query = sprintf($query,$codCom, $rngfecha, $codComf, $rngfechaf );
+            $query = sprintf($query,$codCom, $rngfecha, $codColg, $rngfechag );
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtipxh = $stmt->fetchAll();  
             
@@ -1590,7 +1655,8 @@ where e.trabaja = 1 and e.cod_departamento = :dep and e.cod_municipio = :mun %3\
             sum(case when i.sexo = 1 then 1 else 0 end) canth,
             sum(case when i.sexo = 2 then 1 else 0 end) cantm
            from 
-            datos_fuerza_ingresos f inner join datosd_familia i on (f.id_familia = i.id and i.cod_departamento = :dep and i.cod_municipio = :mun %3\$s %4\$s )
+            datos_generales g join datos_fuerza_ingresos f on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %7\$s %8\$s)
+            inner join datosd_familia i on (f.id_familia = i.id and i.cod_departamento = :dep and i.cod_municipio = :mun %3\$s %4\$s )
            where f.trabaja = 1 and f.cod_departamento = :dep and f.cod_municipio = :mun %5\$s %6\$s
            group by
            case
@@ -1603,10 +1669,11 @@ where e.trabaja = 1 and e.cod_departamento = :dep and e.cod_municipio = :mun %3\
             end
            order by 1
            ";
-            $query = sprintf($query,$codCom, $rngfecha, $codComi, $rngfechai, $codComf, $rngfechaf );
+            $query = sprintf($query,$codCom, $rngfecha, $codComi, $rngfechai, $codComf, $rngfechaf, $codColg, $rngfechag );
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtipxp = $stmt->fetchAll();    
             
@@ -1614,13 +1681,14 @@ where e.trabaja = 1 and e.cod_departamento = :dep and e.cod_municipio = :mun %3\
             count(*) pet,
             sum(case when f.trabaja = 1 then 1 else 0 end) peao,
             sum(case when f.trabaja = 2 then 1 else 0 end) pead
-            from datos_fuerza_ingresos f
-            where cod_departamento = :dep and cod_municipio = :mun %1\$s %2\$s 
+            from datos_generales g join datos_fuerza_ingresos f on (g.id_enc = f.id_enc and g.periodo = :per and g.cod_departamento = :dep and g.cod_municipio = :mun %3\$s %4\$s)
+            where f.cod_departamento = :dep and f.cod_municipio = :mun %1\$s %2\$s 
             and f.ocupacion not in (21, 28, 63, 64, 83) -- se excluyen las ocupaciones: los estudiantes, jubilados, rentarios, amas de casa, incapacitados ";
-            $query = sprintf($query,$codCom, $rngfecha );
+            $query = sprintf($query,$codComf, $rngfechaf, $codColg, $rngfechag );
             $stmt = $em->getConnection()->prepare($query);
             $stmt->bindValue('dep',$codDep);
             $stmt->bindValue('mun',$codMun);
+            $stmt->bindValue('per',$periodo);
             $stmt->execute();
             $dtpea = $stmt->fetchAll();      
 
