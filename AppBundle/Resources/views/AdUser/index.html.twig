@@ -12,7 +12,9 @@
         Agregar, modificar y eliminar información
     </small>
 {% endblock %}   
-
+{% block menu %}
+    {{ menu|raw }}
+{% endblock %}  
 {% block content -%}
 <ul style="list-style: none; margin-left: 0">
     <li>

@@ -8,6 +8,9 @@
         Ingresar la información solicitada
     </small>
 {% endblock %} 
+{% block menu %}
+    {{ menu|raw }}
+{% endblock %}
 {% block content -%}
     
     {{ form_start(form) }}
@@ -26,7 +29,8 @@
         {{ form_row(form.username) }}
         {{ form_row(form.password) }}
         {{ form_row(form.email) }}
-        {{ form_row(form.user_roles) }}          
+        {{ form_row(form.user_roles) }} 
+        {{ form_row(form.acceso) }} 
         {{ form_row(form.submit) }}
         {{ form_widget(form._token) }}
     {{ form_end(form, {'render_rest': false})}}

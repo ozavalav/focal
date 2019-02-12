@@ -2,13 +2,19 @@
 
 namespace Focal\AppBundle\Controller;
 
+
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Focal\AppBundle\Entity\DatosGenerales;
 use Focal\AppBundle\Form\DatosGeneralesType;
 use Symfony\Component\HttpFoundation\Response;
 
-
+if (!defined('__ROOT__')) { 
+    define('__ROOT__', dirname(dirname(__FILE__)));
+}
+require_once (__ROOT__ . '/jpgraph/src/jpgraph.php');
+require_once (__ROOT__ . '/jpgraph/src/jpgraph_bar.php');
 /**
  * ReporteFSSrvP controller.
  *
@@ -205,7 +211,47 @@ $query = "select sum(cantidad) totnac, sum(cant_ninos) totninos, sum(cant_ninas)
         $stmt->bindValue('mun',$codMun);
         $stmt->bindValue('per',$periodo);
         $stmt->execute();
-        $datosnac = $stmt->fetchAll();        
+        $datosnac = $stmt->fetchAll();   
+        
+        $graph = new \Graph(600,400);
+        $graph->SetScale('intint');
+        $graph->SetMargin(50,10,10,110);
+        $graph->title->Set('Prueba de grafica');
+        $graph->title->SetFont(FF_DV_SANSSERIF, FS_BOLD,10);
+        $graph->xaxis->title->Set('Desripcion');
+        $graph->yaxis->title->Set('# personas');
+        
+        $datay = [];
+        $dtdes = [];
+        foreach($datosd as $dta ) {
+            $datay[] = $dta['cantp'];
+            $dtdes[] = $dta['descripcion'];
+        }
+        
+        $graph->xaxis->SetTickLabels($dtdes);
+        $graph->xaxis->SetLabelAngle(90);
+        $graph->xaxis->SetFont(FF_DV_SERIFCOND,FS_NORMAL,8);
+        $graph->yaxis->SetFont(FF_DV_SERIFCOND,FS_NORMAL,8);
+        
+        
+        $bplot = new \BarPlot($datay);
+        $bplot->SetFillColor('green');
+        
+        
+        
+        $path = '/var/www/FocalAB/web/bundles/app/expofiles/imagen.png'; 
+        $graph->Add($bplot);
+        $graph->Stroke($path);
+        //$imgh = $graph->Stroke(_IMG_HANDLER);
+        //$imgh = $graph->Stroke($path);
+        /*ob_start();
+        $graph->img->Stream();
+        $image_data = ob_get_contents();
+        ob_end_clean();
+        $image = base64_decode($image_data);*/
+        
+        
+        
 
         $array4 = array('fecha' => date('d-m-Y'), 
             'fin' => $fin,

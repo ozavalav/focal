@@ -35,7 +35,8 @@
         {{ form_row(edit_form.password) }}
         {{ form_row(edit_form.email) }}
         {% if is_granted('ROLE_ADMIN') %}
-        {{ form_row(edit_form.user_roles) }}
+            {{ form_row(edit_form.user_roles) }}
+            {{ form_row(edit_form.acceso) }}
         {% endif %}
         {{ form_rest(edit_form) }}
         
@@ -56,7 +57,7 @@
         $(document).ready(function() {
             $('#focal_appbundle_aduser_username').prop("disabled", true);
             $('#focal_appbundle_aduser_codDepartamento').val('{% if codDep starts with '0' %}{{ codDep|slice(1,1)}}{% else %}{{codDep|default('')}}{% endif %}');
-            
+            $('#focal_appbundle_aduser_acceso').val({{ acceso }});
             var valdepto = $('#focal_appbundle_aduser_codDepartamento').val();
             
             var param =  valdepto;

@@ -1,0 +1,52 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>AdAccesoGrant</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Idacceso</th>
+                <td>{{ entity.idAcceso }}</td>
+            </tr>
+            <tr>
+                <th>Objeto</th>
+                <td>{{ entity.objeto }}</td>
+            </tr>
+            <tr>
+                <th>Fechacreacion</th>
+                <td>{{ entity.fechaCreacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Usuariocreacion</th>
+                <td>{{ entity.usuarioCreacion }}</td>
+            </tr>
+            <tr>
+                <th>Usuarioultimamodificacion</th>
+                <td>{{ entity.usuarioUltimaModificacion }}</td>
+            </tr>
+            <tr>
+                <th>Fechaultimamodificacion</th>
+                <td>{{ entity.fechaUltimaModificacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Idaccesogrant</th>
+                <td>{{ entity.idAccesoGrant }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('adaccesogrant') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('adaccesogrant_edit', { 'id': entity.idAccesoGrant }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

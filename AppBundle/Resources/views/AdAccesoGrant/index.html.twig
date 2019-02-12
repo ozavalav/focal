@@ -1,0 +1,86 @@
+{% extends '::basemenu.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset ('bundles/app/css/menu/dist/themes/default/style.min.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}   
+
+{% block header -%}
+    Permisos por Acceso
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Asignar permisos por Acceso
+    </small>
+{% endblock %}
+
+{% block content -%}
+    <ul style="list-style: none; margin-left: 0">
+        <li style="display: inline">
+            <a id="btnGuardar" class="btn btn-md btn-success" href="#">
+                <i class="ace-icon fa fa-save align-top bigger-120"></i> Guardar
+            </a> 
+        </li>
+        <li style="display: inline">
+            <a id="btnregresar" class="btn btn-md btn-success" href="{{ path('adroles') }}">
+                <i class="ace-icon fa fa-arrow-left align-top bigger-120"></i> Regresar
+            </a> 
+        </li>
+    </ul>    
+    <div class="table-header">
+        Arbol de opciones
+    </div>
+
+   <div id="divmsgok" class="contenedor_msgok alert alert-success" role="alert" style="display: none"> Operación terminada con exito!</div>
+    <div id="contenedor_grid">
+        <div id="arbmenu">
+            {{ arbol|raw }}
+        </div>   
+    </div>    
+{% endblock %}
+
+{% block javascripts %} 
+   {{ parent() }} 
+   <script type="text/javascript" src="{{ asset('bundles/app/css/menu/dist/jstree.min.js') }}"></script>
+   <script type="text/javascript" src="{{ asset('bundles/app/js/utilitarios.js') }}"></script>
+   <script type="text/javascript">
+        $(document).ready(function() {
+            $('#arbmenu').jstree({
+                "checkbox" : {
+                    "keep_selected_style" : false
+                },
+                "plugins" : ["wholerow","checkbox" ]
+                
+              });
+            
+            $('#btnGuardar').on("click", function () {
+                alert("{{ path('adaccesogrant_create')}}");
+                var instance = $('#arbmenu').jstree(true);
+                var menu = instance.get_json('#', { flat : true, no_data: true });
+                var arbarray = [];
+                
+                for(i=0, j=menu.length; i<j; i++ ) {
+                    if(instance.is_undetermined(menu[i].id)||instance.is_checked(menu[i].id)) {
+                        arbarray.push(menu[i].id);                            
+                    }                        
+                }
+                
+                $.ajax({
+                    url: "{{ path('adaccesogrant_create')}}",
+                    type: "POST",
+                    data: {
+                        arbarray: arbarray,
+                        acceso: {{ idacceso }}
+                    },
+                    success: function (data) {
+                        if(data.result === 'ok') {                            
+                            $('#divmsgok').html(data.message);
+                            $('#divmsgok').show().fadeOut(3000);  
+                        } else {
+                            alert("Error! "+data.message);
+                        }
+                    }
+                });
+            });            
+        });
+   </script>
+{% endblock %}

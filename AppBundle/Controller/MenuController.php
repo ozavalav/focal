@@ -2,9 +2,10 @@
 
 namespace Focal\AppBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Focal\AppBundle\Entity\AppConst;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+
 
 class MenuController extends Controller
 {
@@ -27,7 +28,7 @@ class MenuController extends Controller
         $codDepartamento = $entityUser[0]->getCodDepartamento();
         $codMunicipio = $entityUser[0]->getCodMunicipio();
         $idComunidad = $entityUser[0]->getIdComunidad();
-        
+        $acceso = $entityUser[0]->getAcceso();
         
         $entDepto = $em->getRepository('FocalAppBundle:AdDepartamentos')->findBy(array('codDepartamento' => $codDepartamento));
         $nombreDepartamento = $entDepto[0]->getNombre();
@@ -50,6 +51,7 @@ class MenuController extends Controller
         $session->set('_nombre_municipio', $nombreMunicipio);
         $session->set('_nombre_departamento', $nombreDepartamento);
         $session->set('_cuenta_usuario', $usuario);
+        $session->set('_acceso', $acceso);
         
         /* Captura la variable periodo que fue selecionado en el Login esta variable se
          * estable por medio de Ajax en la patalla de login.html.twig
@@ -71,7 +73,9 @@ class MenuController extends Controller
             $stmt->execute();
             $dtgen = $stmt->fetchAll();
         
-        return $this->render('FocalAppBundle:Menu:index.html.twig', array('dtgen' => $dtgen[0]));
+        $strmenu = $this->forward('Focal\AppBundle\Controller\ArbolMenuController::menuAction',['acceso' => $acceso ]);    
+        $session->set('_menu',$strmenu->getContent());
+        return $this->render('FocalAppBundle:Menu:index.html.twig', array('dtgen' => $dtgen[0], 'menu' => $strmenu->getContent()));
     }
     
     public function menuAction()

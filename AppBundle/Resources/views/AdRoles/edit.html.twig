@@ -2,10 +2,10 @@
 {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
 
 {% block header -%}
-    Editar Profesiones
+    Editar Acceso de Usuario
     <small>
         <i class="ace-icon fa fa-angle-double-right"></i>
-        Editar información de las profesiones
+        Editar información del acceso
     </small>
 {% endblock %} 
 {% block content -%} 
@@ -14,10 +14,9 @@
 
     <ul class="record_actions">
     <li>
-        <a href="{{ path('adprofesiones') }}">
+        <a href="{{ path('adroles') }}">
             Regresar al listado
         </a>
     </li>
 </ul>
 {% endblock %}
-

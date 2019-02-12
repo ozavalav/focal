@@ -104,6 +104,7 @@ class AdUserController extends Controller
         
         $session = $request->getSession();
         $codMuni = $session->get('_cod_municipio');
+        $menu = $session->get('_menu');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -120,7 +121,8 @@ class AdUserController extends Controller
             $departamentos = $query->getResult();     
         return $this->render('FocalAppBundle:AdUser:index.html.twig', array(
             'entities' => $entities,
-            'departamentos' => $departamentos
+            'departamentos' => $departamentos,
+            'menu' => $menu
         ));
     }
     /**
@@ -165,8 +167,10 @@ class AdUserController extends Controller
             $session = $request->getSession();
             $codMuni = $session->get('_cod_municipio');
             $codDept = $session->get('_cod_departamento');
+            $menu = $session->get('_menu');
             //$idComu = $session->get('_cod_comunidad');
             
+            $entity->setAcceso($entity->getAcceso()->getIdRol());
             /* verifica si el usuario tiene privilegios para cambiar el departamento y municipio*/
             if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')){
                 $entity->setCodDepartamento($entity->getCodDepartamento()->getCodDepartamento());
@@ -188,6 +192,7 @@ class AdUserController extends Controller
         return $this->render('FocalAppBundle:AdUser:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'menu' => $menu
         ));
     }
 
@@ -268,6 +273,7 @@ class AdUserController extends Controller
             'entity'      => $entity,
             'codDep'      => $entity->getCodDepartamento(),
             'codMun'      => $entity->getCodMunicipio(),
+            'acceso'      => $entity->getAcceso(),
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
@@ -350,7 +356,7 @@ class AdUserController extends Controller
             }
             
             $entity->setUsername($username_actual);
-
+            $entity->setAcceso($entity->getAcceso()->getIdRol());
             /* verifica si el usuario tiene privilegios para cambiar el el departamento */
             if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')){
                 if(!$entity->getCodDepartamento()) {
