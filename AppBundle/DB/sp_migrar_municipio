@@ -1,0 +1,634 @@
+﻿create or replace function sp_migrar_municipio (p_municipio varchar(5), p_usuario varchar(32))
+returns integer as $$
+declare nor integer;
+declare nro integer; -- numero de registros origen
+declare nrd integer; -- numero de registros destino
+declare dbl varchar;
+declare tmp integer;
+declare reg record;
+declare rcom record;
+declare vstr text;
+declare res text;
+declare rok integer;
+declare msg text;
+
+begin
+ begin
+  dbl := (select dblink_get_connections());
+  raise notice 'dblink actual: %', dbl;
+  perform dblink_connect('dbremota','host=localhost port=5434 user=postgres password=MFPa\$\$w0rd dbname=dbfocal ');
+  raise notice 'dblink actual: %', dbl;
+  if dbl is null then
+   CREATE EXTENSION dblink;
+   perform dblink_connect('dbremota','host=localhost port=5434 user=postgres password=MFPa\$\$w0rd dbname=dbfocal ');
+  end if;
+  exception when duplicate_object then null;
+ end;
+raise notice 'Iniciando la migracion';
+raise notice 'Actualizando catalogo de comunidades';
+-- Actualizando las comunidades
+nor := 0;
+rok := 0;
+for rcom in select * from ad_comunidades where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id || ',' || rcom.tipo_comunidad ||',''' || rcom.cod_municipio || ''',''' || rcom.cod_comunidad || ''',''' || rcom.nombre || ''''; 
+  vstr := vstr || ',''' || coalesce(rcom.descripcion,'') || ''',''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into ad_comunidades values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  exception when unique_violation then
+    nor := nor + 1;
+    continue;
+  end;
+end loop;
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en ad_comunidades: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en ad_comunidades: ' || nor, p_usuario );
+-- final de actualizacion ad_comunidades
+-- Actualizando ad_encuestadores
+raise notice 'Actualizando catalogo de encuestadores';
+nor := 0;
+rok := 0;
+for rcom in select * from ad_encuestadores where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id || ',''' || rcom.nombre ||''',''' || rcom.cod_municipio || ''',''' || coalesce(rcom.cod_comunidad,'') || ''',' || rcom.estado || ','; 
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into ad_encuestadores values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  exception when unique_violation then
+    nor := nor + 1;
+    continue;
+  end;
+end loop;
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en ad_encuestadores: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en ad_encuestadores: ' || nor, p_usuario );
+-- final de actualizacion de ad_encuestadoras
+-- Actualizando datos_generales
+raise notice 'Actualizando DATOS GENERALES';
+nor := 0;
+rok := 0;
+for rcom in select * from datos_generales where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id_enc || ',''' || rcom.cod_municipio ||''',''' || rcom.cod_colonia || ''',''' || coalesce(rcom.cod_barrio,'') || ''',''' || coalesce(rcom.cod_aldea,'') || ''',''' || coalesce(rcom.cod_caserio,'') || ''','; 
+  vstr := vstr || rcom.id_encuestador || ',''' || rcom.nombre_entrevistado || ''',''' || coalesce(rcom.telefono_cel,'') || ''',''' || coalesce(rcom.telefono_fijo,'') || ''',''' || coalesce(rcom.num_ubicacion,'') || ''',';
+  vstr := vstr || rcom.cant_personasvivienda || ',' || rcom.cant_personas523 || ',' || rcom.cant_personasm10 || ',' || rcom.estado || ',';    
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+  vstr := vstr || ',' || rcom.num_boleta || ',''' || rcom.cod_departamento || '''';
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datos_generales values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datos_generales: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datos_generales: ' || nor, p_usuario );
+-- final de actualizacion de datos_generales
+-- Actualizando datos_educacion
+raise notice 'Actualizando DATOS EDUCACION';
+nor := 0;
+rok := 0;
+for rcom in select * from datos_educacion where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id ||','|| rcom.id_enc || ',' || rcom.num || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || rcom.id_familia || ',' || rcom.grado || ',' || rcom.estudia || ',';
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datos_educacion values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datos_educacion: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datos_educacion: ' || nor, p_usuario );
+-- final de actualizacion de datos_generales
+-- Actualizando datos_fuerza_ingreso
+raise notice 'Actualizando DATOS FUERZA INGRESO';
+nor := 0;
+rok := 0;
+for rcom in select * from datos_fuerza_ingresos where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id ||','|| rcom.id_enc || ',' || rcom.num || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || rcom.id_familia || ',' || rcom.estado_civil || ',' || rcom.profesion || ',' || rcom.ocupacion || ',' || rcom.trabaja || ',' || coalesce(rcom.ingresos,0) || ',' ;
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datos_fuerza_ingresos values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datos_fuerza_ingresos: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datos_fuerza_ingresos: ' || nor, p_usuario );
+-- final de actualizacion de datos_fueza_ingresos
+-- Actualizando datos_fuerza_otros
+raise notice 'Actualizando DATOS FUERZA OTROS';
+nor := 0;
+rok := 0;
+for rcom in select * from datos_fuerza_otros where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id ||','|| rcom.id_enc || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || rcom.ocupacion || ',' || coalesce(rcom.sectore,0) || ',' || coalesce(rcom.sectorp,0) || ',' || coalesce(rcom.generaemp,0) || ',';
+  vstr := vstr || rcom.cant_15 || ',' || coalesce(rcom.cant_610,0) || ',' || coalesce(rcom.cant_1115,0) || ',' || coalesce(rcom.cant_1620,0) || ',' || coalesce(rcom.cant_21mas,0) || ',' || coalesce(rcom.miembroorg,0) || ',';
+  vstr := vstr || '''' || coalesce(rcom.nombreorg,'') || ''',''' || coalesce(rcom.inst1,'') || ''',''' || coalesce(rcom.inst2,'') || ''',''' || coalesce(rcom.inst3,'') || ''',';
+  vstr := vstr || rcom.prestamofam || ',' || coalesce(rcom.prestamosexo,0) || ',' || rcom.remesas || ',' || coalesce(rcom.rango_remesas,0) || ',' || rcom.cant_remesas || ',' || rcom.rango_ingresofam || ',' || coalesce(rcom.cant_ingresofam,0) || ',' || rcom.ingreso_ajusta || ',';
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datos_fuerza_otros values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datos_fuerza_otros: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datos_fuerza_otros: ' || nor, p_usuario );
+-- final de actualizacion de datos_fueza_otros
+-- Actualizando datos_seg_alimentaria
+raise notice 'Actualizando DATOS SEGURIDAD ALIMENTARIA';
+nor := 0;
+rok := 0;
+select count(*) into nro from datos_seg_alimentaria where cod_municipio = p_municipio; -- # de registros origen
+for rcom in select * from datos_seg_alimentaria where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id ||','|| rcom.id_enc || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || rcom.trabajo_tierra || ',' || coalesce(rcom.cant_hombres,0) || ',' || coalesce(rcom.cant_mujeres,0) || ',' || coalesce(rcom.tipo_tenencia,0) || ',' || coalesce(rcom.dominio,0) || ',' || coalesce(rcom.produce_alimento,0) || ',' || coalesce(rcom.produce_suficiente,0) || ',' ;
+  vstr := vstr || coalesce(rcom.cant_maiz,0) || ',' || coalesce(rcom.area_maiz,0) || ',' || coalesce(rcom.cant_frijol,0) || ',' || coalesce(rcom.area_frijol,0) || ',' || coalesce(rcom.cant_maicillo,0) || ',' || coalesce(rcom.area_maicillo,0) || ',' || coalesce(rcom.cant_cafe,0) || ',' || coalesce(rcom.area_cafe,0) || ',' || coalesce(rcom.cant_cana,0) || ',' || coalesce(rcom.area_cana,0) || ',''' || coalesce(rcom.desc_otro,'') || ''',' || coalesce(rcom.cant_otro,0) || ',' || coalesce(rcom.area_otro,0) || ',';
+  vstr := vstr || coalesce(rcom.area_goteo,0) || ',' || coalesce(rcom.area_aspersion,0) || ',' || coalesce(rcom.area_ninguno,0) || ',''' || coalesce(rcom.desc_riego,'') || ''',' || coalesce(rcom.area_riego,0) || ',' || coalesce(rcom.excedente,0) || ',';
+  vstr := vstr || coalesce(rcom.tiene_huerto,0) || ',' || coalesce(rcom.tiene_animales,0) || ',' || coalesce(rcom.cant_aves,0) || ',' || coalesce(rcom.cant_bovino,0) || ',' || coalesce(rcom.cant_caprino,0) || ',' || coalesce(rcom.cant_equino,0) || ',' || coalesce(rcom.cant_porcino,0) || ',' || coalesce(rcom.cant_piscicultura,0) || ',' || coalesce(rcom.cant_apicultura,0) || ',' || coalesce(rcom.cant_domesticos,0) || ',';
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datos_seg_alimentaria values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+select conteo into nrd from dblink('dbremota','select count(*) from datos_seg_alimentaria where cod_municipio = '''|| p_municipio || '''') as t1(conteo integer); -- Cantidad de registro destino
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datos_seg_alimentaria: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datos_seg_alimentaria: ' || nor, p_usuario );
+
+if nro = nrd then
+  msg := 'La cantidad de registros de origen y destino quedaron iguales - migracion correta -';
+elsif nro > nrd then
+  msg := 'No se migrarón todos los registros al destino';
+else
+  msg := 'La cantidad de registros de destino es mayor que la cantidad de origen - revisar -';
+end if;
+insert into tbl_resultados_migracion values (p_municipio, 'Resultado: ' || msg , p_usuario );
+raise notice 'Resultado: %', msg;
+-- final de actualizacion de datos_seg_alimentaria
+-- Actualizando datos_seg_alimentaria
+raise notice 'Actualizando DATOS SEGURIDAD PARTICIPACION';
+nor := 0;
+rok := 0;
+select count(*) into nro from datos_seguridad_participacion where cod_municipio = p_municipio; -- # de registros origen
+for rcom in select * from datos_seguridad_participacion where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id ||','|| rcom.id_enc || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || coalesce(rcom.casos_violencia,0) || ',' || coalesce(rcom.cant_casos_violencia,0) || ',' || coalesce(rcom.victima_violencia,0) || ',' || coalesce(rcom.cant_victima_violencia,0) || ',' || coalesce(rcom.considera_seguro,0) || ',';
+  vstr := vstr || coalesce(rcom.orden_robo,0) || ',' || coalesce(rcom.orden_maras,0) || ',' || coalesce(rcom.orden_drogas,0) || ',' || coalesce(rcom.orden_cantinas,0) || ',' || coalesce(rcom.orden_peleas,0) || ',' || coalesce(rcom.orden_violaciones,0) || ',';
+  vstr := vstr || coalesce(rcom.cant_hombres_miembros,0) || ',' || coalesce(rcom.cant_mujeres_miembros,0) || ',';
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datos_seguridad_participacion values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+select conteo into nrd from dblink('dbremota','select count(*) from datos_seguridad_participacion where cod_municipio = '''|| p_municipio || '''') as t1(conteo integer); -- Cantidad de registro destino
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datos_seguridad_participacion: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datos_seguridad_participacion: ' || nor, p_usuario );
+
+if nro = nrd then
+  msg := 'La cantidad de registros de origen y destino quedaron iguales - migracion correta -';
+elsif nro > nrd then
+  msg := 'No se migrarón todos los registros al destino';
+else
+  msg := 'La cantidad de registros de destino es mayor que la cantidad de origen - revisar -';
+end if;
+insert into tbl_resultados_migracion values (p_municipio, 'Resultado: ' || msg , p_usuario );
+raise notice 'Resultado: %', msg;
+-- final de actualizacion de datos_seguridad_participacion
+-- Actualizando datos_serviciospub
+raise notice 'Actualizando DATOS SERVICIOS PUBLICOS';
+nor := 0;
+rok := 0;
+select count(*) into nro from datos_serviciospub where cod_municipio = p_municipio; -- # de registros origen
+for rcom in select * from datos_serviciospub where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id ||','|| rcom.id_enc || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || coalesce(rcom.id_servicio,0) || ',' || coalesce(rcom.reciben,0) || ',' || coalesce(rcom.estado,0) || ',' || coalesce(rcom.estado,0) || ',';
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datos_serviciospub values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+select conteo into nrd from dblink('dbremota','select count(*) from datos_serviciospub where cod_municipio = '''|| p_municipio || '''') as t1(conteo integer); -- Cantidad de registro destino
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datos_serviciospub: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datos_serviciospub: ' || nor, p_usuario );
+
+if nro = nrd then
+  msg := 'La cantidad de registros de origen y destino quedaron iguales - migracion correta -';
+elsif nro > nrd then
+  msg := 'No se migrarón todos los registros al destino';
+else
+  msg := 'La cantidad de registros de destino es mayor que la cantidad de origen - revisar -';
+end if;
+insert into tbl_resultados_migracion values (p_municipio, 'Resultado: ' || msg , p_usuario );
+raise notice 'Resultado: %', msg;
+-- final de actualizacion de datos_serviciospub
+-- Actualizando datos_vivienda
+raise notice 'Actualizando DATOS VIVIENDA';
+nor := 0;
+rok := 0;
+select count(*) into nro from datos_vivienda where cod_municipio = p_municipio; -- # de registros origen
+for rcom in select * from datos_vivienda where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id ||','|| rcom.id_enc || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || rcom.tipo_vivienda || ',' || coalesce(rcom.tipo_tenencia,0) || ',' || coalesce(rcom.tipo_dominio,0) || ',' || coalesce(rcom.sexo_tenencia,0) || ',' || coalesce(rcom.problema_vivienda,0) || ',' || coalesce(rcom.problema_repello,0) || ',' || coalesce(rcom.material_vivienda,0) || ',' ;
+  vstr := vstr || coalesce(rcom.material_techo,0) || ',' || coalesce(rcom.material_piso,0) || ',' || coalesce(rcom.condicion_vivienda,0) || ',' || coalesce(rcom.tiene_cocina,0) || ',' || coalesce(rcom.ubicacion_cocina,0) || ',' || coalesce(rcom.concinacon_elec,0) || ',' || coalesce(rcom.concinacon_chimbo,0) || ',' || coalesce(rcom.concinacon_kerosen,0) || ',' || coalesce(rcom.concinacon_lena,0) || ',' || coalesce(rcom.concinacon_eco,0) || ',';
+  vstr := vstr || coalesce(rcom.consumoagua_notratada,0) || ',' || coalesce(rcom.consumoagua_botellon,0) || ',' || coalesce(rcom.consumoagua_filtrada,0) || ',' || coalesce(rcom.consumoagua_hervida,0) || ',' || coalesce(rcom.consumoagua_clorada,0) || ',' || coalesce(rcom.piezas_vivienda,0) || ',';
+  vstr := vstr || coalesce(rcom.banos_vivienda,0) || ',' || coalesce(rcom.dormitorios_vivienda,0) || ',' || coalesce(rcom.personasx_dormitorio,0) || ',' || coalesce(rcom.familias_casa,0) || ',' || coalesce(rcom.miembro_emigrado,0) || ',' || coalesce(rcom.cant_hombres,0) || ',' || coalesce(rcom.cant_mujeres,0) || ',' || coalesce(rcom.cant_otrospais,0) || ',' || coalesce(rcom.cant_centroa,0) || ',' || coalesce(rcom.cant_nortea,0) || ',';
+  vstr := vstr || coalesce(rcom.cant_sura,0) || ',' || coalesce(rcom.cant_europa,0) || ',' || coalesce(rcom.cant_otros,0) || ',' || coalesce(rcom.cant_dentropais,0) || ',' || coalesce(rcom.razon_migracion,0) || ',';
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||''',';
+  vstr := vstr || coalesce(rcom.pv_sinrepello,0) || ',' || coalesce(rcom.pv_pisotierra,0) || ',' || coalesce(rcom.pv_cielofalso,0) || ',' || coalesce(rcom.pv_estructural,0) || ',' || coalesce(rcom.pv_techomalo,0) || ',' || coalesce(rcom.pv_ninguno,0);
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datos_vivienda values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+select conteo into nrd from dblink('dbremota','select count(*) from datos_vivienda where cod_municipio = '''|| p_municipio || '''') as t1(conteo integer); -- Cantidad de registro destino
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datos_vivienda: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datos_vivienda: ' || nor, p_usuario );
+
+if nro = nrd then
+  msg := 'La cantidad de registros de origen y destino quedaron iguales - migracion correta -';
+elsif nro > nrd then
+  msg := 'No se migrarón todos los registros al destino';
+else
+  msg := 'La cantidad de registros de destino es mayor que la cantidad de origen - revisar -';
+end if;
+insert into tbl_resultados_migracion values (p_municipio, 'Resultado: ' || msg , p_usuario );
+raise notice 'Resultado: %', msg;
+-- final de actualizacion de datos_vivienda
+-- Actualizando datosd_familia
+raise notice 'Actualizando DATOS DEMOGRAFICOS FAMILIA';
+nor := 0;
+rok := 0;
+select count(*) into nro from datosd_familia where cod_municipio = p_municipio; -- # de registros origen
+for rcom in select * from datosd_familia where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || '''' || coalesce(rcom.nombre,'') || ''',' || coalesce(rcom.sexo,0) || ',' || coalesce(rcom.edad,0) || ',' || coalesce(rcom.id_parentesco,0) || ',' || coalesce(rcom.id_etnia,0) || ',' || coalesce(rcom.tiene_pn,0) || ',' || rcom.id_enc || ',';
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datosd_familia values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+select conteo into nrd from dblink('dbremota','select count(*) from datosd_familia where cod_municipio = '''|| p_municipio || '''') as t1(conteo integer); -- Cantidad de registro destino
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datosd_familia: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datosd_familia: ' || nor, p_usuario );
+
+if nro = nrd then
+  msg := 'La cantidad de registros de origen y destino quedaron iguales - migracion correta -';
+elsif nro > nrd then
+  msg := 'No se migrarón todos los registros al destino';
+else
+  msg := 'La cantidad de registros de destino es mayor que la cantidad de origen - revisar -';
+end if;
+insert into tbl_resultados_migracion values (p_municipio, 'Resultado: ' || msg , p_usuario );
+raise notice 'Resultado: %', msg;
+-- final de actualizacion de datosd_familia
+-- Actualizando datosd_otros
+raise notice 'Actualizando DATOS DEMOGRAFICOS OTROS';
+nor := 0;
+rok := 0;
+select count(*) into nro from datosd_otros where cod_municipio = p_municipio; -- # de registros origen
+for rcom in select * from datosd_otros where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id || ',' || rcom.id_enc || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || coalesce(rcom.cant_solteras,0) || ',' || coalesce(rcom.cant_solteros,0) || ',' || coalesce(rcom.cant_nacimientos,0) || ',' || coalesce(rcom.cant_nac_ninos,0) || ',' || coalesce(rcom.cant_nac_ninas,0) || ',' || coalesce(rcom.edad_madre,0) || ',';
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+--  raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datosd_otros values('|| vstr || ')');
+  rok := rok + 1;
+--  raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+select conteo into nrd from dblink('dbremota','select count(*) from datosd_otros where cod_municipio = '''|| p_municipio || '''') as t1(conteo integer); -- Cantidad de registro destino
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datosd_otros: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datosd_otros: ' || nor, p_usuario );
+
+if nro = nrd then
+  msg := 'La cantidad de registros de origen y destino quedaron iguales - migracion correta -';
+elsif nro > nrd then
+  msg := 'No se migrarón todos los registros al destino';
+else
+  msg := 'La cantidad de registros de destino es mayor que la cantidad de origen - revisar -';
+end if;
+insert into tbl_resultados_migracion values (p_municipio, 'Resultado: ' || msg , p_usuario );
+raise notice 'Resultado: %', msg;
+-- final de actualizacion de datosd_otros
+-- Actualizando datosd_otrosnac
+raise notice 'Actualizando DATOS DEMOGRAFICOS OTROS NACIMIENTOS';
+nor := 0;
+rok := 0;
+select count(*) into nro from datosd_otrosnac where cod_municipio = p_municipio; -- # de registros origen
+for rcom in select * from datosd_otrosnac where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id || ',' || rcom.id_enc || ',' || rcom.id_datossotros || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || coalesce(rcom.num,0) || ',' || coalesce(rcom.cantidad,0) || ',' || coalesce(rcom.cant_ninos,0) || ',' || coalesce(rcom.cant_ninas,0) || ',' || coalesce(rcom.edad,0) || ',';
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datosd_otrosnac values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    --raise notice 'Resultado violacion: %', res;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+select conteo into nrd from dblink('dbremota','select count(*) from datosd_otrosnac where cod_municipio = '''|| p_municipio || '''') as t1(conteo integer); -- Cantidad de registro destino
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datosd_otrosnac: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datosd_otrosnac: ' || nor, p_usuario );
+
+if nro = nrd then
+  msg := 'La cantidad de registros de origen y destino quedaron iguales - migracion correta -';
+elsif nro > nrd then
+  msg := 'No se migrarón todos los registros al destino';
+else
+  msg := 'La cantidad de registros de destino es mayor que la cantidad de origen - revisar -';
+end if;
+insert into tbl_resultados_migracion values (p_municipio, 'Resultado: ' || msg , p_usuario );
+raise notice 'Resultado: %', msg;
+-- final de actualizacion de datosd_otrosnac
+-- Actualizando datosd_rangos
+raise notice 'Actualizando DATOS DEMOGRAFICOS RAGOS DE EDAD';
+nor := 0;
+rok := 0;
+select count(*) into nro from datosd_rangos where cod_municipio = p_municipio; -- # de registros origen
+for rcom in select * from datosd_rangos where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id || ',' || rcom.id_enc || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || coalesce(rcom.cant_personas,0) || ',' || coalesce(rcom.cant_hombres,0) || ',' || coalesce(rcom.cant_mujeres,0) || ',' || coalesce(rcom.cant_hombres_leen,0) || ',' || coalesce(rcom.cant_mujeres_leen,0) || ',';
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||''',';
+  vstr := vstr || coalesce(rcom.rango,0) ;
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datosd_rangos values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    --raise notice 'Resultado violacion: %', res;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+select conteo into nrd from dblink('dbremota','select count(*) from datosd_rangos where cod_municipio = '''|| p_municipio || '''') as t1(conteo integer); -- Cantidad de registro destino
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datosd_rangos: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datosd_rangos: ' || nor, p_usuario );
+
+if nro = nrd then
+  msg := 'La cantidad de registros de origen y destino quedaron iguales - migracion correta -';
+elsif nro > nrd then
+  msg := 'No se migrarón todos los registros al destino';
+else
+  msg := 'La cantidad de registros de destino es mayor que la cantidad de origen - revisar -';
+end if;
+insert into tbl_resultados_migracion values (p_municipio, 'Resultado: ' || msg , p_usuario );
+raise notice 'Resultado: %', msg;
+-- final de actualizacion de datosd_otrosnac
+-- Actualizando datoss_edadvacunas
+raise notice 'Actualizando DATOS SALUD VACUNAS';
+nor := 0;
+rok := 0;
+select count(*) into nro from datoss_edadvacunas where cod_municipio = p_municipio; -- # de registros origen
+for rcom in select * from datoss_edadvacunas where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id || ',' || rcom.id_enc || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || coalesce(rcom.rango,0) || ',' || coalesce(rcom.cant_personas,0) || ',' || coalesce(rcom.cant_hombres,0) || ',' || coalesce(rcom.cant_mujeres,0) || ',' || coalesce(rcom.cant_completa,0) || ',' || coalesce(rcom.cant_incompleta,0) || ',';
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datoss_edadvacunas values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    --raise notice 'Resultado violacion: %', res;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+select conteo into nrd from dblink('dbremota','select count(*) from datoss_edadvacunas where cod_municipio = '''|| p_municipio || '''') as t1(conteo integer); -- Cantidad de registro destino
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datoss_edadvacunas: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datoss_edadvacunas: ' || nor, p_usuario );
+
+if nro = nrd then
+  msg := 'La cantidad de registros de origen y destino quedaron iguales - migracion correta -';
+elsif nro > nrd then
+  msg := 'No se migrarón todos los registros al destino';
+else
+  msg := 'La cantidad de registros de destino es mayor que la cantidad de origen - revisar -';
+end if;
+insert into tbl_resultados_migracion values (p_municipio, 'Resultado: ' || msg , p_usuario );
+raise notice 'Resultado: %', msg;
+-- final de actualizacion de datoss_edadvacunas
+-- Actualizando datoss_enfermedades
+raise notice 'Actualizando DATOS SALUD ENFERMEDADES';
+nor := 0;
+rok := 0;
+select count(*) into nro from datoss_enfermedades where cod_municipio = p_municipio; -- # de registros origen
+for rcom in select * from datoss_enfermedades where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id || ',' || rcom.id_enc || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || coalesce(rcom.id_enfermedad,0) || ',' || coalesce(rcom.cant_manifestaron,0) || ',' || coalesce(rcom.cant_hombres,0) || ',' || coalesce(rcom.cant_mujeres,0) || ',' || coalesce(rcom.cant_publica,0) || ',' || coalesce(rcom.cant_privada,0) || ',';
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||'''';
+  --raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datoss_enfermedades values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    --raise notice 'Resultado violacion: %', res;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+select conteo into nrd from dblink('dbremota','select count(*) from datoss_enfermedades where cod_municipio = '''|| p_municipio || '''') as t1(conteo integer); -- Cantidad de registro destino
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datoss_enfermedades: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datoss_enfermedades: ' || nor, p_usuario );
+
+if nro = nrd then
+  msg := 'La cantidad de registros de origen y destino quedaron iguales - migracion correta -';
+elsif nro > nrd then
+  msg := 'No se migrarón todos los registros al destino';
+else
+  msg := 'La cantidad de registros de destino es mayor que la cantidad de origen - revisar -';
+end if;
+insert into tbl_resultados_migracion values (p_municipio, 'Resultado: ' || msg , p_usuario );
+raise notice 'Resultado: %', msg;
+-- final de actualizacion de datoss_enfermedades
+-- Actualizando datoss_general
+raise notice 'Actualizando DATOS SALUD GENERALES';
+nor := 0;
+rok := 0;
+select count(*) into nro from datoss_general where cod_municipio = p_municipio; -- # de registros origen
+for rcom in select * from datoss_general where cod_municipio = p_municipio loop
+begin
+  vstr := rcom.id || ',' || rcom.id_enc || ',''' || rcom.cod_departamento || ''',''' || rcom.cod_municipio ||''',''' || rcom.cod_comunidad || ''',';
+  vstr := vstr || coalesce(rcom.embarazos,0) || ',' || coalesce(rcom.cant_embarazos,0) || ',' || coalesce(rcom.edad1,0) || ',' || coalesce(rcom.edad2,0) || ',' || coalesce(rcom.edad3,0) || ',' || coalesce(rcom.edad4,0) || ',';
+  vstr := vstr || rcom.lugar_casa || ',' || coalesce(rcom.cant_casa,0) || ',' || rcom.lugar_centros || ',' || coalesce(rcom.cant_centros,0) || ',' || rcom.lugar_materno || ',' || coalesce(rcom.cant_materno,0) || ',' || rcom.lugar_hospital || ',' || coalesce(rcom.cant_hospital,0) || ',' || rcom.lugar_clinica || ',' || coalesce(rcom.cant_clinica,0) || ',' || rcom.lugar_otros || ',' || coalesce(rcom.cant_otros,0) || ',';
+  vstr := vstr || coalesce(rcom.muerte_mat,0) || ',' || coalesce(rcom.cant_muertem,0) || ',' || coalesce(rcom.momento_muertem,0) || ',''' || coalesce(rcom.causa_muertem,'') || ''',';
+  vstr := vstr || coalesce(rcom.planifican,0) || ',' || coalesce(rcom.metodo,0) || ',' || coalesce(rcom.sexo_operacion,0) || ',' || coalesce(rcom.cant_muerte_ninos,0) || ',' || coalesce(rcom.cant_muerte_ninas,0) || ',''' || coalesce(rcom.causa_muerte,'') || ''','; 
+  vstr := vstr || '''' || rcom.fecha_creacion || ''',''' || rcom.usuario_creacion || ''',''' || rcom.usuario_ultima_modificacion || ''',''' || rcom.fecha_ultima_modificacion ||''',';
+  vstr := vstr || coalesce(rcom.semurionino,0);
+  raise notice  'vstr: %', vstr;
+  
+  select into res dblink_exec('dbremota','insert into datoss_general values('|| vstr || ')');
+  rok := rok + 1;
+  --raise notice 'Resultado: %', res;
+  
+  exception 
+  when unique_violation then
+    nor := nor + 1;
+    --raise notice 'Resultado violacion: %', res;
+    continue;
+  when connection_failure then
+    raise notice 'Fallo la conecion con el servidor';
+    return 101;
+  end;
+end loop;
+select conteo into nrd from dblink('dbremota','select count(*) from datoss_general where cod_municipio = '''|| p_municipio || '''') as t1(conteo integer); -- Cantidad de registro destino
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros insertados en datoss_general: ' || rok, p_usuario );
+insert into tbl_resultados_migracion values (p_municipio, 'Cantidad de registros no insertados en datoss_general: ' || nor, p_usuario );
+
+if nro = nrd then
+  msg := 'La cantidad de registros de origen y destino quedaron iguales - migracion correta -';
+elsif nro > nrd then
+  msg := 'No se migrarón todos los registros al destino';
+else
+  msg := 'La cantidad de registros de destino es mayor que la cantidad de origen - revisar -';
+end if;
+insert into tbl_resultados_migracion values (p_municipio, 'Resultado: ' || msg , p_usuario );
+raise notice 'Resultado: %', msg;
+-- final de actualizacion de datoss_generales
+return rok;
+end; 
+$$ language plpgsql;

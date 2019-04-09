@@ -1,0 +1,1420 @@
+{% extends '::basemenu.html.twig' %}
+{#% form_theme 'bootstrap_3_layout.html.twig' %#}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{asset('bundles/app/css/parsley.css')}}" />
+    <!-- link rel="stylesheet" href="{#asset('bundles/app/css/mainAB.css')#}" / -->
+    <!--link rel="stylesheet" href="{#asset('bundles/app/css/focal.css')#}" / -->
+{% endblock %} 
+{% block header -%}
+    Nueva Encuesta AB
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Ingresar la información solicitada
+    </small>
+{% endblock %} 
+{% block content -%}
+{% for type, flash_messages in app.session.flashBag.all %}
+    {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+<div class="anuncio">
+        <p>
+            pulse TAB para cambiar de celdas y use las flechas para cambiar la opcion rapidamente
+        </p>
+    </div>
+   
+    <div class="ingreso">
+<form name="focal_appbundle_datosgeneralesAB" data-parsley-validate="" method="post" action="{{ path('datosgenerales_createAB') }}" id="frm_datosgab"> 
+        <div class="formulario">
+            <table>
+                <tr>
+                    <td>Nombre Encuestador</td>
+                    <td colspan="3">
+                        <select required id="qst_01_01" class="form-control" name="qst_01_01">
+                        <option value="">-- Selecionar --</option>
+                        {% for enc in encuestadores %}
+                            <option value="{{ enc.id }}">{{ enc.nombre }}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Nombre entrevistado</td>
+                    <td colspan="3"><input required class="form-control" name="qst_01" id="qst_01" type="text" style="width: 25em"></td>
+                </tr>
+                <tr>
+                    <td>Cel.</td>
+                    <td><input name="qst_02" id="qst_02" type="text" style="width: 12em"></td>
+                    <td>#3-Comunidad</td>
+                    <td>
+                        <select required id="qst_03" class="form-control" name="qst_03">
+                        <option value="">-- Selecionar --</option>
+                        {% for com in comunidades %}
+                            <option value="{{ com.codComunidad }}">{{ com.nombre }}</option>
+                        {% endfor %}
+                        </select>    
+                    </td>
+                </tr>
+            </table>
+            <table class="datos-1">
+                <tr>
+                    <td><b>#4</b>-Manzana No.</td>
+                    <td><input name="qst_04" type="text" id="qst_04"></td>
+                    <td><b>#5</b>-Lote No.</td>
+                    <td><input name="qst_05" id="qst_05" type="text"></td>
+                    <td><b>#6</b>-Numero de ubicaion de la vivienda</td>
+                    <td><input name="qst_06" id="qst_06" type="text"></td>
+                </tr>
+                <tr>
+                    <td><b>#7</b>-Numero de boleta</td>
+                    <td><input name="qst_07" id="qst_07" required type="text"></td>
+                    <td><b>#8</b>-No. Catastral</td>
+                    <td colspan="2"><input name="qst_08" id="qst_08" type="text" style="width: 15em"></td>
+                </tr>
+                <tr>
+                    <td><b>#9</b>-Total Edificaciones</td>
+                    <td><input name="qst_09" id="qst_09" type="text"></td>
+                    <td><b>#10</b>-Total Unidades</td>
+                    <td><input name="qst_10" id="qst_10" type="text"></td>
+                    <td><b>#11</b>-Edificacion No.</td>
+                    <td><input name="qst_11" id="qst_11" type="text"></td>
+                </tr>
+            </table>
+            <br>
+            <table class="datos-1">
+                <tr>
+                    <td><b>#12</b>-Material de paredes</td>
+                    <td>
+                        <select required name="qst_12" id="qst_12">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Adobe</option>
+                            <option value="2">2. Bloque</option>
+                            <option value="3">3. Baharaque</option>
+                            <option value="4">4. Madera</option>
+                            <option value="5">5. Desperdicios</option>
+                            <option value="6">6. Ladrillo</option>
+                            <option value="7">7. Yagua</option>
+                            <option value="8">8. Otro</option>
+                            <option value="9">9. No tiene</option>
+                            <option value="10">10. NS/NR</option>
+                        </select>
+                    </td>
+
+                    <td><b>#13</b>-Material del techo</td>
+                    <td>
+                        <select required name="qst_13" id="qst_13">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1: Desechos</option>
+                            <option value="2">2: Paja o similar</option>
+                            <option value="3">3: Teja de barro</option>
+                            <option value="4">4: Lamina metalica</option>
+                            <option value="5">5: Lamina de asbesto</option>
+                            <option value="6">6: Concreto</option>
+                            <option value="7">7: Shingle</option>
+                            <option value="8">8: Otro</option>
+                            <option value="9">9: NS/NR</option>
+                        </select>
+                    </td>
+                    <td><b>#14</b>-Material del piso</td>
+                    <td>
+                        <select name="qst_14" id="qst_14" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1: Tierra</option>
+                            <option value="2">2: Plancha de cem.</option>
+                            <option value="3">3: Madera rustica</option>
+                            <option value="4">4: Ladrillo de barro</option>
+                            <option value="5">5: Granito</option>
+                            <option value="6">6: Ceramica</option>
+                            <option value="7">7: Mosaico</option>
+                            <option value="8">8: Otro</option>
+                            <option value="9">9: NS/NR</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>#15</b>-Principal problema de la edificacion</td>
+                    <td>
+                        <select name="qst_15" id="qst_15" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1: Sin repello externo</option>
+                            <option value="2">2: Sin repello interno</option>
+                            <option value="3">3: Sin ambos repellos</option>
+                            <option value="4">4: Piso de tierra</option>
+                            <option value="5">5: Falta cielo falso</option>
+                            <option value="6">6: Techo en mal estado</option>
+                            <option value="7">7: Otro</option>
+                            <option value="8">8: Ninguno</option>
+                        </select>
+                    </td>
+
+                    <td><b>#16</b>-Condicion de la edificaion</td>
+                    <td>
+                        <select name="qst_16" id="qst_16" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1: Buena</option>
+                            <option value="2">2: Regular</option>
+                            <option value="3">3: Mala</option>
+                        </select>
+                    </td>
+                    <td><b>#17</b>-Unidad No.</td>
+                    <td>
+                        <input name="qst_17" id="qst_17" type="number" required max="99">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>#18</b>-Uso de la unidad</td>
+                    <td>
+                        <input name="qst_18" id="qst_18" type="number" required max="999"> </td> <td><b>#19</b>-Estado</td>
+                    <td>
+                        <select name="qst_19" id="qst_19" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1: Ocupada</option>
+                            <option value="2">2: Desocupada</option>
+                            <option value="3">3: En construccion</option>
+                            <option value="4">4: En ruina/demolida</option>
+                        </select>
+                    </td>
+                    <td><b>#20</b>-Tenencia</td>
+                    <td>
+                        <select name="qst_20_01" id="qst_20_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Propia dom. Pleno</option>
+                            <option value="2">2. Propia dom. util</option>
+                            <option value="3">3. Propia ocupacion</option>
+                            <option value="4">4. Propia posesión</option>
+                            <option value="5">5. Pagándola</option>
+                            <option value="6">6. Alquilada</option>
+                            <option value="7">7. Cedida</option>
+                            <option value="8">8. NS/NR</option>
+                        </select>
+                        <br>
+                        <b>Sexo</b>
+                        <br>
+                        <select name="qst_20_02" id="qst_20_02" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Hombre</option>
+                            <option value="2">2. Mujer</option>
+                            <option value="3">3. Ambos</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>#21</b>-¿Tiene cocina?</td>
+                    <td>
+                        <select name="qst_21" id="qst_21" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                        </select>
+                    </td>
+
+                    <td><b>#22</b>-¿Donde esta ubicada?</td>
+                    <td>
+                        <select name="qst_22" id="qst_22" disabled>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Dentro</option>
+                            <option value="2">2. Fuera</option>
+                            <option value="3">3. Corredor</option>
+                            <option value="4">4. Otro</option>
+                            <option value="5">5. NS/NR</option>
+
+                        </select>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td><b>#23</b>-¿Que utilizan para cocinar?</td>
+                    <td colspan="5">
+                        <div id="camposCheck">
+                        <input type="checkbox" name="qst_23_1" id="qst_23_1" value="1"> 1. Electricidad</input>
+                        <input type="checkbox" name="qst_23_2" id="qst_23_2" value="1"> 2. Gas volatil</input>
+                        <input type="checkbox" name="qst_23_3" id="qst_23_3" value="1"> 3. Gas (Kerosén)</input>
+                        <input type="checkbox" name="qst_23_4" id="qst_23_4" value="1"> 4. Leña</input>
+                        <input type="checkbox" name="qst_23_5" id="qst_23_5" value="1"> 5. Eco fogon</input>
+                        <input type="checkbox" name="qst_23_6" id="qst_23_6" value="1"> 6. Ninguno</input>
+                        <input type="checkbox" name="qst_23_7" id="qst_23_7" value="1"> 7. Otro</input>
+                        <input type="checkbox" name="qst_23_8" id="qst_23_8" value="1" data-parsley-cocino="1" checked> 8. NS/NR</input>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>#24</b>-¿Como consume agua?</td>
+                    <td colspan="5">
+                        <input type="checkbox" name="qst_24_1" id="qst_24_1" value="1"> 1. No tratada</input>
+                        <input type="checkbox" name="qst_24_2" id="qst_24_2" value="1"> 2. Botellón</input>
+                        <input type="checkbox" name="qst_24_3" id="qst_24_3" value="1"> 3. Filtrada</input>
+                        <input type="checkbox" name="qst_24_4" id="qst_24_4" value="1"> 4. Hervida</input>
+                        <input type="checkbox" name="qst_24_5" id="qst_24_5" value="1"> 5. Clorada</input>
+                        <input type="checkbox" name="qst_24_6" id="qst_24_6" value="1"> 6. Otro</input>
+                        <input type="checkbox" name="qst_24_7" id="qst_24_7" value="1" checked> 7. NS/NR</input>
+                    </td>
+                </tr>    
+                <tr>
+                    <td><b>#25</b>-Cuantas piezas tiene esta unidad?</td>
+                    <td>
+                        <input name="qst_25" id="qst_25" type="number" required>
+                    </td>
+                    <td><b>#26</b>-¿Cuantos baños tiene esta unidad?</td>
+                    <td>
+                        <input name="qst_26" id="qst_26" type="number" required class="numeros">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>#27</b>-¿Cuantas piezas son dormitorios?</td>
+                    <td>
+                        <input name="qst_27" id="qst_27" type="number" required>
+                    </td>
+
+                    <td><b>#28</b>-¿Cuantas personas por dormitorio?</td>
+                    <td>
+                        <input name="qst_28" id="qst_28" type="number" required>
+                    </td>
+                    <td><b>#29</b>-¿Cuantos hogares hay en esta vivienda?</td>
+                    <td>
+                        <input name="qst_29" id="qst_29" type="number" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>#30</b>-¿Cuantos habitantes en la vivienda?</td>
+                    <td>
+                        <input name="qst_30" id="qst_30" type="number" required>
+                    </td>
+                </tr>
+            </table>
+            <!------------------------------------------------------------->
+            <table style="width: 62%">
+                <tr>
+                    <td colspan="4"><b>#31</b>-¿Ha emigrado algun miembro de su vivienda?</td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="qst_31_01" id="qst_31_01" required onchange="enable_31();">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                        </select>
+                    </td>
+                    <td>cuantos </td>
+                    <td>H<input name="qst_31_02" id="qst_31_02" type="number" disabled="true" value="0"></td>
+                    <td>M<input name="qst_31_03" id="qst_31_03" type="number" disabled="true" value="0"></td>
+                </tr>
+            </table>
+            <table id="qst_32_33" style="display:none">
+                <td colspan="7"><b>#32</b>-¿Donde?</td>
+                <tr>
+                    <td>Paises de C.A<input name="qst_32_01" id="qst_32_01" type="number" value="0" required ></td>
+                    <td>Norte America<input name="qst_32_02"id="qst_32_02" type="number" value="0" required></td>
+                    <td>Sur America<input name="qst_32_03" id="qst_32_03" type="number" value="0" required></td>
+                    <td>Europa<input name="qst_32_04" id="qst_32_04" type="number" value="0" required></td>
+                    <td>Dentro del pais<input name="qst_32_05" id="qst_32_05" type="number" value="0" required></td>
+                    <td>Otro<input name="qst_32_06" id="qst_32_06" type="number" value="0" required></td>
+                    <td>Otro<input name="qst_32_06" id="qst_32_06" type="number" value="0" required></td>
+                </tr>
+                <td colspan="4"><b>#33</b>-¿Razones?</td>
+                <tr>
+                    <td>Economicas<input name="qst_33_01" id="qst_33_01" type="number" value="0" required></td>
+                    <td>Violencia Generalizada<input name="qst_33_02" id="qst_33_02" type="number" value="0" required></td>
+                    <td>Reunion Familiar<input name="qst_33_03" id="qst_33_03" type="number" value="0" required></td>
+                    <td>Otro<input name="qst_33_04" id="qst_33_04" type="number" value="0" required></td>
+                </tr>
+            </table>
+            <table class="datos-1">
+                <td colspan="4"><b>#34</b>-¿Conoce casos de violencia intra familiar en su comunidad ne le ultimo año?</td>
+                <tr>
+                    <td>
+                        <select name="qst_34_01" id="qst_34_01" required onchange="enable_34()">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                        </select>
+                    </td>
+                    <td>Cuantos<input name="qst_34_02" id="qst_34_02" type="number" disabled="true"></td>
+                </tr>
+
+                <td colspan="4"><b>#35</b>-¿Le ha sucedido a Ud. o algun hab. de la vivienda en el ultimo año?</td>
+                <tr>
+                    <td>
+                        <select name="qst_35_01" id="qst_35_01" required onchange="enable_35()">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                        </select>
+                    </td>
+                    <td>Cuantos<input name="qst_35_02" id="qst_35_02" type="number" disabled="true"></td>
+                </tr>
+
+                <td colspan="4"><b>#36</b>-¿Que tan seguras, considera ud. se encuentran las perosnas que vivien en su vivienda en este barrio o colonia?</td>
+                <!-- COLORCAR RADIO BUTTON ************************************-->
+                <tr>
+                    <td>
+                        <select name="qst_36" id="qst_36" required onchange="enable_36();">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Estan seguras</option>
+                            <option value="2">2. No estan seguras</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <table class="datos-1" id="qst_37_table" style="display: none">
+                <tr>
+                    <td colspan="7"><b>#37</b>-¿Si considera que no estan seguras, cual es la razon?</td>
+                </tr>    
+                <tr>
+                    <td>Robo o hurto</td>
+                    <td>Maras o pandillas</td>
+                    <td>Venta de dorgas</td>
+                    <td>Cantinas</td>
+                    <td>Riñas y dsicuciones</td>
+                    <td>Violaciones</td>
+                    <td>Otros</td>
+                </tr>
+                <tr>
+                    <td><input name="qst_37_01" id="qst_37_01" value="0" type="number" min="0" max="5"></td>
+                    <td><input name="qst_37_02" id="qst_37_02" value="0" type="number" min="0" max="5"></td>
+                    <td><input name="qst_37_03" id="qst_37_03" value="0" type="number" min="0" max="5"></td>
+                    <td><input name="qst_37_04" id="qst_37_04" value="0" type="number" min="0" max="5"></td>
+                    <td><input name="qst_37_05" id="qst_37_05" value="0" type="number" min="0" max="5"></td>
+                    <td><input name="qst_37_06" id="qst_37_06" value="0" type="number" min="0" max="5"></td>
+                    <td><input name="qst_37_07" id="qst_37_07" value="0" type="number" min="0" max="5"></td>
+                </tr>
+            </table>
+
+            <!--------38 && 39--------------------------->
+            <br>
+            <table class="datos-1">
+                <tr>
+                    <td><b>38.</b>¿En la vivienda existen los siguientes servicios publicos?</td>
+                    <td>Los reciben<br>1: Si<br>2: No<br>3: NS/NR</td>
+                    <td>Estado<br>1: Bueno<br>2: Regular<br>3: Malo</td>
+                    <td>Dias<br>semana<br>reciben<br> servicio<br></td>
+                </tr>
+                <tr>
+                    <td><b>01. </b>Agua de pozo propio</td>
+                    <td>
+                        <select name="qst_38_1_01" id="qst_38_1_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_1_02" id="qst_38_1_02" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_1_03" id="qst_38_1_03" type="number" min="1" max="7" disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>02. </b>Agua domiciliar de pozo comunal</td>
+                    <td>
+                        <select name="qst_38_2_01" id="qst_38_2_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_2_02" id="qst_38_2_02" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_2_03" id="qst_38_2_03" type="number" min="1" max="7" disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>03. </b>Acarrea agua de rio o quebrada</td>
+                    <td>
+                        <select name="qst_38_3_01" id="qst_38_3_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_3_02" id="qst_38_3_02" disabled="true" >
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_3_03" id="qst_38_3_03" type="number" min="1" max="7" disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>04. </b>Agua domiciliar por acueducto</td>
+                    <td>
+                        <select name="qst_38_4_01" id="qst_38_4_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_4_02" id="qst_38_4_02" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_4_03" id="qst_38_4_03" type="number" min="1" max="7" disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>05. </b>Agua llave publica/fuente</td>
+                    <td>
+                        <select name="qst_38_5_01" id="qst_38_5_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_5_02" id="qst_38_5_02" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_5_03" id="qst_38_5_03" type="number" min="1" max="7" disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>06. </b>Reservorio de agua lluvia</td>
+                    <td>
+                        <select name="qst_38_6_01" id="qst_38_6_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_6_02" id="qst_38_6_02" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_6_03" id="qst_38_6_03" type="number" min="1" max="7" disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>07. </b>Inodoro con fosa septica </td>
+                    <td>
+                        <select name="qst_38_7_01" id="qst_38_7_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_7_02" id="qst_38_7_02" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_07_03" id="qst_38_07_03" type="number" min="1" max="7" disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>08. </b>Inodoro con alcantarillado sanitario</td>
+                    <td>
+                        <select name="qst_38_8_01" id="qst_38_8_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_8_02" id="qst_38_8_02" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_8_03" id="qst_38_8_03" type="number" min="1" max="7" disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>09. </b>Letrina de fosa simple</td>
+                    <td>
+                        <select name="qst_38_9_01" id="qst_38_9_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_9_02" id="qst_38_9_02" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_9_03" id="qst_38_9_03" type="number" min="1" max="7" disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>10. </b>Letrina de fosa septica</td>
+                    <td>
+                        <select name="qst_38_10_01" id="qst_38_10_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_10_02" id="qst_38_10_02" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_10_03" id="qst_38_10_03" type="number" min="1" max="7" disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>11. </b>Usa la letrina</td>
+                    <td>
+                        <select name="qst_38_11_01" id="qst_38_11_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_11_02" id="qst_38_11_02" disabled="true" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_11_03" id="qst_38_11_03" type="number" min="1" max="7" disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>12. </b>Recoleccion de basura</td>
+                    <td>
+                        <select name="qst_38_12_01" id="qst_38_12_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_12_02" id="qst_38_12_02" disabled="true" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_12_03" id="qst_38_12_03" type="number" min="1" max="7" disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>13. </b>Aseo de calles</td>
+                    <td>
+                        <select name="qst_38_13_01" id="qst_38_13_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_13_02" id="qst_38_13_02"  disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_13_03" id="qst_38_13_03" type="number" min="1" max="7" disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>14. </b>Energia electrica domiciliar</td>
+                    <td>
+                        <select name="qst_38_14_01" id="qst_38_14_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_14_02" id="qst_38_14_02" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_14_03" id="qst_38_14_03" type="number" min="1" max="7"  disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>15. </b>Telefono(Hondutel)</td>
+                    <td>
+                        <select name="qst_38_15_01" id="qst_38_15_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_15_02" id="qst_38_15_02"  disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_15_03" id="qst_38_15_03" type="number" min="1" max="7"  disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>16. </b>Telefono(Celular movil o fijo)</td>
+                    <td>
+                        <select name="qst_38_16_01" id="qst_38_16_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_16_02" id="qst_38_16_02"  disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_16_03" id="qst_38_16_03" type="number" min="1" max="7"  disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>17. </b>Alumbrado publico</td>
+                    <td>
+                        <select name="qst_38_17_01" id="qst_38_17_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_17_02" id="qst_38_17_02" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_17_03" id="qst_38_17_03" type="number" min="1" max="7"  disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>18. </b>Mantenimiento de calles</td>
+                    <td>
+                        <select name="qst_38_18_01" id="qst_38_18_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option selected value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="qst_38_18_02" id="qst_38_18_02" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Bueno</option>
+                            <option value="2">2. Regular</option>
+                            <option value="3">3. Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input name="qst_38_18_03" id="qst_38_18_03" type="number" min="1" max="7"  disabled="true">
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <input name="total_manif" id="total_manif" type="hidden" data-parsley-equalto="#total_asist">
+            <input name="total_asist" id="total_asist" type="hidden" data-parsley-equalto="#total_manif">
+            <table class="datos-1">
+                <tr>
+                    <!-- CAMBIAR COLORES DE TABLA ********************************-->
+                    <td rowspan="2"><b>39.</b>Tipo de enfermedad</td>
+                    <td colspan=2> Se manifiesto</td>
+                    <td colspan=3> Asistencia</td>
+                </tr>
+                <tr>
+                    <td>Hombre<br></td>
+                    <td>Mujer</td>
+                    <td>Publica</td>
+                    <td>Privada</td>
+                    <td>Propia</td>
+                </tr>
+                <tr>
+                    <td><b>01. </b> Infección respiratoria aguda</td>
+                    <td><input name="qst_39_1_01" id="qst_39_1_01" data-parsley-cantidad="1" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_1_02" id="qst_39_1_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_1_03" id="qst_39_1_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_1_04" id="qst_39_1_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_1_05" id="qst_39_1_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>02. </b> Dengue clasico</td>
+                    <td><input name="qst_39_2_01" id="qst_39_2_01" data-parsley-cantidad="2" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_2_02" id="qst_39_2_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_2_03" id="qst_39_2_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_2_04" id="qst_39_2_04" data-parsley-type="integer" min="0" max="99"></td>                   
+                    <td><input name="qst_39_2_05" id="qst_39_2_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>03. </b>Paludismo</td>
+                    <td><input name="qst_39_3_01" id="qst_39_3_01" data-parsley-cantidad="3" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_3_03" id="qst_39_3_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_3_03" id="qst_39_3_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_3_04" id="qst_39_3_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_3_05" id="qst_39_3_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>04. </b>Dengue hemorrágico</td>
+                    <td><input name="qst_39_4_01" id="qst_39_4_01" data-parsley-cantidad="4" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_4_02" id="qst_39_4_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_4_03" id="qst_39_4_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_4_04" id="qst_39_4_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_4_05" id="qst_39_4_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>05. </b>Chagas</td>
+                    <td><input name="qst_39_5_01" id="qst_39_5_01" data-parsley-cantidad="5" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_5_02" id="qst_39_5_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_5_03" id="qst_39_5_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_5_04" id="qst_39_5_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_5_05" id="qst_39_5_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>06. </b>Zika</td>
+                    <td><input name="qst_39_6_01" id="qst_39_6_01" data-parsley-cantidad="6" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_6_02" id="qst_39_6_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_6_03" id="qst_39_6_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_6_04" id="qst_39_6_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_6_05" id="qst_39_6_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>07. </b>Chincungunya</td>
+                    <td><input name="qst_39_7_01" id="qst_39_7_01" data-parsley-cantidad="7" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_7_02" id="qst_39_7_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_7_03" id="qst_39_7_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_7_04" id="qst_39_7_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_7_05" id="qst_39_7_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>08. </b>Hipertension arterial</td>
+                    <td><input name="qst_39_8_01" id="qst_39_8_01" data-parsley-cantidad="8" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_8_02" id="qst_39_8_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_8_03" id="qst_39_8_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_8_04" id="qst_39_8_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_8_05" id="qst_39_8_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>09. </b>Diábetes</td>
+                    <td><input name="qst_39_9_01" id="qst_39_9_01" data-parsley-cantidad="9" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_9_02" id="qst_39_9_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_9_03" id="qst_39_9_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_9_04" id="qst_39_9_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_9_05" id="qst_39_9_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>10. </b>Asma bronquial</td>
+                    <td><input name="qst_39_10_01" id="qst_39_10_01" data-parsley-cantidad="10" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_10_02" id="qst_39_10_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_10_03" id="qst_39_10_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_10_04" id="qst_39_10_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_10_05" id="qst_39_10_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>11. </b>Epilepsia</td>
+                    <td><input name="qst_39_11_01" id="qst_39_11_01" data-parsley-cantidad="11" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_11_02" id="qst_39_11_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_11_03" id="qst_39_11_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_11_04" id="qst_39_11_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_11_05" id="qst_39_11_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>12. </b>Neumonia</td>
+                    <td><input name="qst_39_12_01" id="qst_39_12_01" data-parsley-cantidad="12" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_12_02" id="qst_39_12_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_12_03" id="qst_39_12_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_12_04" id="qst_39_12_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_12_05" id="qst_39_12_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>13. </b>Consumo de alcohol</td>
+                    <td><input name="qst_39_13_01" id="qst_39_13_01" data-parsley-cantidad="13" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_13_02" id="qst_39_13_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_13_03" id="qst_39_13_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_13_04" id="qst_39_13_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_13_05" id="qst_39_13_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>14. </b>Consumo de drogas</td>
+                    <td><input name="qst_39_14_01" id="qst_39_14_01" data-parsley-cantidad="14" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_14_02" id="qst_39_14_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_14_03" id="qst_39_14_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_14_04" id="qst_39_14_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_14_05" id="qst_39_14_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>15. </b>tuberculosis</td>
+                    <td><input name="qst_39_15_01" id="qst_39_15_01" data-parsley-cantidad="15" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_15_02" id="qst_39_15_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_15_03" id="qst_39_15_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_15_04" id="qst_39_15_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_15_05" id="qst_39_15_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>16. </b>Cancer</td>
+                    <td><input name="qst_39_16_01" id="qst_39_16_01" data-parsley-cantidad="16" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_16_02" id="qst_39_16_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_16_03" id="qst_39_16_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_16_04" id="qst_39_16_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_16_05" id="qst_39_16_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>17. </b>Diarreas</td>
+                    <td><input name="qst_39_17_01" id="qst_39_17_01" data-parsley-cantidad="17" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_17_02" id="qst_39_17_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_17_03" id="qst_39_17_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_17_04" id="qst_39_17_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_17_05" id="qst_39_17_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>18. </b>De la piel</td>
+                    <td><input name="qst_39_18_01" id="qst_39_18_01" data-parsley-cantidad="18" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_18_02" id="qst_39_18_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_18_03" id="qst_39_18_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_18_04" id="qst_39_18_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_18_05" id="qst_39_18_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>19. </b>Insuficiencia renal</td>
+                    <td><input name="qst_39_19_01" id="qst_39_19_01" data-parsley-cantidad="19" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_19_02" id="qst_39_19_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_19_03" id="qst_39_19_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_19_04" id="qst_39_19_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_19_05" id="qst_39_19_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+                <tr>
+                    <td><b>20. </b>Discapacidad fisica/mental</td>
+                    <td><input name="qst_39_20_01" id="qst_39_20_01" data-parsley-cantidad="20" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_20_02" id="qst_39_20_02" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_20_03" id="qst_39_20_03" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_20_04" id="qst_39_20_04" data-parsley-type="integer" min="0" max="99"></td>
+                    <td><input name="qst_39_20_05" id="qst_39_20_05" data-parsley-type="integer" min="0" max="99"></td>
+                </tr>
+            </table>
+            <br>
+
+            <table class="datos-1">
+                <tr>
+                    <td><b>#40</b>-¿Tiene huerto familar en su vivienda?</td>
+                    <td>
+                        <select name="qst_40" id="qst_40" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+               
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>#41</b>-¿Alguien en la vivienda trabajo la tierra por cuenta propia?</td>
+                    <td>
+                        <select name="qst_41_01" id="qst_41_01" required>
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                        </select>
+                    </td>
+                    <td>Cuantos: H<input name="qst_41_02" id="qst_41_02" type="number" min="0" disabled="true"></td>
+                    <td>M<input name="qst_41_03" id="qst_41_03" type="number" min="0" disabled="true"></td>
+                </tr>
+                <tr>
+                    <td><b>#42</b>-Tipo de tenencia de la tierra</td>
+                    <td>
+                        <select name="qst_42" id="qst_42" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Propia dom. pleno</option>
+                            <option value="2">2. Propia dom. util</option>
+                            <option value="3">3. Propia pagandola</option>
+                            <option value="4">4. Alquilada</option>
+                            <option value="5">5 .Prestada</option>
+                            <option value="6">6. En litigio</option>
+                            <option value="7">7. Comunal</option>
+                            <option value="8">8. No tiene</option>
+                            <option value="9">9. NS/NR</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>#43</b>-¿Se producen alimentos por los habs. de la viv.?</td>
+                    <td>
+                        <select name="qst_43" id="qst_43" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="01">1. Si</option>
+                            <option value="02">2. No</option>
+                            <option value="03">3. NS/NR</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>#44</b>-¿Se producen suficientes alimentos para autoconsumo?</td>
+                    <td>
+                        <select name="qst_44" id="qst_44" disabled="true">
+                            <option value="">Seleccioné una...</option>
+                            <option value="01">1. Si</option>
+                            <option value="02">2. No</option>
+                            <option value="03">3. NS/NR</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <table class="datos-1">
+                <tr>
+                    <th colspan="5">45. Areas en tareas con sisema de riego</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><b>1:</b>Goteo</td>
+                    <td><b>1:</b>Aspercion</td>
+                    <td><b>1:</b>Ninguno</td>
+                    <td><b>1:</b>Otro</td>
+                </tr>
+                <tr>
+                    <td><b>1:</b> Tareas</td>
+                    <td><input name="qst_45_01" id="qst_45_01" type="number" disabled="true"></td>
+                    <td><input name="qst_45_02" id="qst_45_02" type="number" disabled="true"></td>
+                    <td><input name="qst_45_03" id="qst_45_03" type="number" disabled="true"></td>
+                    <td><input name="qst_45_04" id="qst_45_04" type="number" disabled="true"></td>
+                </tr>
+            </table>
+            <table class="datos-1">
+                <tr>
+                    <th colspan="7">46. ¿Que sembró y cuanto produjo durante el año pasado?</th>
+                </tr>
+                <tr>
+                    <td>cultivo</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><b>1:</b><input name="qst_46_01_01" id="qst_46_01_01" type="number" disabled="true"></td>
+                    <td><b>2:</b><input name="qst_46_01_02" id="qst_46_01_02" type="number" disabled="true"></td>
+                    <td><b>3:</b><input name="qst_46_01_03" id="qst_46_01_03" type="number" disabled="true"></td>
+                    <td><b>4:</b><input name="qst_46_01_04" id="qst_46_01_04" type="number" disabled="true"></td>
+                    <td><b>5:</b><input name="qst_46_01_05" id="qst_46_01_05" type="number" disabled="true"></td>
+                    <td><b>6:</b><input name="qst_46_01_06" id="qst_46_01_06" type="number" disabled="true"></td>
+                </tr>
+                <tr>
+                    <td>Quintales</td>
+                    <td><input name="qst_46_02_01" id="qst_46_02_01" type="number" style="margin-left: 1.5em" disabled="true"></td>
+                    <td><input name="qst_46_02_02" id="qst_46_02_02" type="number" style="margin-left: 1.5em" disabled="true"></td>
+                    <td><input name="qst_46_02_03" id="qst_46_02_03" type="number" style="margin-left: 1.5em" disabled="true"></td>
+                    <td><input name="qst_46_02_04" id="qst_46_02_04" type="number" style="margin-left: 1.5em" disabled="true"></td>
+                    <td><input name="qst_46_02_05" id="qst_46_02_05" type="number" style="margin-left: 1.5em" disabled="true"></td>
+                    <td><input name="qst_46_02_06" id="qst_46_02_06" type="number" style="margin-left: 1.5em" disabled="true"></td>
+                </tr>
+                <tr>
+                    <td>Tareas</td>
+                    <td><input name="qst_46_03_01" id="qst_46_03_01" type="number" style="margin-left: 1.5em" disabled="true"></td>
+                    <td><input name="qst_46_03_02" id="qst_46_03_02" type="number" style="margin-left: 1.5em" disabled="true"></td>
+                    <td><input name="qst_46_03_03" id="qst_46_03_03" type="number" style="margin-left: 1.5em" disabled="true"></td>
+                    <td><input name="qst_46_03_04" id="qst_46_03_04" type="number" style="margin-left: 1.5em" disabled="true"></td>
+                    <td><input name="qst_46_03_05" id="qst_46_03_05" type="number" style="margin-left: 1.5em" disabled="true"></td>
+                    <td><input name="qst_46_03_06" id="qst_46_03_06" type="number" style="margin-left: 1.5em" disabled="true"></td>
+                </tr>
+            </table>
+            <table class="datos-1">
+                <tr>
+                    <td><b>47.</b>De los alimentos que produce ¿Obtienen excedentes para la venta?</td>
+                    <td>
+                        <select name="qst_47" id="qst_47" disabled="true">
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <table class="datos-1">
+                <tr>
+                    <th colspan="2">48. ¿Que animales domesticos tiene?</th>
+                </tr>
+                <tr>
+                    <td><b>1:</b>Aves (gallinas, patos, pavos)</td>
+                    <td><input name="qst_48_01" id="qst_48_01" type="number"></td>
+                </tr>
+                <tr>
+                    <td><b>2:</b>Bovinos (Bueyes, vacas)</td>
+                    <td><input name="qst_48_02" id="qst_48_02" type="number"></td>
+                </tr>
+                <tr>
+                    <td><b>3:</b>Caprino (ovejas, cabras)</td>
+                    <td><input name="qst_48_03" id="qst_48_03" type="number"></td>
+                </tr>
+                <tr>
+                    <td><b>4:</b>Equinos (caballos, mulas, burros</td>
+                    <td><input name="qst_48_04" id="qst_48_04" type="number"></td>
+                </tr>
+                <tr>
+                    <td><b>5:</b>Porcinos (cerdos)</td>
+                    <td><input name="qst_48_05" id="qst_48_05" type="number"></td>
+                </tr>
+                <tr>
+                    <td><b>6:</b>Pisicultura (tilapia, otros)</td>
+                    <td><input name="qst_48_06" id="qst_48_06" type="number"></td>
+                </tr>
+                <tr>
+                    <td><b>7:</b>Apicultura (colmenas)</td>
+                    <td><input name="qst_48_07" id="qst_48_07" type="number"></td>
+                </tr>
+                <tr>
+                    <td><b>8:</b>Domesticos (Perros, gatos, etc.)</td>
+                    <td><input name="qst_48_08" id="qst_48_08" type="number"></td>
+                </tr>
+
+            </table>
+        </div>
+
+        <div class="data_in">
+            <!-- CUADRO DE INGRESO -->
+            <h>Cuadro de ingreso</h>
+            <div class="data_in_txtbx">
+                <input type="number" id="no_qst" value="12">
+                <input type="text" id="no_res">
+            </div>
+            <button autocomplete="off" id="snd_btn" onclick="envio()">Continuar</button>
+            <br>
+            <p id="test"></p>
+        </div>
+
+    </div>
+    <br>
+    <a href="reverso.html">Siguiente parte</a>
+   <input type="submit" value="Enviar formulario">
+   <input type="reset" value="Borrar formulario">
+</form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+     
+    <!-- Ingreso de boleta AB -->
+    <script src="{{ asset('bundles/app/js/scriptAB.js') }}"></script>
+    <script src="{{ asset('bundles/app/js/parsley.js') }}"></script>
+    <script src="{{ asset('bundles/app/js/es.js') }}"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //$('#focal_appbundle_datosgenerales_submit').prop('disabled',true);
+            //$('#msgbox').fadeout(3000);
+        });
+        
+        $('#qst_21').change(function() {
+            val = this.value;
+            if (val === '1') {
+                $('#qst_22').attr('required', true);
+                $("#qst_22").prop('disabled', false);
+            } else {
+                $('#qst_22').removeAttr('required selected');
+                $('#qst_22').val("");
+                $("#qst_22").removeClass('parsley-success parsley-error');
+                $("#qst_22").prop('disabled', true);
+            }
+        });
+        
+        $('#qst_31_01').change(function() {
+            val = this.value;
+            if (val === '2') {
+                $('input[name^="qst_31_"]').val(0);
+                $('input[name^="qst_32_"]').val(0);
+                $('input[name^="qst_33_"]').val(0);
+            }
+        });
+        
+        $('#qst_36').change(function() {
+            val = this.value;
+            if (val === '1') {
+                $('input[name^="qst_37_"]').val(0);
+            }
+        });
+        
+        $("input[name^='qst_37_']").on('change', function(){                
+            var valor = $(this).val();
+            var nombre = $(this).attr('id');
+            
+            $("input[name^='qst_37_']").each(function(){
+                var valori = $(this).val();
+                var nombrei = $(this).attr('id');
+                if(nombre !== nombrei) {
+                    if(valor === valori){
+                        $('#'+nombrei).val(0);
+                    }
+                } 
+            });
+        });
+        
+        $('#qst_34_01').change(function() {
+            val = this.value;
+            if (val === '1') {
+                $('#qst_34_02').attr('required', true);
+                $("#qst_34_02").prop('disabled', false);
+            } else {
+                $('#qst_34_02').removeAttr('required selected');
+                $('#qst_34_02').val(0);
+                $("#qst_34_02").removeClass('parsley-success parsley-error');
+                $("#qst_34_02").prop('disabled', true);
+            }
+        });
+        
+        $('#qst_35_01').change(function() {
+            val = this.value;
+            if (val === '1') {
+                $('#qst_35_02').attr('required', true);
+                $("#qst_35_02").prop('disabled', false);
+            } else {
+                $('#qst_35_02').removeAttr('required selected');
+                $('#qst_35_02').val(0);
+                $("#qst_35_02").removeClass('parsley-success parsley-error');
+                $("#qst_35_02").prop('disabled', true);
+            }
+        });
+        
+        $("select[name^='qst_38_']").on('change', function(){                
+            var valor = $(this).val();
+            var nombre = $(this).attr('id');
+            
+            var arrest = ['3','11', '12', '13', '15', '16'];
+            var arrdia = ['7','8', '9', '10', '11', '14', '15', '16', '17', '18'];
+            var opc  = nombre.split("_");
+
+            var modest = arrest.indexOf(opc[2]);
+            var moddia = arrdia.indexOf(opc[2]);
+            
+            var psel = nombre.indexOf("_01");
+            
+            if(psel > 0) {
+                var nombre2 = nombre.replace("_01","_02");
+                var nombre3 = nombre.replace("_01","_03");
+                if (valor === '1') {
+                    if(modest < 0 ) { 
+                        $('#'+nombre2).prop('disabled', false);
+                        $('#'+nombre2).attr('required', true);
+                    }
+                    if(moddia < 0 ) {
+                        $('#'+nombre3).prop('disabled', false);
+                        $('#'+nombre3).attr('required', true);
+                    }
+                } else {
+                    if(modest < 0 ) { 
+                        $('#'+nombre2).removeAttr('required selected');
+                        $('#'+nombre2).val("");
+                        $('#'+nombre2).removeClass('parsley-success parsley-error');
+                        $('#'+nombre2).prop('disabled', true);
+                    }
+                    if(moddia < 0 ) {
+                        $('#'+nombre3).removeAttr('required selected');
+                        $('#'+nombre3).val("");
+                        $('#'+nombre3).removeClass('parsley-success parsley-error');
+                        $('#'+nombre3).prop('disabled', true);
+                    }
+                }
+            }
+        });
+
+        $('#qst_41_01').change(function() {
+            val = this.value;
+            if (val === '1') {
+                activarCampos([41,45,46],'i');
+                activarCampos([42,43,44,47],'s');
+            } else {
+                desactivarCampos([42,43,44,47],'s');
+                desactivarCampos([41,45,46],'i');
+            }
+        });
+        
+        function activarCampos(cmp,tipo) { 
+            if(cmp.length > 1){
+                cmp.forEach(function(ele) {
+                   if(tipo==='s') {
+                       $("select[name^='qst_"+ele+"']").attr('required', true).prop('disabled', false);
+                   } else {
+                       $("input[name^='qst_"+ele+"']").attr('required', true).prop('disabled', false);
+                   }
+                });
+            } else {
+                if(tipo==='s') {
+                    $("select[name^='qst_"+cmp+"']").attr('required', true).prop('disabled', false);
+                } else {
+                    $("input[name^='qst_"+cmp+"']").attr('required', true).prop('disabled', false);
+                }       
+            }
+        }
+        
+        function desactivarCampos(cmp,tipo) { 
+            if(cmp.length > 1){
+                cmp.forEach(function(ele) {
+                   if(tipo==='s') {
+                       $("select[name^='qst_"+ele+"']").removeAttr('required selected').val("").removeClass('parsley-success parsley-error').prop('disabled', true);
+                   } else {
+                       $("input[name^='qst_"+ele+"']").removeAttr('required selected').val("").removeClass('parsley-success parsley-error').prop('disabled', true);
+                   }
+                });
+            } else {
+                if(tipo==='s') {
+                    $("select[name^='qst_"+cmp+"']").removeAttr('required selected').val("").removeClass('parsley-success parsley-error').prop('disabled', true);
+                } else {
+                    $("input[name^='qst_"+cmp+"']").removeAttr('required selected').val("").removeClass('parsley-success parsley-error').prop('disabled', true);
+                }             
+            }
+        }
+        
+        $("input[name^='qst_23']").on('change', function(){
+            var total = 0;
+            var ok = false;
+            $("input:checkbox[name^='qst_23']:checked").each(function() {
+                var nom = $(this).attr('name');
+                total++; 
+                if(nom === "qst_23_8") {
+                    ok = true;
+                }
+            });
+            if(total > 1 && ok ) {
+                $('#qst_23_8').prop('checked',false);
+            }
+        }); 
+        
+        $("input[name^='qst_24']").on('change', function(){
+            var total = 0;
+            var ok = false;
+            $("input:checkbox[name^='qst_24']:checked").each(function() {
+                var nom = $(this).attr('name');
+                total++; 
+                if(nom === "qst_24_7") {
+                    ok = true;
+                }
+            });
+            if(total > 1 && ok ) {
+                $('#qst_24_7').prop('checked',false);
+            }
+        });
+                        
+        $(function () {
+          $('#frm_datosgab').parsley().on('field:validated', function() {
+            var ok = $('.parsley-error').length === 0;
+            $('.bs-callout-info').toggleClass('hidden', !ok);
+            $('.bs-callout-warning').toggleClass('hidden', ok);
+          })
+          .on('form:submit', function() {
+            return true; // Don't submit form for this demo
+          });
+        }); 
+        
+        window.Parsley
+        .addValidator('cocino', {
+          validateMultiple: function(value, req) {
+            
+            alert(req);
+            var total = 0;  
+            $("input:checkbox[name^='qst_23']:checked").each(function(){
+                total++;
+            });
+            alert(total);
+            res = total >= req ;
+            if(res) {
+              $('#camposCheck').removeClass('errors');
+              $('#camposCheck').addClass('success');
+            } else {
+              $('#camposCheck').addClass('errors');   
+            }
+            return res ;
+          },
+          messages: {
+            es: 'Debe de seleccionar por lo menos una opción'
+          }
+        });
+        
+        window.Parsley
+        .addValidator('cantidad', {
+          requirementType: 'integer',
+          validateNumber: function(value, fila) {
+            var totalM = parseInt($('#qst_39_'+fila+"_01").val()||0) + parseInt($('#qst_39_'+fila+"_02").val()||0);
+            var totalA = parseInt($('#qst_39_'+fila+"_03").val()||0) + parseInt($('#qst_39_'+fila+"_04").val()||0) + parseInt($('#qst_39_'+fila+"_05").val()||0);
+            return totalM === totalA ;
+          },
+          messages: {
+            es: 'Cantidades de fila %s NO son iguales'
+          }
+        });
+
+    </script> 
+{% endblock %}

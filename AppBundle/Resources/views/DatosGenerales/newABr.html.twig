@@ -1,0 +1,1306 @@
+{% extends '::basemenu.html.twig' %}
+{#% form_theme 'bootstrap_3_layout.html.twig' %#}
+{% block stylesheets %}
+    {{ parent() }}
+    <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" -->
+    <link rel="stylesheet" href="{{asset('bundles/app/css/parsley.css')}}" />
+    <!-- link rel="stylesheet" href="{#asset('bundles/app/css/mainAB.css')#}" / -->
+    <!--link rel="stylesheet" href="{#asset('bundles/app/css/focal.css')#}" / -->
+    <style>
+        table {
+            width: 80%;
+            margin: 5px;
+        }
+        .divTable{
+	display: table;
+	width: 100%;
+}
+.divTableRow {
+	display: table-row;
+}
+.divTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+}
+.divTableCell, .divTableHead {
+	border: 1px solid #999999;
+	display: table-cell;
+	padding: 3px 10px;
+}
+.divTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+	font-weight: bold;
+}
+.divTableFoot {
+	background-color: #EEE;
+	display: table-footer-group;
+	font-weight: bold;
+}
+.divTableBody {
+	display: table-row-group;
+}
+    </style>
+{% endblock %} 
+{% block header -%}
+    Nueva Encuesta AB parte 2
+    <small>
+        <i class="ace-icon fa fa-angle-double-right"></i>
+        Ingresar la información solicitada
+    </small>
+{% endblock %} 
+{% block content -%}
+{% for type, flash_messages in app.session.flashBag.all %}
+    {% for flash_message in flash_messages %}
+        <div id="msgbox" class="alert alert-{{ type }}">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+<div class="anuncio">
+        <p>
+            pulse TAB para cambiar de celdas y use las flechas para cambiar la opcion rapidamente
+        </p>
+    </div>
+   
+    <div class="ingreso">
+<form name="focal_appbundle_datosgeneralesABr" method="post" action="{{ path('datosgenerales_createABr') }}" id="frm_datosgabr"> 
+    <input type="hidden" id="idEnc" name="idEnc" value="{{ idEnc }}"  >
+    <input type="hidden" id="codComunidad" name="codComunidad" value="{{ codComunidad }}"  >
+        <div class="formulario">
+            <table>
+                <tr>
+                    <td>Nombre de los residentes</td>
+                    <td>Parentesco</td>
+                    <td>Sexo</td>
+                    <td>Edad</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input name="qst_50" id="qst_50" required data-parsley-group="residente" type="text">
+                    </td>
+                    
+                    <td>
+                        <select required id="qst_51" name="qst_51" data-parsley-group="residente">
+                        <option value="">-- Selecionar una--</option>
+                        {% for par in parentescos %}
+                            <option value="{{ par.id }}">{{ par.descripcion }}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                    
+                    <td>
+                        <select name="qst_52" id="qst_52" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Hombre</option>
+                            <option value="2">2. Mujer</option>
+                        </select>
+                    </td> 
+                    
+                    <td>
+                        <input name="qst_53" id="qst_53" required type="number" data-parsley-range="[0, 120]" data-parsley-group="residente">
+                    </td> 
+                </tr>
+                <tr>
+                    <td>Etnia</td>
+                    <td>Inscrito en RNP</td>
+                    <td>Vacunas completas</td>
+                </tr>    
+                </tr>
+                    <td>
+                        <select required id="qst_54" name="qst_54" data-parsley-group="residente">
+                        <option value="">-- Selecionar una--</option>
+                        {% for et in etnias %}
+                            <option value="{{ et.id }}">{{ et.descripcion }}</option>
+                        {% endfor %}
+                        </select>  
+                    </td>
+                    
+                    <td>
+                        <select name="qst_55" id="qst_55" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td> 
+                    
+                    <td>
+                        <select name="qst_56" id="qst_56" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td colspan="4" style="background-color: lightblue"> 
+                        -- SOLO PARA PERSONAS DE 5 AÑOS Y MAS --
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sabe leer y escribir</td>
+                    <td>Estudia</td>
+                    <td>Año cursando</td>
+                    <td>Año de estudio</td>
+                </tr>
+                <tr>
+                    
+                    <td>
+                        <select name="qst_57" id="qst_57" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                        </select>
+                    </td> 
+                    
+                    <td>
+                        <select name="qst_58" id="qst_58" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                        </select>
+                    </td> 
+                    
+                    <td>
+                        <select name="qst_59" id="qst_59" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Pre-escolar</option>
+                            <option value="2">2. Grado 1</option>
+                            <option value="3">3. Grado 2</option>
+                            <option value="4">4. Grado 3</option>
+                            <option value="5">5. Grado 4</option>
+                            <option value="6">6. Grado 5</option>
+                            <option value="7">7. Grado 6</option>
+                            <option value="8">8. Grado 7</option>
+                            <option value="9">9. Grado 8</option>
+                            <option value="10">10. Grado 9</option>
+                            <option value="11">11. Diversificado</option>
+                            <option value="12">12. Universitario</option>
+                            <option value="13">13. Ninguno</option>
+                        </select>
+                    </td>
+                    
+                    <td>
+                        <input name="qst_60" id="qst_60" required type="text" data-parsley-range="[0, 26]" data-parsley-group="residente">
+                    </td>
+                </tr>    
+            </table> 
+            <table>
+                <tr>
+                    <td colspan="3" style="background-color: lightblue">
+                        -- SOLO PARA PERSONAS DE 10 AÑOS Y MAS --
+                    </td>
+                </tr> 
+                <tr>
+                    <td>Estado civil</td>
+                    <td>Trabaja</td>
+                    <td>Ocupación</td>
+                    
+                </tr> 
+                <tr>
+                    
+                    <td>
+                        <select name="qst_61" id="qst_61" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Soltero/a</option>
+                            <option value="2">2. Casado/o</option>
+                            <option value="3">3. Divorciado/a</option>
+                            <option value="4">4. Union libre</option>
+                            <option value="5">5. Viudo/a</option>
+                            <option value="6">6. NS/NR</option>
+                        </select>
+                    </td>
+                    
+                    <td>
+                        <select name="qst_62" id="qst_62" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                        </select>
+                    </td> 
+                    
+                    <td>
+                        <select required id="qst_63" name="qst_63" data-parsley-group="residente">
+                        <option value="">-- Selecionar una--</option>
+                        {% for oc in ocupaciones %}
+                            <option value="{{ oc.id }}">{{ oc.descripcion }}</option>
+                        {% endfor %}
+                        </select> 
+                    </td> 
+                </tr>
+            </table>    
+            <table>    
+                <tr>
+                    <td>Profesiones</td>
+                    <td>Ingresos mensual</td>
+                </tr>
+                <tr>
+                    <td>
+                        <select required id="qst_64" name="qst_64" data-parsley-group="residente">
+                        <option value="">-- Selecionar una--</option>
+                        {% for pro in profesiones %}
+                            <option value="{{ pro.id }}">{{ pro.descripcion }}</option>
+                        {% endfor %}
+                        </select> 
+                    </td>
+                    
+                    <td>
+                        <input name="qst_65" id="qst_65" required type="number" data-parsley-type="number" data-parsley-group="residente">
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td>Actividad economica</td>
+                    <td>En que sector esta contratado</td>
+                    <td>A que sector se dedica</td>
+                    <td>Cuanto empleo genera...</td>                
+                </tr>
+                <tr>
+                    
+                    <td>
+                        <select name="qst_66" id="qst_66" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Trabajo propio</option>
+                            <option value="2">2. Trabajo asalariado</option>
+                            <option value="3">3. Busca trabajo</option>
+                            <option value="4">4. Trabajo dom.</option>
+                            <option value="5">5. Trabajo dom. + </option>
+                            <option value="6">6. Jubilado/Pensionado</option>
+                            <option value="7">7. Estudia</option>
+                            <option value="8">8. Incapacitado</option>
+                            <option value="9">9. Otros</option>
+                        </select>
+                    </td>
+                    
+                    <td>
+                        <select name="qst_67" id="qst_67" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Comercial</option>
+                            <option value="2">2. Industrial</option>
+                            <option value="3">3. Servicio</option>
+                            <option value="4">4. NS/NR</option>
+                        </select>
+                    </td>
+                    
+                    <td>
+                        <select name="qst_68" id="qst_68" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Primario</option>
+                            <option value="2">2. Secundario</option>
+                            <option value="3">3. Terciario</option>
+                            <option value="4">4. NS/NR</option>
+                        </select>
+                    </td>
+                    
+                    <td>
+                        <select name="qst_69" id="qst_69" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. 0</option>
+                            <option value="2">2. 1 a 5</option>
+                            <option value="3">3. 6 a 10</option>
+                            <option value="4">4. 11 a 15</option>
+                            <option value="5">5. 16 a 20</option>
+                            <option value="6">6. 21 o mas</option>
+                            <option value="7">7. NS/NR</option>
+                        </select>
+                    </td>               
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td>Organización miembro</td>
+                    <td>Instituciones de apoyo</td>
+                    <td>Participan en org.</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input name="qst_70" id="qst_70" required type="text" data-parsley-group="residente">
+                    </td>
+                    
+                    <td>
+                        <input name="qst_71_1" id="qst_71_1" type="text" data-parsley-group="residente">
+                        <input name="qst_71_2" id="qst_71_2" type="text" data-parsley-group="residente">
+                    </td>
+                    
+                    <td>
+                        <select name="qst_72" id="qst_72" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Participa</option>
+                            <option value="2">2. No Participa</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                </tr>
+            </table> 
+            <table>
+                <tr>
+                    <td colspan="3" style="background-color: lightblue">
+                        -- SOLO DE 18 AÑOS Y MAS --
+                    </td>
+                </tr>
+                <tr>
+                    <td>Obtenido prestamo</td>
+                    <td>Recibe remesas</td>
+                    <td>Método de planificación</td>
+                </tr>
+                <tr>
+                    
+                    <td>
+                        <select name="qst_73" id="qst_73" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    
+                    <td>
+                        <select name="qst_74" id="qst_74" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. No recibe</option>
+                            <option value="2">2. 0.01 a 1,000.00</option>
+                            <option value="3">3. 1,000.01 a 2,000.00</option>
+                            <option value="4">4. 2,000.01 y mas</option>
+                            <option value="5">5. NS/NR</option>
+                        </select>
+                    </td>
+                    
+                    <td>
+                        <select name="qst_75" id="qst_75" required data-parsley-group="residente">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. No planifica</option>
+                            <option value="2">2. Ritmo</option>
+                            <option value="3">3. DIU</option>
+                            <option value="4">4. Pastilla</option>
+                            <option value="5">5. Preservativo</option>
+                            <option value="6">6. Inyección</option>
+                            <option value="7">7. Operación hombre</option>
+                            <option value="8">8. Operación mujer</option>
+                            <option value="9">9. Implante</option>
+                            <option value="10">10. NS/NR</option>
+                        </select>
+                    </td>
+                </tr>    
+            </table>    
+            
+        </div>
+        <div>
+            <button type="button" id="btnAgregar" class="btn btn-success pull-right">Agregar(+)</button>
+            <button type="button" id="btnEditar" class="btn btn-success pull-right" style="display:none">Actualizar(#)</button>
+        </div>
+        <div id="residentes" style="width:100%; overflow-x: scroll; white-space: nowrap; margin: 10px;">
+            <table id="tbl_residentes" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <td>Acción</td>
+                        <td>Num</td>
+                        <td>Nombre</td>
+                        <td>Parentesco</td>
+                        <td>Sexo</td>
+                        <td>Edad</td>
+                        <td>Etnia</td>
+                        <td>RNP</td>
+                        <td>Vacunas</td>
+                        <td>Sabe L/E</td>
+                        <td>Estudia</td>
+                        <td>Año actual</td>
+                        <td>Nivel E.</td>
+                        <td>E. Civil</td>
+                        <td>Trabaja</td>
+                        <td>Ocupación</td>
+                        <td>Profesión</td>
+                        <td>Ingreso</td>
+                        <td>A. Económica</td>
+                        <td>Sector C.</td>
+                        <td>Sector D.</td>
+                        <td>Empleos</td>
+                        <td>Miembro 1</td>
+                        <td>Inst. Apoyo</td>
+                        <td>Inst. Apoyo</td>
+                        <td>Participa</td>
+                        <td>Prestamo</td>
+                        <td>Remesas</td>
+                        <td>Planifica</td>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                </tbody>    
+            </table>  
+            <input type="hidden" id="contres" name="contres" value="0">
+            <input type="hidden" id="selcol" name="selcol" value="0">
+        </div>
+        <div>
+            <table>
+               <tr><td colspan="2" style="background-color: lightblue;"> -- DATOS DE SALUD --</td></tr> 
+                <tr>
+                    <td>76. ¿Cuantas madres solteras hay en la vivienda?</td>
+                    <td><input name="qst_76" id="qst_76" required type="text" data-parsley-group="saludin"></td>
+                </tr>
+                <tr>
+                    <td>77. ¿Cuantos padres solteros hay en la vivienda?</td>
+                    <td><input name="qst_77" id="qst_77" required type="text" data-parsley-group="saludin"></td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td colspan="2">
+                        78. ¿Existe alguna mujer embarazada en la vivienda? 
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="qst_78" id="qst_78" required data-parsley-group="saludin">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>Cuantas</td>
+                                <td>Edad 1</td>
+                                <td>Edad 2</td>
+                                <td>Edad 3</td>
+                            </tr>
+                            <tr>
+                                <td><input name="qst_78_1" id="qst_78_1" required type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_78_2" id="qst_78_2" required type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_78_3" id="qst_78_3" required type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_78_4" id="qst_78_4" required type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr><td colspan="6">79. ¿Cuantos niños(as) nacieron en la familia durante el año pasado?</td></tr>
+                <tr>
+                    <td align="center" rowspan="2">Cantidad</td>
+                    <td align="center" colspan="2">Sexo</td>
+                    <td align="center" colspan="3">Edad de la madre</td>
+                </tr>
+                <tr>
+                    <td align="center">Hombre</td>
+                    <td align="center">Mujer</td>
+                    <td align="center">1</td>
+                    <td align="center">2</td>
+                    <td align="center">3</td>
+                </tr>
+                <tr>
+                    <td><input name="qst_79_1_1" id="qst_79_1_1" required type="number" data-parsley-cantidadnac="1" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_1_2" id="qst_79_1_2" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_1_3" id="qst_79_1_3" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_1_4" id="qst_79_1_4" type="number" disabled="true" data-parsley-range="[14, 60]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_1_5" id="qst_79_1_5" type="number" disabled="true" data-parsley-range="[14, 60]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_1_6" id="qst_79_1_6" type="number" disabled="true" data-parsley-range="[14, 60]" data-parsley-group="saludin"></td>
+                </tr>
+                <tr>
+                    <td><input name="qst_79_2_1" id="qst_79_2_1" required type="number" data-parsley-cantidadnac="2" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_2_2" id="qst_79_2_2" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_2_3" id="qst_79_2_3" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_2_4" id="qst_79_2_4" type="number" disabled="true" data-parsley-range="[14, 60]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_2_5" id="qst_79_2_5" type="number" disabled="true" data-parsley-range="[14, 60]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_2_6" id="qst_79_2_6" type="number" disabled="true" data-parsley-range="[14, 60]" data-parsley-group="saludin"></td>
+                </tr>
+            </table>
+            <table>
+                <tr><td>80. ¿Dónde nació el último niño(a)?</td></tr>
+                <tr><td>
+                    <select name="qst_80" id="qst_80" required data-parsley-group="saludin">
+                        <option value="">Seleccioné una...</option>
+                        <option value="1">1. Casa</option>
+                        <option value="2">2. Centro de salud</option>
+                        <option value="3">3. Clinica materno infantil</option>
+                        <option value="4">4. Hospital</option>
+                        <option value="5">5. Clinica privada</option>
+                        <option value="6">6. Otro establecimiento de salud</option>
+                        <option value="7">7. Otros</option>
+                    </select>
+                </></tr>
+            </table>
+            <table>
+                <tr><td colspan="2">81. ¿Hubo alguna muerte materna durante o despues del parto, en la familia que vive en  la vivienda, el año pasado?</td></tr>
+                <tr>
+                    <td>
+                        <select name="qst_81" id="qst_81" required data-parsley-group="saludin">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>Cuantas</td>
+                                <td>Cuando</td>
+                                <td>Causa de la muerte</td>
+                            </tr>
+                            <tr>
+                                <td><input name="qst_81_1" id="qst_81_1" required type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td>
+                                    <select name="qst_81_2" id="qst_81_2" required data-parsley-group="saludin">
+                                        <option value="">Seleccioné una...</option>
+                                        <option value="1">1. Durante el parto</option>
+                                        <option value="2">2. En el parto</option>
+                                        <option value="3">3. Despues del parto</option>
+                                    </select>   
+                                </td>
+                                <td><input name="qst_81_3" id="qst_81_3" required type="text" data-parsley-group="saludin"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table> 
+            <table>
+                <tr><td colspan="3">82. ¿Murio en la familia un niño(a) menor de 5 años, el año pasado?</td></tr>
+                <tr>
+                    <td>
+                        <label style="font-weight: normal;">Si/No</label>
+                        <select name="qst_82" id="qst_82" required data-parsley-group="saludin">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Si</option>
+                            <option value="2">2. No</option>
+                            <option value="3">3. NS/NR</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label style="font-weight: normal;">¿Cuantos?</label>
+                        <input name="qst_82_1" id="qst_82_1" type="number" disabled="true" data-parsley-cantidadmuertes="1" data-parsley-range="[0, 99]" data-parsley-group="saludin">
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td></td>
+                                <td colspan="2" align="center">Cantidad(Sexo)</td>
+                                <td align="center">Causa</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td align="center">Hombre</td>
+                                <td align="center">Mujer</td>
+                                <td></td>
+                            </tr>    
+                            <tr>
+                                <td>1.</td>
+                                <td><input name="qst_82_2_1" id="qst_82_2_1" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_82_2_2" id="qst_82_2_2" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_82_2_3" id="qst_82_2_3" type="text" disabled="true" data-parsley-group="saludin"></td>
+                            </tr>
+                            <tr>
+                                <td>2.</td>
+                                <td><input name="qst_82_3_1" id="qst_82_3_1" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_82_3_2" id="qst_82_3_2" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_82_3_3" id="qst_82_3_3" type="text" disabled="true" data-parsley-group="saludin"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table> 
+            <table>
+                <tr><td style="background-color: lightblue;"> -- DATOS DE INGRESO FAMILIAR -- </td></tr>
+                <tr><td>83. Desde su percepción ¿Los ingresos de la vivienda ajustan para alimentase?</td></tr>
+                <tr>
+                    <td>
+                        <select name="qst_83" id="qst_83" required data-parsley-group="saludin">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. Un tiempo</option>
+                            <option value="2">2. Dos tiempos</option>
+                            <option value="3">3. Tres tiempos</option>
+                            <option value="4">4. NS/NR</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr><td>84. ¿Cuantos son los ingresos mensuales de la vivienda? (sumar ingresos mensuales con remesas)</td></tr>
+                <tr>
+                    <td>
+                        <select name="qst_84" id="qst_84" required data-parsley-group="saludin">
+                            <option value="">Seleccioné una...</option>
+                            <option value="1">1. menor de 1,000</option>
+                            <option value="2">2.  1,001 -  2,000</option>
+                            <option value="3">3.  2,001 -  4,000</option>
+                            <option value="4">4.  4,001 -  8,000</option>
+                            <option value="5">5.  8,001 - 12,000</option>
+                            <option value="6">6. 12,001 - 20,000</option>
+                            <option value="7">7. 20,001 - 30,000</option>
+                            <option value="8">8. 30,001 - 50,000</option>
+                            <option value="9">9. 50,001 - y mas</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr><td style="background-color: lightblue;"> -- DATOS DEMOGRAFICOS GENERALES -- </td></tr>
+                <tr><td>85. Personas por rango de edad, sexo y si saben leer y escribir</td></tr>
+                <tr>
+                    <td>
+                        <div id="tblrangos">
+                        
+                        </div>    
+                    </td>
+                </tr>
+                <tr><td>86. ¿Cuantas personas son de 5 a 23 años?</td></tr>
+                <tr><td><div id="per5a23"></div></td></tr>
+                <tr><td>87. ¿Cuantas personas son de 10 años en adelante?</td></tr>
+                <tr>
+                    <td><div id="perm10"></div></td>
+                </tr>
+            </table>
+        </div>                
+        <div class="data_in">
+            <!-- CUADRO DE INGRESO -->
+            <h>Cuadro de ingreso</h>
+            <div class="data_in_txtbx">
+                <input type="number" data-parsley-group="resto" id="no_qst" value="12">
+                <input type="text" id="no_res">
+            </div>
+            <button autocomplete="off" id="snd_btn" onclick="envio()">Continuar</button>
+            <br>
+            <p id="test"></p>
+        </div>
+        <input id="btnSubmit" type="submit" value="Enviar formulario">
+        <input type="reset" value="Borrar formulario">      
+        
+        <!-- hacer submit al formulario y no validad el grupo -->
+    </form>
+    </div>
+    <br>
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+     
+    <!-- Ingreso de boleta ABr -->
+    <script src="{{ asset('bundles/app/js/scriptAB.js') }}"></script>
+    <script src="{{ asset('bundles/app/js/parsley.js') }}"></script>
+    <script src="{{ asset('bundles/app/js/es.js') }}"></script>
+    
+    <script type="text/javascript">
+        /* Arreglo de rangos de edades */
+        var rango = [
+            {nr:"01-04",rh:0,rm:0, lh:0, lm:0},
+            {nr:"05-06",rh:0,rm:0, lh:0, lm:0},
+            {nr:"07-12",rh:0,rm:0, lh:0, lm:0},
+            {nr:"13-15",rh:0,rm:0, lh:0, lm:0},
+            {nr:"16-18",rh:0,rm:0, lh:0, lm:0},
+            {nr:"19-23",rh:0,rm:0, lh:0, lm:0},
+            {nr:"24-30",rh:0,rm:0, lh:0, lm:0},
+            {nr:"31-40",rh:0,rm:0, lh:0, lm:0},
+            {nr:"41-50",rh:0,rm:0, lh:0, lm:0},
+            {nr:"51-64",rh:0,rm:0, lh:0, lm:0},
+            {nr:"65-y mas",rh:0,rm:0, lh:0, lm:0}];
+        var per5a23 = 0;
+        var perm10 = 0;
+        /* Alterna campos segun la edad */
+        
+        $('#qst_53').change(function() {
+            var edad = $(this).val();
+            
+            if (edad < 5 ) {
+                alternarCampos("57-75",2,['71_1','71_2']);
+            } else if (edad >= 5 && edad < 10 ) {
+                alternarCampos("57-60",1);
+                alternarCampos("61-75",2,['71_1','71_2']);
+            } else if (edad >= 10 && edad < 18) {
+                alternarCampos("57-72",1,['71_1','71_2']);
+                alternarCampos("73-75",2);
+            } else {
+                alternarCampos("57-75",1,['71_1','71_2']);
+            }
+        });
+        
+        /* Alterna campos segun actividad economica*/
+        
+        $('#qst_66').change(function() {
+            var val = $(this).val();
+            
+            alternarCampos("67-70", 1, ['71_1','71_2']);
+            if (val == 1 ) {
+                alternarCampos("67-67",2);
+            } else if (val == 2 || val == 4) {
+                alternarCampos("68-70",2,['71_1','71_2']);
+            } else if (val == 3) {
+                alternarCampos("67-70",2,['71_1','71_2']);
+            } else if (val >= 6 ){
+                alternarCampos("67-70",2,['71_1','71_2']);
+            }
+        });
+        
+        $('#qst_78').change(function() {
+            var val = $(this).val();
+            
+            if (val == 2 || val == 3 ) {
+                alternarCampos("0-0",2,['78_1','78_2','78_3','78_4']);
+            } else {
+                alternarCampos("0-0",1,['78_1','78_2','78_3','78_4']);
+            }
+        });
+        
+        $('#qst_79_1_1, #qst_79_2_1').change(function() {
+            var val = parseInt($(this).val());
+            var nom = $(this).attr('id');
+            var fil = nom.split("_");
+            
+            if(val > 0) {
+                $('#qst_79_'+fil[2]+'_2').prop('disabled', false);
+                $('#qst_79_'+fil[2]+'_3').prop('disabled', false);
+                $('#qst_79_'+fil[2]+'_4').prop('disabled', false);
+                $('#qst_79_'+fil[2]+'_5').prop('disabled', false);
+                $('#qst_79_'+fil[2]+'_6').prop('disabled', false);
+            } else {
+                $('#qst_79_'+fil[2]+'_2').val("").prop('disabled', true);
+                $('#qst_79_'+fil[2]+'_3').val("").prop('disabled', true);
+                $('#qst_79_'+fil[2]+'_4').val("").prop('disabled', true);
+                $('#qst_79_'+fil[2]+'_5').val("").prop('disabled', true);
+                $('#qst_79_'+fil[2]+'_6').val("").prop('disabled', true);
+            }
+        });
+        
+        $('#qst_81').change(function() {
+            var val = $(this).val();
+            
+            if (val == 2 || val == 3 ) {
+                alternarCampos("0-0",2,['81_1','81_2','81_3']);
+            } else {
+                alternarCampos("0-0",1,['81_1','81_2','81_3']);
+            }
+        });
+        
+        $('#qst_82').change(function() {
+            var val = $(this).val();
+            
+            if (val == 2 || val == 3 ) {    
+                $('#qst_82_1').val("").removeAttr('required selected').removeClass('parsley-success parsley-error').prop('disabled', true);
+                $('#qst_82_2_1').val("").prop('disabled', true);
+                $('#qst_82_2_2').val("").prop('disabled', true);
+                $('#qst_82_2_3').val("").prop('disabled', true);
+                $('#qst_82_3_1').val("").prop('disabled', true);
+                $('#qst_82_3_2').val("").prop('disabled', true);
+                $('#qst_82_3_3').val("").prop('disabled', true);
+            } else {
+                $('#qst_82_1').val("").attr('required', true).removeClass('parsley-success parsley-error').prop('disabled', false);
+                $('#qst_82_2_1').val("").prop('disabled', false);
+                $('#qst_82_2_2').val("").prop('disabled', false);
+                $('#qst_82_2_3').val("").prop('disabled', false);
+                $('#qst_82_3_1').val("").prop('disabled', false);
+                $('#qst_82_3_2').val("").prop('disabled', false);
+                $('#qst_82_3_3').val("").prop('disabled', false);
+            }
+        });
+        
+        function alternarCampos(rng, act, arr = []){
+            var cmp = rng.split("-");
+            var ele = arr.length||0;
+            if(ele > 0) {
+                for(i = 0; i < ele; i++) {
+                    if(act == 1) {
+                        $("#qst_"+arr[i]).val("").attr('required', true).removeClass('parsley-success parsley-error').prop('disabled', false);
+                    } else {
+                        $("#qst_"+arr[i]).val("").removeAttr('required selected').removeClass('parsley-success parsley-error').prop('disabled', true);
+                    }
+                }
+            }
+            if(act == 1) {
+                for(i = cmp[0]; i <= cmp[1]; i++) {
+                    $("#qst_"+i).val("").attr('required', true).removeClass('parsley-success parsley-error').prop('disabled', false);
+                }
+            } else {
+                for(i = cmp[0]; i <= cmp[1]; i++) {
+                    $("#qst_"+i).val("").removeAttr('required selected').removeClass('parsley-success parsley-error').prop('disabled', true);
+                }
+            }    
+        }
+        
+/* Limpiar los campos del formulario se puede dar un rango de id*/        
+        function limpiarCampos(rng){
+            var cmp = rng.split("-");
+            for(i = cmp[0]; i <= cmp[1]; i++) {
+                $('#qst_'+i).val("").removeClass('parsley-success parsley-error');
+            }
+            $('#qst_71_1').val("").removeClass('parsley-success parsley-error');
+            $('#qst_71_2').val("").removeClass('parsley-success parsley-error');  
+        }
+        
+/* Borrar el atributo a todos los campos para poder darle submit*/        
+        function borrarAtributo(rng, atributo){
+            var cmp = rng.split("-");
+            for(i = cmp[0]; i <= cmp[1]; i++) {
+                $('#qst_'+i).val("").removeAttr(atributo);
+            }
+            $('#qst_71_1, #qst_71_2').val("").removeAttr(atributo);
+        }
+        
+/* Borra una fila de la tabla de registros en pantalla */        
+        function borrarFila(info) {
+            var idfila = $(info).data("num");
+            $("#fila_"+idfila).hide();
+            $("#tblest_"+idfila).val(0); /* Estados de la fila: 1 = nueva, 2 = actualizar, 3 = cargada, 0 = borrada */
+            
+            /* Actualiza el arreglo de rangos para llevar el control de cantidades por rango de edad*/
+            actualizarRangos();
+            pintarTablaRangos();
+            
+        }
+
+/* Suma cantidades dependiendo la edad al rango de edad tambien a leer y escribir */
+        function agregarRangos(eda, sex, lye, est ) {
+            if (est == 1) {
+                if(eda <= 4) {
+                    if(sex == 1) {
+                        rango[0].rh = rango[0].rh + 1;
+                        rango[0].lh = rango[0].lh + (lye == 1)?1:0;
+                    } else {
+                        rango[0].rm = rango[0].rm + 1;
+                        rango[0].lm = rango[0].lm + (lye == 1)?1:0;
+                    }        
+                } else if(eda > 4 && eda <= 6) {
+                    if(sex == 1) {
+                        rango[1].rh = rango[1].rh + 1;
+                        rango[1].lh = rango[1].lh + (lye == 1)?1:0;
+                    } else {
+                        rango[1].rm = rango[1].rm + 1;
+                        rango[1].lm = rango[1].lm + (lye == 1)?1:0;
+                    }
+                } else if(eda > 6 && eda <= 12) {
+                    if(sex == 1) {
+                        rango[2].rh = rango[2].rh + 1;
+                        rango[2].lh = rango[2].lh + (lye == 1)?1:0;
+                    } else {
+                        rango[2].rm = rango[2].rm + 1;
+                        rango[2].lm = rango[2].lm + (lye == 1)?1:0;
+                    }
+                } else if(eda > 12 && eda <= 15) {
+                    if(sex == 1) {
+                        rango[3].rh = rango[3].rh + 1;
+                        rango[3].lh = rango[3].lh + (lye == 1)?1:0;
+                    } else {
+                        rango[3].rm = rango[3].rm + 1;
+                        rango[3].lm = rango[3].lm + (lye == 1)?1:0;
+                    }
+                } else if(eda > 15 && eda <= 18) {
+                    if(sex == 1) {
+                        rango[4].rh = rango[4].rh + 1;
+                        rango[4].lh = rango[4].lh + (lye == 1)?1:0;
+                    } else {
+                        rango[4].rm = rango[4].rm + 1;
+                        rango[4].lm = rango[4].lm + (lye == 1)?1:0;
+                    }
+                } else if(eda > 18 && eda <= 23) {
+                    if(sex == 1) {
+                        rango[5].rh = rango[5].rh + 1;
+                        rango[5].lh = rango[5].lh + (lye == 1)?1:0;
+                    } else {
+                        rango[5].rm = rango[5].rm + 1;
+                        rango[5].lm = rango[5].lm + (lye == 1)?1:0;
+                    }
+                } else if(eda > 23 && eda <= 30) {
+                    if(sex == 1) {
+                        rango[6].rh = rango[6].rh + 1;
+                        rango[6].lh = rango[6].lh + (lye == 1)?1:0;
+                    } else {
+                        rango[6].rm = rango[6].rm + 1;
+                        rango[6].lm = rango[6].lm + (lye == 1)?1:0;
+                    }
+                } else if(eda > 30 && eda <= 40) {
+                    if(sex == 1) {
+                        rango[7].rh = rango[7].rh + 1;
+                        rango[7].lh = rango[7].lh + (lye == 1)?1:0;
+                    } else {
+                        rango[7].rm = rango[7].rm + 1;
+                        rango[7].lm = rango[7].lm + (lye == 1)?1:0;
+                    }
+                } else if(eda > 40 && eda <= 50) {
+                    if(sex == 1) {
+                        rango[8].rh = rango[8].rh + 1;
+                        rango[8].lh = rango[8].lh + (lye == 1)?1:0;
+                    } else {
+                        rango[8].rm = rango[8].rm + 1;
+                        rango[8].lm = rango[8].lm + (lye == 1)?1:0;
+                    }
+                } else if(eda > 50 && eda <= 64) {
+                    if(sex == 1) {
+                        rango[9].rh = rango[9].rh + 1;
+                        rango[9].lh = rango[9].lh + (lye == 1)?1:0;
+                    } else {
+                        rango[9].rm = rango[9].rm + 1;
+                        rango[9].lm = rango[9].lm + (lye == 1)?1:0;
+                    }
+                } else if(eda > 64) {
+                    if(sex == 1) {
+                        rango[10].rh = rango[10].rh + 1;
+                        rango[10].lh = rango[10].lh + (lye == 1)?1:0;
+                    } else {
+                        rango[10].rm = rango[10].rm + 1;
+                        rango[10].lm = rango[10].lm + (lye == 1)?1:0;
+                    }
+                }
+                
+                if(eda > 4 && eda <= 23) {
+                    per5a23 = per5a23 + 1;
+                }
+                if(eda > 9) {
+                    perm10 = perm10 + 1;
+                }
+            }
+        }
+        
+        function pintarTablaRangos() {
+            $('#tblrangos').html("<table class='table-striped'><tr><td>Rango</td><td>Cant. Hombres</td><td>Cant. Mujeres</td><td>Cant. Hombres Leen</td><td>Cant. Mujeres Leen</td></tr>\n\
+    <tr><td align='center'>"+ rango[0].nr +"</td><td align='center'>"+rango[0].rh+"</td><td align='center'>"+rango[0].rm+"</td><td align='center'>"+rango[0].lh+"</td><td align='center'>"+rango[0].lm+"</td></tr>\n\
+<tr><td align='center'>"+ rango[1].nr +"</td><td align='center'>"+rango[1].rh+"</td><td align='center'>"+rango[1].rm+"</td><td align='center'>"+rango[1].lh+"</td><td align='center'>"+rango[1].lm+"</td></tr>\n\
+<tr><td align='center'>"+ rango[2].nr +"</td><td align='center'>"+rango[2].rh+"</td><td align='center'>"+rango[2].rm+"</td><td align='center'>"+rango[2].lh+"</td><td align='center'>"+rango[2].lm+"</td></tr>\n\
+<tr><td align='center'>"+ rango[3].nr +"</td><td align='center'>"+rango[3].rh+"</td><td align='center'>"+rango[3].rm+"</td><td align='center'>"+rango[3].lh+"</td><td align='center'>"+rango[3].lm+"</td></tr>\n\
+<tr><td align='center'>"+ rango[4].nr +"</td><td align='center'>"+rango[4].rh+"</td><td align='center'>"+rango[4].rm+"</td><td align='center'>"+rango[4].lh+"</td><td align='center'>"+rango[4].lm+"</td></tr>\n\
+<tr><td align='center'>"+ rango[5].nr +"</td><td align='center'>"+rango[5].rh+"</td><td align='center'>"+rango[5].rm+"</td><td align='center'>"+rango[5].lh+"</td><td align='center'>"+rango[5].lm+"</td></tr>\n\
+<tr><td align='center'>"+ rango[6].nr +"</td><td align='center'>"+rango[6].rh+"</td><td align='center'>"+rango[6].rm+"</td><td align='center'>"+rango[6].lh+"</td><td align='center'>"+rango[6].lm+"</td></tr>\n\
+<tr><td align='center'>"+ rango[7].nr +"</td><td align='center'>"+rango[7].rh+"</td><td align='center'>"+rango[7].rm+"</td><td align='center'>"+rango[7].lh+"</td><td align='center'>"+rango[7].lm+"</td></tr>\n\
+<tr><td align='center'>"+ rango[8].nr +"</td><td align='center'>"+rango[8].rh+"</td><td align='center'>"+rango[8].rm+"</td><td align='center'>"+rango[8].lh+"</td><td align='center'>"+rango[8].lm+"</td></tr>\n\
+<tr><td align='center'>"+ rango[9].nr +"</td><td align='center'>"+rango[9].rh+"</td><td align='center'>"+rango[9].rm+"</td><td align='center'>"+rango[9].lh+"</td><td align='center'>"+rango[9].lm+"</td></tr>\n\
+<tr><td align='center'>"+ rango[10].nr +"</td><td align='center'>"+rango[10].rh+"</td><td align='center'>"+rango[10].rm+"</td><td align='center'>"+rango[10].lh+"</td><td align='center'>"+rango[10].lm+"</td></tr>\n\
+</table>");
+        $('#per5a23').html("<input type='text' value='"+per5a23+"' readonly>");
+        $('#perm10').html("<input type='text' value='"+perm10+"' readonly>");
+        
+        }
+        
+        function limpiarRango(item, idx) {
+            item.rh = 0;
+            item.rm = 0;
+            item.lh = 0;
+            item.lm = 0;
+        }
+        
+        function actualizarRangos(){
+            rango.forEach(limpiarRango);
+            per5a23 = 0;
+            perm10 = 0;
+            $("input[name^='qst_53_']").each(function(idx, ele){
+                var fil = idx +1;
+                var sex = $("#qst_52_"+fil).val();
+                var lye = $("#qst_57_"+fil).val();
+                var est = $("#tblest_"+fil).val();
+                agregarRangos($(ele).val(), sex , lye , est );
+            });
+        }
+
+/* Carga los campos de la tabla de registros en el formulario en pantalla */
+
+         function editarFila(info) {
+            var idfila = $(info).data("num");
+            $('#selcol').val(idfila);
+            
+            alternarCampos("50-75",1,['71_1','71_2']);
+            
+            $("#btnAgregar").hide();
+            $("#btnEditar").show();
+            
+            $("#qst_50").val($("#qst_50_"+idfila).val());
+            $("#qst_51").val($("#qst_51_"+idfila).val());
+            $("#qst_52").val($("#qst_52_"+idfila).val());
+            $("#qst_53").val($("#qst_53_"+idfila).val());
+            $("#qst_54").val($("#qst_54_"+idfila).val());
+            $("#qst_55").val($("#qst_55_"+idfila).val());
+            $("#qst_56").val($("#qst_56_"+idfila).val());
+            $("#qst_57").val($("#qst_57_"+idfila).val());
+            $("#qst_58").val($("#qst_58_"+idfila).val());
+            $("#qst_59").val($("#qst_59_"+idfila).val());
+            $("#qst_60").val($("#qst_60_"+idfila).val());
+            $("#qst_61").val($("#qst_61_"+idfila).val());
+            $("#qst_62").val($("#qst_62_"+idfila).val());
+            $("#qst_63").val($("#qst_63_"+idfila).val());
+            $("#qst_64").val($("#qst_64_"+idfila).val());
+            $("#qst_65").val($("#qst_65_"+idfila).val());
+            $("#qst_66").val($("#qst_66_"+idfila).val());
+            $("#qst_67").val($("#qst_67_"+idfila).val());
+            $("#qst_68").val($("#qst_68_"+idfila).val());
+            $("#qst_69").val($("#qst_69_"+idfila).val());
+            $("#qst_70").val($("#qst_70_"+idfila).val());
+            $("#qst_71_1").val($("#qst_71_1_"+idfila).val());
+            $("#qst_71_2").val($("#qst_71_2_"+idfila).val());
+            $("#qst_72").val($("#qst_72_"+idfila).val());
+            $("#qst_73").val($("#qst_73_"+idfila).val());
+            $("#qst_74").val($("#qst_74_"+idfila).val());
+            $("#qst_75").val($("#qst_75_"+idfila).val());
+            
+            $("#qst_50").focus();
+            
+            /* Habilita los campos segun la edad */
+            var edad = $("#qst_53_"+idfila).val();
+            if (edad < 5) {
+                alternarCampos('57-75',2,['71_1','71_2']);
+            } else if (edad >= 5 && edad < 10 ) {
+                alternarCampos('61-75',2,['71_1','71_2']);
+            } else if (edad >= 10 && edad < 18) {
+                alternarCampos('73-75',2);
+            }
+            /* Habilita los campos segun la actividad economica */
+            var aeco = $("#qst_66_"+idfila).val();
+            if(aeco == 1) {
+                alternarCampos('67-67',2);
+            } else if (aeco == 3 || aeco > 5) {
+                alternarCampos('67-71',2,['71_1','71_2']);
+            } else if (aeco == 4) {
+                alternarCampos('68-71',2,['71_1','71_2']);
+            } 
+            
+        }
+
+/* Actualiza una fila en tabla pantalla. Del formulario hacia la tabla de registros */
+
+        function actualizarfila() {
+            var idfila = $("#selcol").val();
+            
+            $("#qst_50_"+idfila).val($("#qst_50").val());
+            $("#qst_51_"+idfila).empty().append('<option value="'+$("#qst_51").val()+'">'+$('select[name="qst_51"] option:selected').text()+'</option>');
+            $("#qst_52_"+idfila).empty().append('<option value="'+$("#qst_52").val()+'">'+(($("#qst_52").val()==1)?"H":"M")+'</option>');
+            $("#qst_53_"+idfila).val($("#qst_53").val());
+            $("#qst_54_"+idfila).empty().append('<option value="'+$("#qst_54").val()+'">'+$('select[name="qst_54"] option:selected').text()+'</option>');
+            $("#qst_55_"+idfila).empty().append('<option value="'+$("#qst_55").val()+'">'+$('select[name="qst_55"] option:selected').text()+'</option>');
+            $("#qst_56_"+idfila).empty().append('<option value="'+$("#qst_56").val()+'">'+$('select[name="qst_56"] option:selected').text()+'</option>');
+            $("#qst_57_"+idfila).empty().append('<option value="'+$("#qst_57").val()+'">'+$('select[name="qst_57"] option:selected').text()+'</option>');
+            $("#qst_58_"+idfila).empty().append('<option value="'+$("#qst_58").val()+'">'+$('select[name="qst_58"] option:selected').text()+'</option>');
+            $("#qst_59_"+idfila).empty().append('<option value="'+$("#qst_59").val()+'">'+$('select[name="qst_59"] option:selected').text()+'</option>');
+            $("#qst_60_"+idfila).val($("#qst_60").val());
+            $("#qst_61_"+idfila).empty().append('<option value="'+$("#qst_61").val()+'">'+$('select[name="qst_61"] option:selected').text()+'</option>');
+            $("#qst_62_"+idfila).empty().append('<option value="'+$("#qst_62").val()+'">'+$('select[name="qst_62"] option:selected').text()+'</option>');
+            $("#qst_63_"+idfila).empty().append('<option value="'+$("#qst_63").val()+'">'+$('select[name="qst_63"] option:selected').text()+'</option>');
+            $("#qst_64_"+idfila).empty().append('<option value="'+$("#qst_64").val()+'">'+$('select[name="qst_64"] option:selected').text()+'</option>');
+            $("#qst_65_"+idfila).val($("#qst_65").val());
+            $("#qst_66_"+idfila).empty().append('<option value="'+$("#qst_66").val()+'">'+$('select[name="qst_66"] option:selected').text()+'</option>');
+            $("#qst_67_"+idfila).empty().append('<option value="'+$("#qst_67").val()+'">'+$('select[name="qst_67"] option:selected').text()+'</option>');
+            $("#qst_68_"+idfila).empty().append('<option value="'+$("#qst_68").val()+'">'+$('select[name="qst_68"] option:selected').text()+'</option>');
+            $("#qst_69_"+idfila).empty().append('<option value="'+$("#qst_69").val()+'">'+$('select[name="qst_69"] option:selected').text()+'</option>');
+            $("#qst_70_"+idfila).val($("#qst_70").val());
+            $("#qst_71_1_"+idfila).val($("#qst_71_1").val());
+            $("#qst_71_2_"+idfila).val($("#qst_71_2").val());
+            $("#qst_72_"+idfila).empty().append('<option value="'+$("#qst_72").val()+'">'+$('select[name="qst_72"] option:selected').text()+'</option>');
+            $("#qst_73_"+idfila).empty().append('<option value="'+$("#qst_73").val()+'">'+$('select[name="qst_73"] option:selected').text()+'</option>');
+            $("#qst_74_"+idfila).empty().append('<option value="'+$("#qst_74").val()+'">'+$('select[name="qst_74"] option:selected').text()+'</option>');
+            $("#qst_75_"+idfila).empty().append('<option value="'+$("#qst_75").val()+'">'+$('select[name="qst_75"] option:selected').text()+'</option>');
+            
+            alternarCampos("50-75",1,['71_1','71_2']);
+            $("#btnEditar").hide();
+            $("#btnAgregar").show();  
+            
+            /* Actualiza el arreglo de rangos para llevar el control de cantidades por rango de edad*/
+            actualizarRangos();
+            pintarTablaRangos();
+        }
+
+/* Agregar una fila nueva a la tabla en pantalla. Del formulario a la tabla de registros */
+
+        function agregarfila() {
+            var con = $('#contres').val();
+            con++;
+            var tnom = $('#qst_50').val();
+            var tpar = $('#qst_51').val();
+            var tpart = $('select[name="qst_51"] option:selected').text();
+            var tsex = $('#qst_52').val();
+            var teda = $('#qst_53').val();
+            var tetn = $('#qst_54').val();
+            var tetnt = $('select[name="qst_54"] option:selected').text();
+            var trnp = $('#qst_55').val();
+            var trnpt = $('select[name="qst_55"] option:selected').text();
+            var tvac = $('#qst_56').val();
+            var tvact = $('select[name="qst_56"] option:selected').text();
+            var tlye = $('#qst_57').val();
+            var tlyet = $('select[name="qst_57"] option:selected').text();
+            var test = $('#qst_58').val();
+            var testt = $('select[name="qst_58"] option:selected').text();
+            var tacu = $('#qst_59').val();
+            var tacut = $('select[name="qst_59"] option:selected').text();
+            var tned = $('#qst_60').val();
+            var teci = $('#qst_61').val();
+            var tecit = $('select[name="qst_61"] option:selected').text();
+            var ttra = $('#qst_62').val();
+            var ttrat = $('select[name="qst_62"] option:selected').text();
+            var tocu = $('#qst_63').val();
+            var tocut = $('select[name="qst_63"] option:selected').text();
+            var tpro = $('#qst_64').val();
+            var tprot = $('select[name="qst_64"] option:selected').text();
+            var ting = $('#qst_65').val();
+            var taec = $('#qst_66').val();
+            var taect = $('select[name="qst_66"] option:selected').text();
+            var tsco = $('#qst_67').val();
+            var tscot = $('select[name="qst_67"] option:selected').text();
+            var tsde = $('#qst_68').val();
+            var tsdet = $('select[name="qst_68"] option:selected').text();
+            var tese = $('#qst_69').val();
+            var teset = $('select[name="qst_69"] option:selected').text();
+            var torg = $('#qst_70').val();
+            var tin1 = $('#qst_71_1').val();
+            var tin2 = $('#qst_71_2').val();
+            var tpor = $('#qst_72').val();
+            var tport = $('select[name="qst_72"] option:selected').text();
+            var tpre = $('#qst_73').val();
+            var tpret = $('select[name="qst_73"] option:selected').text();
+            var trem = $('#qst_74').val();
+            var tremt = $('select[name="qst_74"] option:selected').text();
+            var tmpl = $('#qst_75').val();
+            var tmplt = $('select[name="qst_75"] option:selected').text();
+            
+            /* Estados de la fila: 1 = nueva, 2 = actualizar, 3 = cargada, 0 = borrada */
+            var fila = '<tr id="fila_'+con+'">\n\
+                <td><button type="button" id="tblborrar" class="btn btn-default" data-num="'+con+'" title="Borrar" onclick="borrarFila(this);"><i class="fa fa-trash"></i></button>\n\
+                <button type="button" id="tblmodificar" class="btn btn-default" data-num="'+con+'" title="Modificar" onclick="editarFila(this);"><i class="fa fa-edit"></i></button></td>\n\
+                <td>'+con+'</td>\n\
+                <td><input type="text" id="qst_50_'+con+'" name="qst_50_'+con+'" value="'+tnom+'" readonly></td>\n\
+                <td><select id="qst_51_'+con+'" name="qst_51_'+con+'" readonly><option value="'+tpar+'">'+tpart+'</option></select></td>\n\
+                <td><select id="qst_52_'+con+'" name="qst_52_'+con+'" readonly><option value="'+tsex+'">'+((tsex == 1)?"H":"M")+'</option></select></td>\n\
+                <td><input id="qst_53_'+con+'" name="qst_53_'+con+'" value="'+teda+'" type="text" readonly></td>\n\
+                <td><select id="qst_54_'+con+'" name="qst_54_'+con+'" readonly><option value="'+tetn+'">'+tetnt+'</option></select></td>\n\
+                <td><select id="qst_55_'+con+'" name="qst_55_'+con+'" readonly><option value="'+trnp+'">'+trnpt+'</option></select></td>\n\
+                <td><select id="qst_56_'+con+'" name="qst_56_'+con+'" readonly><option value="'+tvac+'">'+tvact+'</option></select></td>\n\
+<td><select id="qst_57_'+con+'" name="qst_57_'+con+'" readonly><option value="'+tlye+'">'+tlyet+'</option></select></td>\n\
+<td><select id="qst_58_'+con+'" name="qst_58_'+con+'" readonly><option value="'+test+'">'+testt+'</option></select></td>\n\
+<td><select id="qst_59_'+con+'" name="qst_59_'+con+'" readonly><option value="'+tacu+'">'+tacut+'</option></select></td>\n\
+<td><input id="qst_60_'+con+'" name="qst_60_'+con+'" value="'+tned+'" type="text" readonly></td>\n\
+<td><select id="qst_61_'+con+'" name="qst_61_'+con+'" readonly><option value="'+teci+'">'+tecit+'</option></select></td>\n\
+<td><select id="qst_62_'+con+'" name="qst_62_'+con+'" readonly><option value="'+ttra+'">'+ttrat+'</option></select></td>\n\
+<td><select id="qst_63_'+con+'" name="qst_63_'+con+'" readonly><option value="'+tocu+'">'+tocut+'</option></select></td>\n\
+<td><select id="qst_64_'+con+'" name="qst_64_'+con+'" readonly><option value="'+tpro+'">'+tprot+'</option></select></td>\n\
+<td><input id="qst_65_'+con+'" name="qst_65_'+con+'" value="'+ting+'" type="text" readonly></td>\n\
+<td><select id="qst_66_'+con+'" name="qst_66_'+con+'" readonly><option value="'+taec+'">'+taect+'</option></select></td>\n\
+<td><select id="qst_67_'+con+'" name="qst_67_'+con+'" readonly><option value="'+tsco+'">'+tscot+'</option></select></td>\n\
+<td><select id="qst_68_'+con+'" name="qst_68_'+con+'" readonly><option value="'+tsde+'">'+tsdet+'</option></select></td>\n\
+<td><select id="qst_69_'+con+'" name="qst_69_'+con+'" readonly><option value="'+tese+'">'+teset+'</option></select></td>\n\
+<td><input id="qst_70_'+con+'" name="qst_70_'+con+'" value="'+torg+'" type="text" readonly></td>\n\
+<td><input id="qst_71_1_'+con+'" name="qst_71_1_'+con+'" value="'+tin1+'" type="text" readonly></td>\n\
+<td><input id="qst_71_2_'+con+'" name="qst_71_2_'+con+'" value="'+tin2+'" type="text" readonly></td>\n\
+<td><select id="qst_72_'+con+'" name="qst_72_'+con+'" readonly><option value="'+tpor+'">'+tport+'</option></select></td>\n\
+<td><select id="qst_73_'+con+'" name="qst_73_'+con+'" readonly><option value="'+tpre+'">'+tpret+'</option></select></td>\n\
+<td><select id="qst_74_'+con+'" name="qst_74_'+con+'" readonly><option value="'+trem+'">'+tremt+'</option></select></td>\n\
+<td><select id="qst_75_'+con+'" name="qst_75_'+con+'" readonly><option value="'+tmpl+'">'+tmplt+'</option></select></td>\n\
+<td style="display:none"><input id="tblest_'+con+'" type="hidden" name="tblest_'+con+'" value="1"></td>\n\
+                </tr>';
+            
+            $('#tbl_residentes').append(fila);
+            $('#contres').val(con);
+            alternarCampos("50-75",1,['71_1','71_2']);
+            
+            /* Suma un nuevo rango al arreglo de rangos para llevar el control de cantidades por rango de edad*/
+            agregarRangos(teda, tsex, tlye, 1);
+            /* Pintar la tabla */
+            pintarTablaRangos();
+        }    
+        
+/* Valida el formulario antes de actualizar la fila */
+
+        $('#btnEditar').click(function() {
+            $('#frm_datosgabr').parsley().whenValidate({
+              group: 'residente'
+            }).done(function() {
+                actualizarfila();
+            });
+        });
+
+/* Valida el formulario antes de agregar la fila */    
+        $('#btnAgregar').click(function() {
+            $('#frm_datosgabr').parsley().whenValidate({
+              group: 'residente'
+            }).done(function() {
+                agregarfila();
+            });
+        });
+        
+/* Valida el resto del formulario antes del submit */    
+        $('#btnSubmit').click(function() {
+            /* Les borro el atributo requerido a estos campos para que no se consideran en la validación final */
+            borrarAtributo('50-75','required');
+            borrarAtributo('71_1-71_2','required');
+            /* Deshabilito el boton agregar para que no se pueda agregar columnas en blanco pues los campos de arriba estan no requeridos */
+            $('#btnAgregar').prop('disabled',true);
+            
+            $('#frm_datosgabr').parsley().whenValidate({
+              group: 'saludin'
+            }).done(function() {
+                //$('#frm_datosgabr').submit();
+            });
+            
+            /*borrarAtributo('50-75','required');
+            borrarAtributo('71_1-71_2','required');
+            $('#frm_datosgabr').submit();*/
+            
+        });
+        
+        window.Parsley
+        .addValidator('cocino', {
+          validateMultiple: function(value, req) {
+            
+            alert(req);
+            var total = 0;  
+            $("input:checkbox[name^='qst_23']:checked").each(function(){
+                total++;
+            });
+            alert(total);
+            res = total >= req ;
+            if(res) {
+              $('#camposCheck').removeClass('errors');
+              $('#camposCheck').addClass('success');
+            } else {
+              $('#camposCheck').addClass('errors');   
+            }
+            return res ;
+          },
+          messages: {
+            es: 'Debe de seleccionar por lo menos una opción'
+          }
+        });
+        
+        window.Parsley
+        .addValidator('cantidadnac', {
+          requirementType: 'integer',
+          validateNumber: function(value, fila) {
+            var ok1 = false;  
+            var cantnac = parseInt($('#qst_79_'+fila+"_1").val()||0);
+            var cantnachm = parseInt($('#qst_79_'+fila+"_2").val()||0) + parseInt($('#qst_79_'+fila+"_3").val()||0);
+            ok1 = (cantnac === cantnachm) ;
+            
+            var ok2 = false;
+            var conte = 0;
+            var edad1 = parseInt($('#qst_79_'+fila+"_4").val()||0);
+            if(edad1 != "" || edad1 != 0) { conte++; }
+            var edad2 = parseInt($('#qst_79_'+fila+"_5").val()||0);
+            if(edad2 != "" || edad2 != 0) { conte++; }
+            var edad3 = parseInt($('#qst_79_'+fila+"_6").val()||0);
+            if(edad3 != "" || edad3 != 0) { conte++; }
+            ok2 = (cantnac === conte);
+            
+            return (ok1 && ok2) ;
+          },
+          messages: {
+            es: 'Las cantidades en fila %s NO concuerdan'
+          }
+        });
+        
+        window.Parsley
+        .addValidator('cantidadmuertes', {
+          requirementType: 'integer',
+          validateNumber: function(value, fila) {
+            var ok = false;  
+            var cantmuertes = parseInt($('#qst_82_1').val()||0);
+            var canth = parseInt($('#qst_82_2_1').val()||0) + parseInt($('#qst_82_3_1').val()||0);
+            var cantm = parseInt($('#qst_82_3_1').val()||0) + parseInt($('#qst_82_3_2').val()||0);
+            ok = (cantmuertes === (canth + cantm));
+ 
+            return (ok);
+          },
+          messages: {
+            es: 'Las cantidades de muertes %s NO concuerdan'
+          }
+        });
+
+    </script> 
+{% endblock %}

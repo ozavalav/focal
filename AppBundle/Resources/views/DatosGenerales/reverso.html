@@ -1,0 +1,682 @@
+<!-- FBI STOP THERE -->
+<html>
+    <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="main.css">
+</head>
+<!--- AÑADIR OPCION NULA EN CADA SELECT----->
+<!--- NEGRITA EN NUMERS DE PREGUNTA---->
+
+<body>
+
+    <div class="anuncio">
+        <p>
+            pulse TAB para cambiar de celdas y use las flechas para cambiar la opcion rapidamente
+        </p>
+    </div>
+    <table class="datos-1 ancho-reverso">
+        <th colspan="4">COMPOSICION DEL GRUPO FAMILIAR Y ACTIVIDADES RELACIONADAS</th>
+        <tr>
+            <td><b>50: </b>Nombre del residente</td>
+            <td><b>51: </b>Parentesco</td>
+            <td><b>52: </b>Sexo</td>
+            <td><b>53: </b>Edad</td>
+
+        </tr>
+
+        <tr>
+            <td><input type="text" id="qst_50" name="qst_50"></td>
+            <td><input type="text" id="qst_51"></td>
+            <td>
+                <select id="qst_52">
+                    <option value="0">Selecciones una...</option>
+                    <option value="1">1: Hombre</option>
+                    <option value="2">2: Mujer</option>
+                </select>
+            </td>
+            <td><input id="qst_53" type="number" min="1"></td>
+
+        </tr>
+        <tr>
+            <td><b>54: </b>Etnia</td>
+            <td><b>55: </b>Inscrito en RNP</td>
+            <td><b>56: </b>Vacuna completa</td>
+        </tr>
+        <tr>
+            <td>
+                <select id="qst_54">
+                    <option>01:Maya</option>
+                    <option>02:Chorti</option>
+                    <option>03:Lenca</option>
+                    <option>04:Misquito</option>
+                    <option>05:Nahua</option>
+                    <option>06:Pech</option>
+                    <option>07:Tolupan</option>
+                    <option>08:Tawaka</option>
+                    <option>09:Garifuna</option>
+                    <option>10:Negro de habla inglesa</option>
+                    <option>11:Mestizo/Ladino</option>
+                    <option>12:Otro</option>
+                    <option>13.NS/NR</option>
+                </select>
+            </td>
+            <td>
+                <select id="qst_55">
+                    <option value="0">Selecciones una...</option>
+                    <option value="1">1: Si</option>
+                    <option value="2">2: No</option>
+                </select>
+            </td>
+            <td>
+                <select id="qst_56">
+                    <option value="0">Selecciones una...</option>
+                    <option value="1">1: Si</option>
+                    <option value="2">2: No</option>
+                </select>
+            </td>
+        </tr>
+
+    </table>
+    <table class="datos-1 ancho-reverso">
+        <tr>
+            <td colspan="4" align=center> <b>SOLO A PERSONAS DE 5 AÑOS Y MAS</b></td>
+        </tr>
+        <tr>
+            <td><b>57.</b>Sabe leer y escribir</td>
+            <td> 58.Estudia ahora</td>
+            <td> 59.Año que actualmente cursa</td>
+            <td> 60.Años de estudio Nivel Educativo</td>
+        </tr>
+        <tr>
+            <td>
+                <select>
+                    <option>1:Si</option>
+                    <option>2:No</option>
+                    <option>3:NS/NR</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option>1:Si</option>
+                    <option>2:No</option>
+                    <option>3:NS/NR</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option>01:Preescolar</option>
+                    <option>02:Grado 1</option>
+                    <option>03:Grado 2</option>
+                    <option>04:Grado 3</option>
+                    <option>05:Grado 4</option>
+                    <option>06:Grado 5</option>
+                    <option>07:Grado 6</option>
+                    <option>08:Grado 7</option>
+                    <option>09:Grado 8</option>
+                    <option>10:Grado 9</option>
+                    <option>11:Diversificado</option>
+                    <option>12:Universitario</option>
+                    <option>13.Ninguno</option>
+                </select>
+            </td>
+            <td><input type="number" min="0"></td>
+        </tr>
+
+        <tr>
+            <td colspan="4" align=center> <b>SOLO A PERSONAS DE 10 AÑOS Y MAS</b></td>
+        <tr>
+            <td><b>61.</b>Estado civil</td>
+            <td>62.Trabaja</td>
+            <td>63.Ocupacion actual</td>
+            <td>64.Profesion u oficio</td>
+        </tr>
+        <tr>
+            <td>
+                <select>
+                    <option>1:Soltero/a</option>>
+                    <option>2:Casado/a</option>>
+                    <option>3:Divorciado/a</option>>
+                    <option>4:Union libre</option>
+                    <option>5:Viud/a</option>>
+                    <option>6:NS/NR</option>>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option>1:Si</option>
+                    <option>2:No</option>
+                    <option>3:NS/NR</option>
+                </select>
+            </td>
+            <td>
+                <input type="number">
+            </td>
+            <td>
+                <input type="text">
+            </td>
+        </tr>
+
+        <tr>
+            <td>65.Ingreso mensual</td>
+            <td>66.Que actividad<br>economica realiza</td>
+            <td>67.En que sector esta<br> contratando</td>
+            <td>68.A que sector<br>se dedica</td>
+        </tr>
+        <tr>
+            <td>
+                <input type="number" min="0">
+            </td>
+            <td>
+                <select>
+                    <option>1:Trabajo propio</option>
+                    <option>2:Trabajo asalariado</option>
+                    <option>3:Busca trabajo</option>
+                    <option>4:Trabajo domestico exclusivo</option>
+                    <option>5:Trabajo domestico y otra actividad economica</option>
+                    <option>6:Jubilado/Pensionado</option>
+                    <option>7:Estudia exclusivamente</option>
+                    <option>8:Incapacitado</option>
+                    <option>9:Otros</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option>1:Comercial</option>
+                    <option>2:Industrial</option>
+                    <option>3:Servicio</option>
+                    <option>4:NS/NR</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option>1:Primario</option>
+                    <option>2:Secundario</option>
+                    <option>3:Terciario</option>
+                    <option>4:NS/NR</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td><b>69.</b>Cuanto empleo genera<br> al sector al que se dedica</td>
+            <td>70.Organizacion de <br>la que sea miembro</td>
+            <td>71.Que instituciones han<br> apoyado al sector <br>producto al cual usted pertenece</td>
+            <td>72.Quien en la vivienda<br> participa en organizaciones de la comunidad</td>
+        </tr>
+        <tr>
+            <td>
+                <select>
+                    <option>1: 0</option>
+                    <option>2: 1 a 5</option>
+                    <option>3: 6 a 10</option>
+                    <option>4: 11 a 15</option>
+                    <option>5: 16 a 20</option>
+                    <option>6: 21 en adelante</option>
+                    <option>7: NS/NR</option>
+                </select>
+            </td>
+            <td>
+                <input type="number" min="0">
+            </td>
+            <td>
+                <input type="text">
+                <input type="text">
+            <td>
+                <select>
+                    <option>1.Participa</option>
+                    <option>2.No Participa</option>
+                    <option>3.NS/NR</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" align=center> <b>SOLO A PERSONAS DE 18 AÑOS Y MAS</b></td>
+        </tr>
+        <td><b>73.</b>Ha obtenido un<br> prestamo</td>
+        <td><b>74.</b>Cuanto recibe de remesa</td>
+        <td><b>75.</b>Que metodo de planificacion<br>de familia utiliza</td>
+        <tr>
+            <td>
+                <select>
+                    <option>1:Si</option>
+                    <option>2:No</option>
+                    <option>3:NS/NR</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option>1:No recibe</option>
+                    <option>2:0.01 a 1,000,000</option>
+                    <option>3:1,000,000 a 2,000,000</option>
+                    <option>4:2,000.01 y mas</option>
+                    <option>5:NS/NR</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option>1:No planifica</option>
+                    <option>2:Ritmo</option>
+                    <option>3:DIU</option>
+                    <option>4:Pastilla</option>
+                    <option>5:Preservativo (Condon)</option>
+                    <option>6:Inyeccion</option>
+                    <option>7:Operacion hombre</option>
+                    <option>8:Operacion mujer</option>
+                    <option>9:Implante</option>
+                    <option>10:NS/NR</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <table class="datos-1">
+        <tr>
+            <td colspan="4" align=center> <b>SALUD</b></td>
+        </tr>
+        <tr>
+            <td><b>76.</b> ¿Cuantas madres solteras hay en la vivienda?</td>
+            <td><b>77.</b> ¿Cuantos padres solteros hay en la vivienda?</td>
+            <td colspan="2"><b>78.</b> ¿Existe alguna mujer embarazada dentro de la vivienda?</td>
+        </tr>
+        <tr>
+            <td><input type="number"></td>
+            <td><input type="number"></td>
+            <td>
+                <select>
+                    <option>Seleccione una...</option>
+                    <option>Si</option>
+                    <option>No</option>
+                </select>
+                <br>
+                ¿Cuantas?
+                <br>
+                <input type="number">
+            </td>
+            <td>
+                Edad 1<br>
+                <input type="number">
+                <br>
+                Edad 2<br>
+                <input type="number">
+                <br>
+                Edad 3<br>
+                <input type="number">
+                <br>
+            </td>
+        </tr>
+    </table>
+    <table class="datos-1">
+        <tr>
+            <td colspan="6"><b>79.</b> ¿Cuantos niños nacieron en la familia durante el año pasado?</td>
+        </tr>
+        <tr>
+            <td>Cantidad</td>
+            <td colspan="2">Sexo</td>
+            <td colspan="3"> Edad de la madre</td>
+        </tr>
+        <tr>
+            <td><input type="number" class="numeros" min="0"></td>
+            <td><input type="number" class="numeros" min="0"></td>
+            <td><input type="number" class="numeros" min="0"></td>
+            <td><input type="number" class="numeros" min="0"></td>
+            <td><input type="number" class="numeros" min="0"></td>
+            <td><input type="number" class="numeros" min="0"></td>
+        </tr>
+        <tr>
+            <td><input type="number" class="numeros" min="0"></td>
+            <td><input type="number" class="numeros" min="0"></td>
+            <td><input type="number" class="numeros" min="0"></td>
+            <td><input type="number" class="numeros" min="0"></td>
+            <td><input type="number" class="numeros" min="0"></td>
+            <td><input type="number" class="numeros" min="0"></td>
+        </tr>
+    </table>
+    <table class="datos-1">
+        <tr>
+            <td colspan="1"><b>80.</b> ¿Donde nacio el utlimo niño/a?</td>
+            <td colspan="5"><b>81.</b> ¿Hubo alguna muerta materna dureante o depsues del parte en la familia que vive en la vivienda, el año pasado?</td>
+        </tr>
+        <tr>
+            <td>
+                <select>
+                    <option value="0">Seleccione una...</option>
+                    <option value="1">1: Casa</option>
+                    <option value="2">2: Cenrto de salud</option>
+                    <option value="3">3: Clinica aterno inf.</option>
+                    <option value="4">4: Hospital</option>
+                    <option value="5">5: Clinica privada</option>
+                    <option value="6">6: Otro Estable. De salud</option>
+                    <option value="7">7: otro</option>
+                </select>
+            </td>
+
+            <td>
+                <select>
+                    <option>Seleccione una...</option>
+                    <option>1: Si</option>
+                    <option>2: No</option>
+                </select>
+            </td>
+            <td>
+                Durante embarazo <input class="numeros" type="number" min="0">
+            </td>
+            <td>
+                En el parto <input class="numeros" type="number" min="0">
+            </td>
+            <td>
+                Despues del parto <input class="numeros" type="number" min="0">
+            </td>
+            <td>
+                Causa de la muerte <input type="text">
+            </td>
+        </tr>
+    </table>
+    <table class="datos-1">
+        <tr>
+            <td colspan="4"><b>82.</b> Murio en la familaia un niño/a menor de 5 años, el año pasado?</td>
+        </tr>
+        <tr>
+            <td>
+
+                <select>
+                    <option>Seleccione una...</option>
+                    <option>1: Si</option>
+                    <option>2: No</option>
+                </select>
+            </td>
+            <td>
+                cuantos <input class="numeros" type="number">
+            </td>
+        </tr>
+        <tr>
+            <td rowspan="2"></td>
+            <td colspan="2"><b>Cantidad</b></td>
+            <td rowspan="2"><b>Causa</b></td>
+        </tr>
+        <tr>
+
+            <td>Hombre</td>
+            <td>Mujer</td>
+
+        </tr>
+        <tr>
+            <td><b>1. </b></td>
+            <td><input class="numeros" type="number"></td>
+            <td><input class="numeros" type="number"></td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td><b>2. </b></td>
+            <td><input class="numeros" type="number"></td>
+            <td><input class="numeros" type="number"></td>
+            <td><input type="text"></td>
+        </tr>
+    </table>
+    <table class="datos-1">
+        <tr>
+            <td><b>83. </b>Desde su percepción ¿Los ingresos de la vivienda ajustan para alimentarse?</td>
+        </tr>
+        <tr>
+            <td>
+                <select>
+                    <option value="1">1 tiempo</option>
+                    <option value="2">2 tiempos</option>
+                    <option value="3">3 tiempos</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><b>84. </b>¿Cuantos son los ingresos mensuales de la vivienda?</td>
+        </tr>
+        <tr>
+            <td>
+                <select>
+                    <option value=""> &lt; de 1,000</option>
+                    <option value="">1,001 - 2,000</option>
+                    <option value="">2,001 - 3,000</option>
+                    <option value="">3,001 - 4,000</option>
+                    <option value="">4,001 - 8,000</option>
+                    <option value="">8,001 - 12,000</option>
+                    <option value="">12,001 - 20,000</option>
+                    <option value="">20,001 - 30,0000</option>
+                    <option value="">30,001 - 50,000</option>
+                    <option value="">50,001 y mas </option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td><b>85</b></td>
+            <td>Edad</td>
+            <td>Sexo</td>
+            <td>Leer y escribir</td>
+        </tr>
+        <tr>
+            <td>No.</td>
+            <td>en años</td>
+            <td>1:H, 2:M</td>
+            <td>1:Si, 2:No</td>
+        </tr>
+        <tr>
+            <td>01</td>
+            <td>1 a 4</td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">H</option>
+                    <option value="2">M</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">Si</option>
+                    <option value="2">No</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>02</td>
+            <td>5 a 6</td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">H</option>
+                    <option value="2">M</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">Si</option>
+                    <option value="2">No</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>03</td>
+            <td>7 a 12</td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">H</option>
+                    <option value="2">M</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">Si</option>
+                    <option value="2">No</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>04</td>
+            <td>13 a 15</td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">H</option>
+                    <option value="2">M</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">Si</option>
+                    <option value="2">No</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>05</td>
+            <td>16 a 18</td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">H</option>
+                    <option value="2">M</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">Si</option>
+                    <option value="2">No</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>06</td>
+            <td>19 a 23</td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">H</option>
+                    <option value="2">M</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">Si</option>
+                    <option value="2">No</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>07</td>
+            <td>24 a 30</td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">H</option>
+                    <option value="2">M</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">Si</option>
+                    <option value="2">No</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>08</td>
+            <td>31 a 40</td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">H</option>
+                    <option value="2">M</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">Si</option>
+                    <option value="2">No</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>09</td>
+            <td>41 a 50</td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">H</option>
+                    <option value="2">M</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">Si</option>
+                    <option value="2">No</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>10</td>
+            <td>51 a 64</td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">H</option>
+                    <option value="2">M</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">Si</option>
+                    <option value="2">No</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>11</td>
+            <td>65 y mas</td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">H</option>
+                    <option value="2">M</option>
+                </select>
+            </td>
+            <td>
+                <select>
+                    <option value="0">N/H</option>
+                    <option value="1">Si</option>
+                    <option value="2">No</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    
+    <table class="datos-1">
+        <tr>
+            <td><b>86. </b>¿Cuantas personas son de 5 a 23 años?</td>
+            <td><input type="number" min="0"></td>
+        </tr>
+        <tr>
+            <td><b>87. </b>¿Cuantas personas son de 10 años en adelante?</td>
+            <td><input type="number" min="0"></td>
+        </tr>
+        <tr>
+            <td><b>88. </b>Resulltado de la entrevista:</td>
+            <td>
+                <select>
+                    <option value="0">Seleccione una...</option>
+                    <option value="1">Completa</option>
+                    <option value="2">Rechazo</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript" src="script.js"></script>
+</body>
+</html>
