@@ -10,11 +10,6 @@ use Focal\AppBundle\Entity\DatosSeguridadParticipacion;
 use Focal\AppBundle\Entity\DatosServiciospub;
 use Focal\AppBundle\Entity\DatossEnfermedades;
 use Focal\AppBundle\Entity\DatosSegAlimentaria;
-use Focal\AppBundle\Entity\DatosGrupoFamiliar;
-use Focal\AppBundle\Entity\DatosdOtros;
-use Focal\AppBundle\Entity\DatosdRangos;
-use Focal\AppBundle\Entity\DatosFuerzaOtros;
-use Focal\AppBundle\Entity\DatossGeneral;
 use Focal\AppBundle\Form\DatosGeneralesType;
 use Focal\AppBundle\Entity\AppConst;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -930,562 +925,12 @@ public function reportecuadro161718192021Action() {
         $em->flush();
 
         
-        /* Listado de parentescos */
-        $dsql ="select p.id, p.descripcion "
-        . "from FocalAppBundle:AdParentesco p "
-        . "order by p.id";
-        $query = $em->createQuery($dsql);
-        $parentescos = $query->getResult();
-        
-        /* Listado de etnias */
-        $dsql ="select e.id, e.descripcion "
-        . "from FocalAppBundle:AdEtnia e "
-        . "order by e.id";
-        $query = $em->createQuery($dsql);
-        $etnias = $query->getResult();
-        
-        /* Listado de ocupaciones */
-        $dsql ="select p.id, p.descripcion "
-        . "from FocalAppBundle:AdOcupaciones p "
-        . "order by p.id";
-        $query = $em->createQuery($dsql);
-        $ocupaciones = $query->getResult();
-        
-        /* Listado de profesiones */
-        $dsql ="select e.id, e.descripcion "
-        . "from FocalAppBundle:AdProfesiones e "
-        . "order by e.id";
-        $query = $em->createQuery($dsql);
-        $profesiones = $query->getResult();
-        
         $this->addFlash('success','Datos guardados con exito');
-        return $this->render('FocalAppBundle:DatosGenerales:newABr.html.twig', array(
-            //'entity' => $entity,
-            //'form'   => $form->createView(),
-            'idEnc' => $id_encuesta,
-            'etnias' => $etnias, 
-            'parentescos' => $parentescos,
-            'ocupaciones' => $ocupaciones,
-            'profesiones' => $profesiones,
-        ));
+        
+        return $this->redirect($this->generateUrl('datosgeneralesABr_new', array('idEnc' => $id_encuesta, 'codCom' => $codComunidad)));
+        
     }
 
-/**
-     * Creates a new DatosGenerales entity.
-     *
-     */
-    public function createABrAction(Request $request)
-    {
-        /* Verifica si el usuario esta autenticado */
-        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw $this->createAccessDeniedException();
-        }
-        
-        $session = $request->getSession();
-        $codMuni = $session->get('_cod_municipio');
-        $codDept = $session->get('_cod_departamento');
-        $periodo = $session->get('_periodo');
-        
-        $codComunidad = $request->get('codComunidad');
-        $idEnc = $request->get('idEnc');
-        
-        $usr= $this->get('security.context')->getToken()->getUser();
-        $usuario = $usr->getUsername();
-
-        $em = $this->getDoctrine()->getManager();
-        
-/* =================== DATOS GRUPO FAMILIAR ===========================*/
-        
-        
-    /* Guarda cada registro ingresado */
-        $cantfila = $request->get('contres');
-        $numero = 1;
-        $tingfam = 0;
-        $per5a23 = 0;
-        $perm10 = 0;
-        $totalper = 0;
-        
-        $rangos = array(
-            array("rng" =>  1, "t" => 0, "h" => 0, "m" => 0, "hl" => 0, "ml" => 0),
-            array("rng" =>  2, "t" => 0, "h" => 0, "m" => 0, "hl" => 0, "ml" => 0),
-            array("rng" =>  3, "t" => 0, "h" => 0, "m" => 0, "hl" => 0, "ml" => 0),
-            array("rng" =>  4, "t" => 0, "h" => 0, "m" => 0, "hl" => 0, "ml" => 0),
-            array("rng" =>  5, "t" => 0, "h" => 0, "m" => 0, "hl" => 0, "ml" => 0),
-            array("rng" =>  6, "t" => 0, "h" => 0, "m" => 0, "hl" => 0, "ml" => 0),
-            array("rng" =>  7, "t" => 0, "h" => 0, "m" => 0, "hl" => 0, "ml" => 0),
-            array("rng" =>  8, "t" => 0, "h" => 0, "m" => 0, "hl" => 0, "ml" => 0),
-            array("rng" =>  9, "t" => 0, "h" => 0, "m" => 0, "hl" => 0, "ml" => 0),
-            array("rng" => 10, "t" => 0, "h" => 0, "m" => 0, "hl" => 0, "ml" => 0),
-            array("rng" => 11, "t" => 0, "h" => 0, "m" => 0, "hl" => 0, "ml" => 0),
-        );
-        
-        for($i = 1; $i <= $cantfila; $i++){
-           $efi = $request->get('tblest_'.$i);
-           if($efi == 1) {
-                $entdgf = new DatosGrupoFamiliar();
-                
-                /* Generar el id unico de la tabla vivienda */
-                $sequenceName = 'datos_grupo_familiar_id_seq';
-                $dbConnection = $em->getConnection();
-                $nextvalQuery = $dbConnection->getDatabasePlatform()->getSequenceNextValSQL($sequenceName);
-                $newId = (int)$dbConnection->fetchColumn($nextvalQuery);
-                $codCom = (int)$codMuni . $newId;
-                
-                /* Guarda valores de referencia */
-                $entdgf->setId((int)$codCom);
-                $entdgf->setCodComunidad($codComunidad);
-                $entdgf->setcodMunicipio($codMuni);  
-                $entdgf->setcodDepartamento($codDept);
-                $entdgf->setIdEnc($idEnc);
-                
-                $nom = (int)$request->get('qst_50_'.$i);
-                $par = (int)$request->get('qst_51_'.$i);
-                $sex = (int)$request->get('qst_52_'.$i);
-                $eda = (int)$request->get('qst_53_'.$i);
-                $etn = (int)$request->get('qst_54_'.$i);
-                $rnp = (int)$request->get('qst_55_'.$i);
-                $vac = (int)$request->get('qst_56_'.$i);
-                $lye = (int)$request->get('qst_57_'.$i);
-                $est = (int)$request->get('qst_58_'.$i);
-                $acu = (int)$request->get('qst_59_'.$i);
-                $aes = (int)$request->get('qst_60_'.$i);
-                $eci = (int)$request->get('qst_61_'.$i);
-                $tra = (int)$request->get('qst_62_'.$i);
-                $ocu = (int)$request->get('qst_63_'.$i);
-                $pro = (int)$request->get('qst_64_'.$i);
-                $ing = (int)$request->get('qst_65_'.$i);
-                $aec = (int)$request->get('qst_66_'.$i);
-                $sco = (int)$request->get('qst_67_'.$i);
-                $sde = (int)$request->get('qst_68_'.$i);
-                $gee = (int)$request->get('qst_69_'.$i);
-                $nor = (int)$request->get('qst_70_'.$i);
-                $ia1 = $request->get('qst_71_1_'.$i);
-                $ia2 = $request->get('qst_71_2_'.$i);
-                $pao = (int)$request->get('qst_72_'.$i);
-                $pre = (int)$request->get('qst_73_'.$i);
-                $rem = (int)$request->get('qst_74_'.$i);
-                $pla = (int)$request->get('qst_75_'.$i);
-                
-                $entdgf->setNumero($numero++);
-                $entdgf->setNombre($nom);
-                $entdgf->setIdParentesco($par);
-                $entdgf->setSexo($sex);
-                $entdgf->setEdad($eda);
-                $entdgf->setIdEtnia($etn);
-                $entdgf->setTienePn((empty($rnp))?0:$rnp);
-                $entdgf->setVacunas((empty($vac))?0:$vac);
-                $entdgf->setLeerEscribir((empty($lye))?0:$lye);
-                $entdgf->setEstudia((empty($est))?0:$est);
-                $entdgf->setAnoCursando((empty($acu))?0:$acu);
-                $entdgf->setAnoEstudio((empty($aes))?:$aes);
-                $entdgf->setEstadoCivil((empty($eci))?0:$eci);
-                $entdgf->setTrabaja((empty($tra))?0:$tra);
-                $entdgf->setOcupacion((empty($ocu))?0:$ocu);
-                $entdgf->setProfesion((empty($pro))?0:$pro);
-                $entdgf->setIngresos((empty($ing))?0:$ing);
-                $entdgf->setActividadEco((empty($aec))?0:$aec);
-                $entdgf->setSectorContratado((empty($sco))?0:$sco);
-                $entdgf->setSectorDedica((empty($sde))?0:$sde);
-                $entdgf->setGeneraEmpleo((empty($gee))?0:$gee);
-                $entdgf->setNombreOrg((empty($nor))?null:$nor);
-                $entdgf->setInstApoyo1((empty($ia1))?null:$ia1);
-                $entdgf->setInstApoyo2((empty($ia2))?null:$ia2);
-                $entdgf->setParticipaOrg($pao);
-                $entdgf->setPrestamo((empty($pre))?0:$pre);
-                $entdgf->setRemesas((empty($rem))?0:$rem);
-                $entdgf->setMetodoPlanifica((empty($pla))?0:$pla);
-                
-                /* Guarda los valores por defecto */
-                $fecha = new \DateTime("now");
-                $entdgf->setUsuarioCreacion($usuario);
-                $entdgf->setUsuarioUltimaModificacion($usuario);
-                $entdgf->setFechaCreacion($fecha);
-                $entdgf->setFechaUltimaModificacion($fecha);
-                
-                /* Variable que guarda el total de ingreso familiar */
-                $tingfam = $tingfam + $ing;
-                
-                /* Calcula cantidad de personas por rango de edad y las que saben leer y escribir */
-                if($eda <= 4) {
-                    $rangos[0]["h"]  = $rangos[0]["h"]  + ($sex==1)?1:0;
-                    $rangos[0]["m"]  = $rangos[0]["m"]  + ($sex==2)?1:0;
-                    $rangos[0]["hl"] = $rangos[0]["hl"] + ($lye==1 && $sex==1)?1:0;
-                    $rangos[0]["ml"] = $rangos[0]["ml"] + ($lye==1 && $sex==2)?1:0;
-                    $rangos[0]["t"]  = $rangos[0]["t"] + 1;
-                } else if ($eda>4 && $eda<=6) {
-                    $rangos[1]["h"]  = $rangos[1]["h"]  + ($sex==1)?1:0;
-                    $rangos[1]["m"]  = $rangos[1]["m"]  + ($sex==2)?1:0;
-                    $rangos[1]["hl"] = $rangos[1]["hl"] + ($lye==1 && $sex==1)?1:0;
-                    $rangos[1]["ml"] = $rangos[1]["ml"] + ($lye==1 && $sex==2)?1:0;
-                    $rangos[1]["t"]  = $rangos[1]["t"] + 1;
-                } else if ($eda>6 && $eda<=12) {
-                    $rangos[2]["h"]  = $rangos[2]["h"]  + ($sex==1)?1:0;
-                    $rangos[2]["m"]  = $rangos[2]["m"]  + ($sex==2)?1:0;
-                    $rangos[2]["hl"] = $rangos[2]["hl"] + ($lye==1 && $sex==1)?1:0;
-                    $rangos[2]["ml"] = $rangos[2]["ml"] + ($lye==1 && $sex==2)?1:0;
-                    $rangos[0]["t"]  = $rangos[0]["t"] + 1;
-                } else if ($eda>12 && $eda<=15) {
-                    $rangos[3]["h"]  = $rangos[3]["h"]  + ($sex==1)?1:0;
-                    $rangos[3]["m"]  = $rangos[3]["m"]  + ($sex==2)?1:0;
-                    $rangos[3]["hl"] = $rangos[3]["hl"] + ($lye==1 && $sex==1)?1:0;
-                    $rangos[3]["ml"] = $rangos[3]["ml"] + ($lye==1 && $sex==2)?1:0;
-                    $rangos[0]["t"]  = $rangos[0]["t"] + 1;
-                } if ($eda>15 && $eda<=18) {
-                    $rangos[4]["h"]  = $rangos[4]["h"]  + ($sex==1)?1:0;
-                    $rangos[4]["m"]  = $rangos[4]["m"]  + ($sex==2)?1:0;
-                    $rangos[4]["hl"] = $rangos[4]["hl"] + ($lye==1 && $sex==1)?1:0;
-                    $rangos[4]["ml"] = $rangos[4]["ml"] + ($lye==1 && $sex==2)?1:0;
-                } if ($eda>18 && $eda<=23) {
-                    $rangos[5]["h"]  = $rangos[5]["h"]  + ($sex==1)?1:0;
-                    $rangos[5]["m"]  = $rangos[5]["m"]  + ($sex==2)?1:0;
-                    $rangos[5]["hl"] = $rangos[5]["hl"] + ($lye==1 && $sex==1)?1:0;
-                    $rangos[5]["ml"] = $rangos[5]["ml"] + ($lye==1 && $sex==2)?1:0;
-                    $rangos[5]["t"]  = $rangos[5]["t"] + 1;
-                } if ($eda>23 && $eda<=30) {
-                    $rangos[6]["h"]  = $rangos[6]["h"]  + ($sex==1)?1:0;
-                    $rangos[6]["m"]  = $rangos[6]["m"]  + ($sex==2)?1:0;
-                    $rangos[6]["hl"] = $rangos[6]["hl"] + ($lye==1 && $sex==1)?1:0;
-                    $rangos[6]["ml"] = $rangos[6]["ml"] + ($lye==1 && $sex==2)?1:0;
-                    $rangos[6]["t"]  = $rangos[6]["t"] + 1;
-                } if ($eda>30 && $eda<=40) {
-                    $rangos[7]["h"]  = $rangos[7]["h"]  + ($sex==1)?1:0;
-                    $rangos[7]["m"]  = $rangos[7]["m"]  + ($sex==2)?1:0;
-                    $rangos[7]["hl"] = $rangos[7]["hl"] + ($lye==1 && $sex==1)?1:0;
-                    $rangos[7]["ml"] = $rangos[7]["ml"] + ($lye==1 && $sex==2)?1:0;
-                    $rangos[7]["t"]  = $rangos[7]["t"] + 1;
-                } if ($eda>40 && $eda<=50) {
-                    $rangos[8]["h"]  = $rangos[8]["h"]  + ($sex==1)?1:0;
-                    $rangos[8]["m"]  = $rangos[8]["m"]  + ($sex==2)?1:0;
-                    $rangos[8]["hl"] = $rangos[8]["hl"] + ($lye==1 && $sex==1)?1:0;
-                    $rangos[8]["ml"] = $rangos[8]["ml"] + ($lye==1 && $sex==2)?1:0;
-                    $rangos[8]["t"]  = $rangos[8]["t"] + 1;
-                } if ($eda>50 && $eda<=64) {
-                    $rangos[9]["h"]  = $rangos[9]["h"]  + ($sex==1)?1:0;
-                    $rangos[9]["m"]  = $rangos[9]["m"]  + ($sex==2)?1:0;
-                    $rangos[9]["hl"] = $rangos[9]["hl"] + ($lye==1 && $sex==1)?1:0;
-                    $rangos[9]["ml"] = $rangos[9]["ml"] + ($lye==1 && $sex==2)?1:0;
-                    $rangos[9]["t"]  = $rangos[9]["t"] + 1;
-                } if ($eda>64) {
-                    $rangos[10]["h"]  = $rangos[10]["h"]  + ($sex==1)?1:0;
-                    $rangos[10]["m"]  = $rangos[10]["m"]  + ($sex==2)?1:0;
-                    $rangos[10]["hl"] = $rangos[10]["hl"] + ($lye==1 && $sex==1)?1:0;
-                    $rangos[10]["ml"] = $rangos[10]["ml"] + ($lye==1 && $sex==2)?1:0;
-                    $rangos[10]["t"]  = $rangos[10]["t"] + 1;
-                }
-                
-                /* Calcula los valores de las personas que ocupan la vivienda para actualizar tabla: Datos Generales */
-                if($eda >4 && $eda <=13) {
-                    $per5a23 = $per5a23 + 1;
-                }
-                if($eda > 9) {
-                    $perm10 = $perm10 + 1;
-                }
-                
-                $totalper = $totalper + 1;
-                
-                $em->persist($entdgf);
-            }        
-        }
-        
-/* =================== DATOS DEMOGRAFICOS OTROS ===========================*/
-        $entddo = new DatosdOtros;
-        
-        /* Generar el id unico de la tabla seguridad y participacion */
-        $sequenceName = 'datosd_otros_id_seq';
-        $dbConnection = $em->getConnection();
-        $nextvalQuery = $dbConnection->getDatabasePlatform()->getSequenceNextValSQL($sequenceName);
-        $newId = (int)$dbConnection->fetchColumn($nextvalQuery);
-        $codCom = (int)$codMuni . $newId;
-        
-        $entddo->setId((int)$codCom);
-        $entddo->setIdEnc($idEnc);
-        $entddo->setCodComunidad($codComunidad);
-        $entddo->setcodMunicipio($codMuni);  
-        $entddo->setcodDepartamento($codDept);
-        
-        $msol = (int)$request->get('qst_76');
-        $psol = (int)$request->get('qst_77');
-        $cnac = (int)$request->get('qst_79_1_1');
-        $cnho = (int)$request->get('qst_79_1_2');
-        $cnmu = (int)$request->get('qst_79_1_3');
-        $ema1 = (int)$request->get('qst_79_1_4');
-        $ema2 = (int)$request->get('qst_79_1_4');
-        $ema3 = (int)$request->get('qst_79_1_5');
-        
-        
-        $entddo->setCantSolteros($psol) ;
-        $entddo->setCantSolteras($msol) ;
-        $entddo->setCantNacimientos($cnac);
-        $entddo->setCantNacNinos($cnho);
-        $entddo->setCantNacNinas($cnmu);
-        $entddo->setEdadMadre($ema1);
-        
-        
-        /* Guarda los valores por defecto */
-        $entddo->setUsuarioCreacion($usuario);
-        $entddo->setUsuarioUltimaModificacion($usuario);
-        $entddo->setFechaCreacion($fecha);
-        $entddo->setFechaUltimaModificacion($fecha);
-        
-        $em->persist($entddo);
-        
-        
-/* =================== DATOS SALUD GENERAL ===========================*/
-        $entsag = new DatossGeneral();
-        
-        /* Generar el id unico de la tabla seguridad y participacion */
-        $sequenceName = 'datoss_general_id_seq';
-        $dbConnection = $em->getConnection();
-        $nextvalQuery = $dbConnection->getDatabasePlatform()->getSequenceNextValSQL($sequenceName);
-        $newId = (int)$dbConnection->fetchColumn($nextvalQuery);
-        $codCom = (int)$codMuni . $newId;
-        
-        $entsag->setId((int)$codCom);
-        $entsag->setIdEnc($idEnc);
-        $entsag->setCodComunidad($codComunidad);
-        $entsag->setcodMunicipio($codMuni);  
-        $entsag->setcodDepartamento($codDept);
-        
-        $embr = (int)$request->get('qst_78');
-        $cemb = (int)$request->get('qst_78_1');
-        $eem1 = (int)$request->get('qst_78_2');
-        $eem2 = (int)$request->get('qst_78_3');
-        $eem3 = (int)$request->get('qst_78_4');
-        $dnun = (int)$request->get('qst_80');
-        
-        $muem = (int)$request->get('qst_81');
-        $cmum = (int)$request->get('qst_81_1');
-        $momm = (int)$request->get('qst_81_2');
-        $caum = $request->get('qst_81_3');
-        
-        $muen = (int)$request->get('qst_82');
-        $cmun = (int)$request->get('qst_82_1');
-        $cmuh1 = (int)$request->get('qst_82_2_1');
-        $cmum1 = (int)$request->get('qst_82_2_2');
-        $caum1 = $request->get('qst_82_2_3');
-        $cmuh2 = (int)$request->get('qst_82_3_1');
-        $cmum2 = (int)$request->get('qst_82_3_2');
-        $caum2 = (int)$request->get('qst_82_3_3');
-        
-       
-        
-        $entsag->setEmbarazos($embr);
-        $entsag->setCantEmbarazos($cemb);
-        $entsag->setEdad1($eem1);
-        $entsag->setEdad2($eem2);
-        $entsag->setEdad3($eem3);
-        
-        
-        $entsag->setLugarCasa(false);
-        $entsag->setCantCasa(0);
-        $entsag->setLugarCentros(false);
-        $entsag->setCantCentros(0);
-        $entsag->setLugarMaterno(false);
-        $entsag->setCantMaterno(0);
-        $entsag->setLugarHospital(false);
-        $entsag->setCantHospital(0);
-        $entsag->setLugarClinica(false);
-        $entsag->setCantClinica(0);
-        $entsag->setLugarOtros(false);
-        $entsag->setCantOtros(0);
-        
-        switch($dnun) {
-            case 1:
-                $entsag->setLugarCasa(true);
-                break;
-            case 2:
-                $entsag->setLugarCentros(true);
-                break;
-            case 3:
-                $entsag->setLugarClinica(true);
-                break;
-            case 4:
-                $entsag->setLugarHospital(true);
-                break;
-            case 5:
-                $entsag->setLugarClinica(true);
-                break;
-            case 6:
-                $entsag->setLugarOtros(true);
-                break;
-            case 7:
-                /* Falta este campo en la base de datos*/
-                break;
-        }
-        
-        $entsag->setSemurionino($muen);
-        $entsag->setCantMuerteNinos($cmuh1);
-        $entsag->setCantMuerteNinas($cmum1);
-        $entsag->setCausaMuerte($caum1);
-        
-        $entsag->setMuerteMat($muem);
-        $entsag->setCantMuertem($cmum);
-        $entsag->setMomentoMuertem($momm);
-        $entsag->setCausaMuertem($caum);
-        
-        /* Guarda los valores por defecto */
-        $entsag->setUsuarioCreacion($usuario);
-        $entsag->setUsuarioUltimaModificacion($usuario);
-        $entsag->setFechaCreacion($fecha);
-        $entsag->setFechaUltimaModificacion($fecha);
-        
-        $em->persist($entsag);        
-        
-/* =================== DATOS FUERZA OTROS ===========================*/
-        $entdfo = new DatosFuerzaOtros();
-        
-        /* Generar el id unico de la tabla seguridad y participacion */
-        $sequenceName = 'datos_fuerza_otros_id_seq';
-        $dbConnection = $em->getConnection();
-        $nextvalQuery = $dbConnection->getDatabasePlatform()->getSequenceNextValSQL($sequenceName);
-        $newId = (int)$dbConnection->fetchColumn($nextvalQuery);
-        $codCom = (int)$codMuni . $newId;
-        
-        $entdfo->setId((int)$codCom);
-        $entdfo->setIdEnc($idEnc);
-        $entdfo->setCodComunidad($codComunidad);
-        $entdfo->setcodMunicipio($codMuni);  
-        $entdfo->setcodDepartamento($codDept);
-        
-        $iaju = (int)$request->get('qst_83');
-        
-        $entdfo->setIngresoAjusta($iaju); /* 1 = un tiempo, 2 = 2 tiempos y 3 = 3 tiempos */
-        
-        /* Calcula el rango de ingresos familiar */
-        
-/***** FALTA INCLUIR EN EL CALCULO LAS REMESAS ******/
-        
-        $ringfam = 0;
-        if($tingfam < 1000 ) {
-            $ringfam = 1;
-        } else if ($tingfam > 1001 && $tingfam <= 2000) {
-            $ringfam = 2;
-        } else if ($tingfam > 2001 && $tingfam <= 4000) {
-            $ringfam = 3;
-        } else if ($tingfam > 4001 && $tingfam <= 8000) {
-            $ringfam = 4;
-        } else if ($tingfam > 8001 && $tingfam <= 12000) {
-            $ringfam = 5;
-        } else if ($tingfam > 12001 && $tingfam <= 20000) {
-            $ringfam = 6;
-        } else if ($tingfam > 20001 && $tingfam <= 30000) {
-            $ringfam = 7;
-        } else if ($tingfam > 30001 && $tingfam <= 50000) {
-            $ringfam = 8;
-        } else if ($tingfam > 50001 ) {
-            $ringfam = 9;
-        } 
-        
-        $entdfo->setCantIngresofam($tingfam);
-        $entdfo->setRangoIngresofam($ringfam);
-        
-        /* Guarda los valores por defecto */
-        $entdfo->setUsuarioCreacion($usuario);
-        $entdfo->setUsuarioUltimaModificacion($usuario);
-        $entdfo->setFechaCreacion($fecha);
-        $entdfo->setFechaUltimaModificacion($fecha);
-        
-        $em->persist($entdfo);
-        
-/* =================== DATOS DEMOGRAFICOS POR RANGOS EDAD ===========================*/
-        
-        foreach($rangos as $item) {
-            if($item["t"] > 0) {
-                $entddr = new DatosdRangos;
-                /* Generar el id unico de la tabla seguridad y participacion */
-                $sequenceName = 'datosd_rangos_id_seq';
-                $dbConnection = $em->getConnection();
-                $nextvalQuery = $dbConnection->getDatabasePlatform()->getSequenceNextValSQL($sequenceName);
-                $newId = (int)$dbConnection->fetchColumn($nextvalQuery);
-                $codCom = (int)$codMuni . $newId;
-
-                $entddr->setId((int)$codCom);
-                $entddr->setIdEnc($idEnc);
-                $entddr->setCodComunidad($codComunidad);
-                $entddr->setcodMunicipio($codMuni);  
-                $entddr->setcodDepartamento($codDept);
-
-                $entddr->setRango($item["rng"]);
-                $entddr->setCantPersonas($item["t"]);
-                $entddr->setCantHombres($item["h"]);
-                $entddr->setCantMujeres($item["m"]);
-                $entddr->setCantHombresLeen($item["hl"]);
-                $entddr->setCantMujeresLeen($item["ml"]);
-
-                /* Guarda los valores por defecto */
-                $entddr->setUsuarioCreacion($usuario);
-                $entddr->setUsuarioUltimaModificacion($usuario);
-                $entddr->setFechaCreacion($fecha);
-                $entddr->setFechaUltimaModificacion($fecha);
-
-                $em->persist($entddr);
-            }
-        }
-        
-/* =================== ACTUALIZAR DATOS GENERALES ===========================*/
-        
-        try {
-            $ent = $em->getRepository('FocalAppBundle:DatosGenerales')->findBy(array('idEnc' => $idEnc, 'codMunicipio' => $codMuni , 'codDepartamento' => $codDept, 'periodo' => $periodo));
-
-            if ($ent) { 
-                $ent[0]->setCantPersonas523($per5a23);
-                $ent[0]->setCantPersonasm10($perm10);
-                $ent[0]->setCantPersonasvivienda($totalper);
-                /* Guarda los valores por defecto */
-                $ent[0]->setUsuarioUltimaModificacion($usuario);
-                $ent[0]->setFechaUltimaModificacion($fecha);
-            } 
-        } catch (\Exception $e){
-            //error_log($e->getMessage());
-            $this->addFlash('error',$e->getMessage());
-            $this->addFlash('warning_df','No se pudieron encontrar los Datos Generales algunos datos no se actulizaron en la table Datos Generales');
-            //throw new NotFoundHttpException('Número de boleta ya existe o esta vacia');
-            //throw $this->createAccessDeniedException();
-        }
-        
-        $em->flush();
-        
-        /* Listado de parentescos */
-        $dsql ="select p.id, p.descripcion "
-        . "from FocalAppBundle:AdParentesco p "
-        . "order by p.id";
-        $query = $em->createQuery($dsql);
-        $parentescos = $query->getResult();
-        
-        /* Listado de etnias */
-        $dsql ="select e.id, e.descripcion "
-        . "from FocalAppBundle:AdEtnia e "
-        . "order by e.id";
-        $query = $em->createQuery($dsql);
-        $etnias = $query->getResult();
-        
-        /* Listado de ocupaciones */
-        $dsql ="select p.id, p.descripcion "
-        . "from FocalAppBundle:AdOcupaciones p "
-        . "order by p.id";
-        $query = $em->createQuery($dsql);
-        $ocupaciones = $query->getResult();
-        
-        /* Listado de profesiones */
-        $dsql ="select e.id, e.descripcion "
-        . "from FocalAppBundle:AdProfesiones e "
-        . "order by e.id";
-        $query = $em->createQuery($dsql);
-        $profesiones = $query->getResult();
-        
-        $this->addFlash('success','Datos guardados con exito');
-        return $this->render('FocalAppBundle:DatosGenerales:newABr.html.twig', array(
-            //'entity' => $entity,
-            //'form'   => $form->createView(),
-            'idEnc' => 000,
-            'codComunidad' => '000000000',
-            'etnias' => $etnias, 
-            'parentescos' => $parentescos,
-            'ocupaciones' => $ocupaciones,
-            'profesiones' => $profesiones,
-        ));
-    }    
-    
     /**
      * Creates a form to create a DatosGenerales entity.
      *
@@ -1547,59 +992,6 @@ public function reportecuadro161718192021Action() {
         //    'form'   => $form->createView(),
             'comunidades' => $comunidades,
             'encuestadores' => $encuestadores,
-        ));
-    }
-    
-    /**
-     * Displays a form to create a new DatosGenerales entity.
-     *
-     */
-    public function newABrAction(Request $request)
-    {
-        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw $this->createAccessDeniedException();
-        }
-        
-        $em = $this->getDoctrine()->getManager();
-        
-        $session = $request->getSession();
-        $codMuni = $session->get('_cod_municipio');
-        
-        /* Listado de parentescos */
-        $dsql ="select p.id, p.descripcion "
-        . "from FocalAppBundle:AdParentesco p "
-        . "order by p.id";
-        $query = $em->createQuery($dsql);
-        $parentescos = $query->getResult();
-        
-        /* Listado de etnias */
-        $dsql ="select e.id, e.descripcion "
-        . "from FocalAppBundle:AdEtnia e "
-        . "order by e.descripcion";
-        $query = $em->createQuery($dsql);
-        $etnias = $query->getResult();
-        
-        /* Listado de ocupaciones */
-        $dsql ="select p.id, p.descripcion "
-        . "from FocalAppBundle:AdOcupaciones p "
-        . "order by p.descripcion";
-        $query = $em->createQuery($dsql);
-        $ocupaciones = $query->getResult();
-        
-        /* Listado de profesiones */
-        $dsql ="select e.id, e.descripcion "
-        . "from FocalAppBundle:AdProfesiones e "
-        . "order by e.descripcion";
-        $query = $em->createQuery($dsql);
-        $profesiones = $query->getResult();
-        
-        return $this->render('FocalAppBundle:DatosGenerales:newABr.html.twig', array(
-            'idEnc' => 1620147695,
-            'codComunidad' => '162030001000',
-            'etnias' => $etnias, 
-            'parentescos' => $parentescos,
-            'ocupaciones' => $ocupaciones,
-            'profesiones' => $profesiones,
         ));
     }
 
@@ -1995,6 +1387,7 @@ public function guardarAction(Request $request, $id)
         $codMuni = $entity->getCodMunicipio();  
         $codDept = $entity->getCodDepartamento();
         $periodo = $entity->getPeriodo();
+        $codComunidad = $entity->getCodColonia();
         
         /* Listado de comunidades */
         $dsql ="select distinct co.codComunidad, co.nombre "
@@ -2082,49 +1475,49 @@ public function guardarAction(Request $request, $id)
 
 /*================ DATOS VIVIENDA ================*/
                 
-        $mat_viv = $request->get('qst_12');
-        $mat_techo = $request->get('qst_13');
-        $mat_piso = $request->get('qst_14');
-        $pro_viv = $request->get('qst_15');
-        $con_viv = $request->get('qst_16');
-        $tenencia = $request->get('qst_20_01');
-        $ten_sexo = $request->get('qst_20_02');
-        $tiene_coc = $request->get('qst_21');
-        $ubi_cocina = $request->get('qst_22');
-        $con_ele = $request->get('qst_23_1');
-        $con_gas = $request->get('qst_23_2');
-        $con_ker = $request->get('qst_23_3');
-        $con_len = $request->get('qst_23_4');
-        $con_eco = $request->get('qst_23_5');
-        $con_nin = $request->get('qst_23_6');
-        $con_otro = $request->get('qst_23_7');
-        $con_nsnr = $request->get('qst_23_8');
+        $mat_viv = (int)$request->get('qst_12');
+        $mat_techo = (int)$request->get('qst_13');
+        $mat_piso = (int)$request->get('qst_14');
+        $pro_viv = (int)$request->get('qst_15');
+        $con_viv = (int)$request->get('qst_16');
+        $tenencia = (int)$request->get('qst_20_01');
+        $ten_sexo = (int)$request->get('qst_20_02');
+        $tiene_coc = (int)$request->get('qst_21');
+        $ubi_cocina = (int)$request->get('qst_22');
+        $con_ele = (int)$request->get('qst_23_1');
+        $con_gas = (int)$request->get('qst_23_2');
+        $con_ker = (int)$request->get('qst_23_3');
+        $con_len = (int)$request->get('qst_23_4');
+        $con_eco = (int)$request->get('qst_23_5');
+        $con_nin = (int)$request->get('qst_23_6');
+        $con_otro = (int)$request->get('qst_23_7');
+        $con_nsnr = (int)$request->get('qst_23_8');
         
-        $agu_not = $request->get('qst_24_1');
-        $agu_bot = $request->get('qst_24_2');
-        $agu_fil = $request->get('qst_24_3');
-        $agu_her = $request->get('qst_24_4');
-        $agu_clo = $request->get('qst_24_5');
-        $agu_otro = $request->get('qst_24_6');
-        $agu_nsnr = $request->get('qst_24_7');
+        $agu_not = (int)$request->get('qst_24_1');
+        $agu_bot = (int)$request->get('qst_24_2');
+        $agu_fil = (int)$request->get('qst_24_3');
+        $agu_her = (int)$request->get('qst_24_4');
+        $agu_clo = (int)$request->get('qst_24_5');
+        $agu_otro = (int)$request->get('qst_24_6');
+        $agu_nsnr = (int)$request->get('qst_24_7');
         
-        $piezas_viv = $request->get('qst_25');
-        $banos_viv = $request->get('qst_26');
-        $dor_viv = $request->get('qst_27');
-        $per_xdor = $request->get('qst_28');
-        $fam_xviv = $request->get('qst_29');
-        $per_xviv = $request->get('qst_30');
+        $piezas_viv = (int)$request->get('qst_25');
+        $banos_viv = (int)$request->get('qst_26');
+        $dor_viv = (int)$request->get('qst_27');
+        $per_xdor = (int)$request->get('qst_28');
+        $fam_xviv = (int)$request->get('qst_29');
+        $per_xviv = (int)$request->get('qst_30');
         
-        $miembro_mig = $request->get('qst_31_01');
-        $mig_hom = $request->get('qst_31_02');
-        $mig_muj = $request->get('qst_31_03');
+        $miembro_mig = (int)$request->get('qst_31_01');
+        $mig_hom = (int)$request->get('qst_31_02');
+        $mig_muj = (int)$request->get('qst_31_03');
               
-        $mig_ca = $request->get('qst_32_01');
-        $mig_na = $request->get('qst_32_02');
-        $mig_sa = $request->get('qst_32_03');
-        $mig_eu = $request->get('qst_32_04');
-        $mig_in = $request->get('qst_32_05');
-        $mig_ot = $request->get('qst_32_06');
+        $mig_ca = (int)$request->get('qst_32_01');
+        $mig_na = (int)$request->get('qst_32_02');
+        $mig_sa = (int)$request->get('qst_32_03');
+        $mig_eu = (int)$request->get('qst_32_04');
+        $mig_in = (int)$request->get('qst_32_05');
+        $mig_ot = (int)$request->get('qst_32_06');
         
         $entviv[0]->setCantCentroa($mig_ca);
         $entviv[0]->setCantNortea($mig_na);
@@ -2235,18 +1628,18 @@ public function guardarAction(Request $request, $id)
         
 /* ================ SEGURIDAD Y PARTICIPACION ==================*/
         
-        $cas_vio = $request->get('qst_34_01');
-        $can_cvi = $request->get('qst_34_02');
-        $vic_cvi = $request->get('qst_35_01');
-        $can_vcv = $request->get('qst_35_02');
-        $con_seg = $request->get('qst_36');
-        $rin_rob = $request->get('qst_37_01');
-        $rin_mar = $request->get('qst_37_02');
-        $rin_dro = $request->get('qst_37_03');
-        $rin_can = $request->get('qst_37_04');
-        $rin_rin = $request->get('qst_37_05');
-        $rin_vio = $request->get('qst_37_06');
-        $rin_otr = $request->get('qst_37_07');
+        $cas_vio = (int)$request->get('qst_34_01');
+        $can_cvi = (int)$request->get('qst_34_02');
+        $vic_cvi = (int)$request->get('qst_35_01');
+        $can_vcv = (int)$request->get('qst_35_02');
+        $con_seg = (int)$request->get('qst_36');
+        $rin_rob = (int)$request->get('qst_37_01');
+        $rin_mar = (int)$request->get('qst_37_02');
+        $rin_dro = (int)$request->get('qst_37_03');
+        $rin_can = (int)$request->get('qst_37_04');
+        $rin_rin = (int)$request->get('qst_37_05');
+        $rin_vio = (int)$request->get('qst_37_06');
+        $rin_otr = (int)$request->get('qst_37_07');
         
         $entsep[0]->setOrdenViolaciones($rin_vio);
         $entsep[0]->setOrdenPeleas($rin_rin);
@@ -2360,17 +1753,7 @@ public function guardarAction(Request $request, $id)
         
         $em->flush();
         
-        return $this->render('FocalAppBundle:DatosGenerales:editAB.html.twig', array(
-            'entity'      => $entity,
-            'entviv'      => $entviv[0],
-            'entsep'      => $entsep[0],
-            'entenf'      => $entenf,
-            'entspu'      => $entspu,
-            'entsal'      => $entsal[0],
-            'idenc' => $entity->getIdEnc(),
-            'comunidades' => $comunidades,
-            'encuestadores' => $encuestadores,
-        ));
+        return $this->redirect($this->generateUrl('datosgenerales_editABr', array('idEnc' => $id, 'codComunidad' => $codComunidad)));
 
     }
     /**

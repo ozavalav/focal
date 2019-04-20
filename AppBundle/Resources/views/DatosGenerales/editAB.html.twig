@@ -6,9 +6,34 @@
     <link rel="stylesheet" href="{{asset('bundles/app/css/parsley.css')}}" />
     <!--link rel="stylesheet" href="{#{asset('bundles/app/css/mainAB.css')}#}" /-->
     <!--link rel="stylesheet" href="{#{asset('bundles/app/css/focal.css')}#}" /-->
+    <style>
+    table {
+      table-layout: fixed;
+      width: 100%;
+      border-collapse: separate; 
+      border-spacing: 5px;  
+    }
+    input[type=text], select, textarea {
+        width: 100%;
+        resize: vertical;
+    }
+    input[type=number] {
+        width: 100%;
+        resize: vertical;
+    }
+    .input-int {
+        width: 100%;
+        resize: vertical;
+    }
+    .titulo-sec {
+        background-color: lightblue;
+        text-align: center;
+    }
+    </style>
+    
 {% endblock %} 
 {% block header -%}
-    Nueva Encuesta AB
+    Editar Encuesta AB - parte 1
     <small>
         <i class="ace-icon fa fa-angle-double-right"></i>
         Ingresar la información solicitada
@@ -32,8 +57,9 @@
 <form name="focal_appbundle_datosgeneralesAB" method="post" action="{{ path('datosgenerales_updateAB', { 'id': idenc }) }}" id="frm_datosgab"> 
         <div class="formulario">
             <table>
+                <tr><td colspan="4" class="titulo-sec"> -- DATOS DE CONTROL --</td></tr>
                 <tr>
-                    <td>Nombre Encuestador</td>
+                    <td>Nombre Encuestador:</td>
                     <td colspan="3">
                         <select required id="qst_01_01" class="form-control" name="qst_01_01">
                         <option value="">-- Selecionar --</option>
@@ -44,13 +70,13 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Nombre entrevistado</td>
-                    <td colspan="3"><input value ="{{ entity.nombreEntrevistado }}" required name="qst_01" id="qst_01" type="text" style="width: 25em"></td>
+                    <td><b>#1</b>-Nombre entrevistado:</td>
+                    <td colspan="3"><input value ="{{ entity.nombreEntrevistado }}" required name="qst_01" id="qst_01" type="text" maxlength="100"></td>
                 </tr>
                 <tr>
-                    <td>Cel.</td>
-                    <td><input value="{{ entity.telefonoCel }}" name="qst_02" id="qst_02" type="text" style="width: 12em"></td>
-                    <td>#3-Comunidad</td>
+                    <td><b>#2</b>-Número de teléfono celular: </td>
+                    <td><input value="{{ entity.telefonoCel }}" name="qst_02" id="qst_02" type="text" maxlength="30"></td>
+                    <td style="text-align: right"><b>#3</b>-Comunidad</td>
                     <td>
                         <select required id="qst_03" class="form-control" name="qst_03">
                         <option value="">-- Selecionar --</option>
@@ -61,34 +87,47 @@
                     </td>
                 </tr>
             </table>
-            <table class="datos-1">
+            <table>
                 <tr>
                     <td><b>#4</b>-Manzana No.</td>
-                    <td><input name="qst_04" type="text" id="qst_04"></td>
                     <td><b>#5</b>-Lote No.</td>
-                    <td><input name="qst_05" id="qst_05" type="text"></td>
-                    <td><b>#6</b>-Numero de ubicaion de la vivienda</td>
-                    <td><input name="qst_06" id="qst_06" type="text"></td>
+                    <td><b>#6</b>-Número de ubicación de la vivienda</td>
                 </tr>
                 <tr>
-                    <td><b>#7</b>-Numero de boleta</td>
-                    <td><input value="{{ entity.numBoleta }}" name="qst_07" id="qst_07" type="text"></td>
+                    <td><input name="qst_04" id="qst_04" type="text" maxlength="5"></td>
+                    <td><input name="qst_05" id="qst_05" type="text" maxlength="5"></td>
+                    <td><input name="qst_06" id="qst_06" type="text" maxlength="10"></td>
+                </tr>
+                <tr>
+                    <td><b>#7</b>-Número de boleta</td>
                     <td><b>#8</b>-No. Catastral</td>
-                    <td colspan="2"><input name="qst_08" id="qst_08" type="text" style="width: 15em"></td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td><b>#9</b>-Total Edificaciones</td>
-                    <td><input name="qst_09" id="qst_09" type="text"></td>
-                    <td><b>#10</b>-Total Unidades</td>
-                    <td><input name="qst_10" id="qst_10" type="text"></td>
-                    <td><b>#11</b>-Edificacion No.</td>
-                    <td><input name="qst_11" id="qst_11" type="text"></td>
+                    <td><input name="qst_07" id="qst_07" value="{{ entity.numBoleta }}" required type="text" maxlength="10"></td>
+                    <td><input name="qst_08" id="qst_08" type="text" maxlength="20"></td>
                 </tr>
+                
             </table>
             <br>
-            <table class="datos-1">
+            <table>
+                <tr><td colspan="3" class="titulo-sec"> -- DATOS DE LA EDIFIACIÓN --</td></tr>
+                <tr>
+                    <td><b>#9</b>-Total Edificaciones</td>
+                    <td><b>#10</b>-Total Unidades</td>
+                    <td><b>#11</b>-Edificación No.</td>
+                </tr>
+                <tr>
+                    <td><input name="qst_09" id="qst_09" type="text" maxlength="5"></td>
+                    <td><input name="qst_10" id="qst_10" type="text" maxlength="5"></td>
+                    <td><input name="qst_11" id="qst_11" type="text" maxlength="5"></td>
+                </tr>
                 <tr>
                     <td><b>#12</b>-Material de paredes</td>
+                    <td><b>#13</b>-Material del techo</td>
+                    <td><b>#14</b>-Material del piso</td>
+                </tr>
+                <tr>
                     <td>
                         <select name="qst_12" id="qst_12">
                             <option value="">Seleccioné una...</option>
@@ -104,32 +143,29 @@
                             <option {{ entviv.materialVivienda == 10 ? 'selected' }} value="10">10. NS/NR</option>
                         </select>
                     </td>
-
-                    <td><b>#13</b>-Material del techo</td>
                     <td>
                         <select name="qst_13" id="qst_13">
                             <option value="">Seleccioné una...</option>
                             <option {{ entviv.materialTecho == 1 ? 'selected' }} value="1">1: Desechos</option>
                             <option {{ entviv.materialTecho == 2 ? 'selected' }} value="2">2: Paja o similar</option>
                             <option {{ entviv.materialTecho == 3 ? 'selected' }} value="3">3: Teja de barro</option>
-                            <option {{ entviv.materialTecho == 4 ? 'selected' }} value="4">4: Lamina metalica</option>
-                            <option {{ entviv.materialTecho == 5 ? 'selected' }} value="5">5: Lamina de asbesto</option>
+                            <option {{ entviv.materialTecho == 4 ? 'selected' }} value="4">4: Lámina metálica</option>
+                            <option {{ entviv.materialTecho == 5 ? 'selected' }} value="5">5: Lámina de asbesto</option>
                             <option {{ entviv.materialTecho == 6 ? 'selected' }} value="6">6: Concreto</option>
                             <option {{ entviv.materialTecho == 7 ? 'selected' }} value="7">7: Shingle</option>
                             <option {{ entviv.materialTecho == 8 ? 'selected' }} value="8">8: Otro</option>
                             <option {{ entviv.materialTecho == 9 ? 'selected' }} value="9">9: NS/NR</option>
                         </select>
                     </td>
-                    <td><b>#14</b>-Material del piso</td>
                     <td>
                         <select name="qst_14" id="qst_14">
                             <option value="">Seleccioné una...</option>
                             <option {{ entviv.materialPiso == 1 ? 'selected' }} value="1">1: Tierra</option>
                             <option {{ entviv.materialPiso == 2 ? 'selected' }} value="2">2: Plancha de cem.</option>
-                            <option {{ entviv.materialPiso == 3 ? 'selected' }} value="3">3: Madera rustica</option>
+                            <option {{ entviv.materialPiso == 3 ? 'selected' }} value="3">3: Madera rústica</option>
                             <option {{ entviv.materialPiso == 4 ? 'selected' }} value="4">4: Ladrillo de barro</option>
                             <option {{ entviv.materialPiso == 5 ? 'selected' }} value="5">5: Granito</option>
-                            <option {{ entviv.materialPiso == 6 ? 'selected' }} value="6">6: Ceramica</option>
+                            <option {{ entviv.materialPiso == 6 ? 'selected' }} value="6">6: Cerámica</option>
                             <option {{ entviv.materialPiso == 7 ? 'selected' }} value="7">7: Mosaico</option>
                             <option {{ entviv.materialPiso == 8 ? 'selected' }} value="8">8: Otro</option>
                             <option {{ entviv.materialPiso == 9 ? 'selected' }} value="9">9: NS/NR</option>
@@ -137,7 +173,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><b>#15</b>-Principal problema de la edificacion</td>
+                    <td><b>#15</b>-Principal problema de la edificación</td>
+                    <td><b>#16</b>-Condición de la edificación</td>
+                    <td><b>#17</b>-Unidad No.</td>
+                </tr>
+                <tr>
                     <td>
                         <select name="qst_15" id="qst_15">
                             <option value="">Seleccioné una...</option>
@@ -151,8 +191,6 @@
                             <option value="8">8: Ninguno</option>
                         </select>
                     </td>
-
-                    <td><b>#16</b>-Condicion de la edificaion</td>
                     <td>
                         <select name="qst_16" id="qst_16">
                             <option value="">Seleccioné una...</option>
@@ -161,15 +199,18 @@
                             <option {{ entviv.condicionVivienda == 3 ? 'selected' }} value="3">3: Mala</option>
                         </select>
                     </td>
-                    <td><b>#17</b>-Unidad No.</td>
                     <td>
-                        <input name="qst_17" id="qst_17" type="number">
+                        <input name="qst_17" id="qst_17" type="number" max="999">
                     </td>
                 </tr>
                 <tr>
                     <td><b>#18</b>-Uso de la unidad</td>
+                    <td><b>#19</b>-Estado</td>
+                    <td></td>
+                </tr>
+                <tr>
                     <td>
-                        <input name="qst_18" id="qst_18" type="number"> </td> <td><b>#19</b>-Estado</td>
+                        <input name="qst_18" id="qst_18" type="number" max="999"> </td>
                     <td>
                         <select name="qst_19" id="qst_19" required>
                             <option value="">Seleccioné una...</option>
@@ -179,7 +220,14 @@
                             <option value="4">4: En ruina/demolida</option>
                         </select>
                     </td>
+                    <td></td>
+                 </tr>
+                 <tr>
                     <td><b>#20</b>-Tenencia</td>
+                    <td><b>Sexo</b></td>
+                    <td></td>
+                </tr>
+                <tr>
                     <td>
                         <select name="qst_20_01" id="qst_20_01">
                             <option value="">Seleccioné una...</option>
@@ -192,9 +240,8 @@
                             <option {{ entviv.tipoTenencia == 7 ? 'selected' }} value="7">7. Cedida</option>
                             <option {{ entviv.tipoTenencia == 8 ? 'selected' }} value="8">8. NS/NR</option>
                         </select>
-                        <br>
-                        <b>Sexo</b>
-                        <br>
+                    </td>
+                    <td>
                         <select name="qst_20_02" id="qst_20_02">
                             <option value="">Seleccioné una...</option>
                             <option {{ entviv.sexoTenencia == 1 ? 'selected' }} value="1">1. Hombre</option>
@@ -202,9 +249,14 @@
                             <option {{ entviv.sexoTenencia == 3 ? 'selected' }} value="3">3. Ambos</option>
                         </select>
                     </td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td><b>#21</b>-¿Tiene cocina?</td>
+                   <td><b>#21</b>-¿Tiene cocina?</td>
+                   <td><b>#22</b>-¿Donde esta ubicada?</td>
+                   <td></td>
+                </tr>
+                <tr>
                     <td>
                         <select name="qst_21" id="qst_21">
                             <option value="">Seleccioné una...</option>
@@ -212,8 +264,6 @@
                             <option {{ entviv.tieneCocina == 2 ? 'selected' }} value="2">2. No</option>
                         </select>
                     </td>
-
-                    <td><b>#22</b>-¿Donde esta ubicada?</td>
                     <td>
                         <select name="qst_22" id="qst_22" {{ entviv.tieneCocina == 1 ? 'required' }}>
                             <option value="">Seleccioné una...</option>
@@ -225,23 +275,24 @@
 
                         </select>
                     </td>
+                    <td></td>
                 </tr>
+                <tr><td colspen="3"><b>#23</b>-¿Que utilizan para cocinar?</td></tr>
                 <tr>    
-                    <td><b>#23</b>-¿Que utilizan para cocinar?</td>
-                    <td colspan="5">
+                    <td colspan="3">
                         <input {{ entviv.concinaconElec == 1 ? 'checked' }} type="checkbox" name="qst_23_1" id="qst_23_1" value="1"> 1. Electricidad</input>
-                        <input {{ entviv.concinaconChimbo == 1 ? 'checked' }} type="checkbox" name="qst_23_2" id="qst_23_2" value="1"> 2. Gas volatil</input>
+                        <input {{ entviv.concinaconChimbo == 1 ? 'checked' }} type="checkbox" name="qst_23_2" id="qst_23_2" value="1"> 2. Gas volátil</input>
                         <input {{ entviv.concinaconKerosen == 1 ? 'checked' }} type="checkbox" name="qst_23_3" id="qst_23_3" value="1"> 3. Gas (Kerosén)</input>
                         <input {{ entviv.concinaconLena == 1 ? 'checked' }} type="checkbox" name="qst_23_4" id="qst_23_4" value="1"> 4. Leña</input>
-                        <input {{ entviv.concinaconEco == 1 ? 'checked' }} type="checkbox" name="qst_23_5" id="qst_23_5" value="1"> 5. Eco fogon</input>
+                        <input {{ entviv.concinaconEco == 1 ? 'checked' }} type="checkbox" name="qst_23_5" id="qst_23_5" value="1"> 5. Eco fogón</input>
                         <input type="checkbox" name="qst_23_6" id="qst_23_6" value="1"> 6. Ninguno</input>
                         <input type="checkbox" name="qst_23_7" id="qst_23_7" value="1"> 7. Otro</input>
                         <input type="checkbox" name="qst_23_8" id="qst_23_8" value="1" data-parsley-cocino="1"> 8. NS/NR</input>
                     </td>
                 </tr>
+                <tr><td colspan="3"><b>#24</b>-¿Como consume agua?</td></tr>
                 <tr>
-                    <td><b>#24</b>-¿Como consume agua?</td>
-                    <td colspan="5">
+                    <td colspan="3">
                         <input {{ entviv.consumoaguaNotratada == 1 ? 'checked' }} type="checkbox" name="qst_24_1" id="qst_24_1" value="1"> 1. No tratada</input>
                         <input {{ entviv.consumoaguaBotellon == 1 ? 'checked' }} type="checkbox" name="qst_24_2" id="qst_24_2" value="1"> 2. Botellón</input>
                         <input {{ entviv.consumoaguaFiltrada == 1 ? 'checked' }} type="checkbox" name="qst_24_3" id="qst_24_3" value="1"> 3. Filtrada</input>
@@ -252,99 +303,106 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><b>#25</b>-Cuantas piezas tiene esta unidad?</td>
-                    <td>
-                        <input value="{{ entviv.piezasVivienda|default(0) }}" name="qst_25" id="qst_25" type="number" required>
-                    </td>
+                    <td><b>#25</b>-¿Cuantas piezas tiene esta unidad?</td>
                     <td><b>#26</b>-¿Cuantos baños tiene esta unidad?</td>
-                    <td>
-                        <input value="{{ entviv.banosVivienda|default(0) }}" name="qst_26" id="qst_26" type="number" class="numeros" required>
-                    </td>
-                </tr>
-                <tr>
                     <td><b>#27</b>-¿Cuantas piezas son dormitorios?</td>
+                </tr>
+                <tr>
                     <td>
-                        <input value="{{ entviv.dormitoriosVivienda|default(0) }}" name="qst_27" id="qst_27" type="number" required>
+                        <input value="{{ entviv.piezasVivienda|default(0) }}" name="qst_25" id="qst_25" type="number" max="99" required>
                     </td>
-
-                    <td><b>#28</b>-¿Cuantas personas por dormitorio?</td>
                     <td>
-                        <input value="{{ entviv.personasxDormitorio|default(0) }}" name="qst_28" id="qst_28" type="number" required>
+                        <input value="{{ entviv.banosVivienda|default(0) }}" name="qst_26" id="qst_26" type="number" max="99" class="numeros" required>
                     </td>
-                    <td><b>#29</b>-¿Cuantos hogares hay en esta vivienda?</td>
                     <td>
-                        <input value="{{ entviv.familiasCasa|default(0) }}"name="qst_29" id="qst_29" type="number" required>
+                        <input value="{{ entviv.dormitoriosVivienda|default(0) }}" name="qst_27" id="qst_27" type="number" max="99" required>
                     </td>
                 </tr>
                 <tr>
+                    <td><b>#28</b>-¿Cuantas personas por dormitorio?</td>
+                    <td><b>#29</b>-¿Cuantos hogares hay en esta vivienda?</td>
                     <td><b>#30</b>-¿Cuantos habitantes en la vivienda?</td>
+                </tr>
+                <tr>
                     <td>
-                        <input value="{{ entity.cantPersonasVivienda|default(0) }}"name="qst_30" id="qst_30" type="number" required>
+                        <input value="{{ entviv.personasxDormitorio|default(0) }}" name="qst_28" id="qst_28" type="number" max="99" required>
+                    </td>
+                    <td>
+                        <input value="{{ entviv.familiasCasa|default(0) }}"name="qst_29" id="qst_29" type="number" max="99" required>
+                    </td>
+                    <td>
+                        <input value="{{ entity.cantPersonasVivienda|default(0) }}"name="qst_30" id="qst_30" type="number" max="99" required>
                     </td>
                 </tr>
             </table>
             <!------------------------------------------------------------->
-            <table class="datos-1">
+            <table>
+                <tr><td colspan="4" class="titulo-sec"> -- DATOS DE MIGRACIÓN --</td></tr>
                 <tr>
                     <td colspan="4"><b>#31</b>-¿Ha emigrado algun miembro de su vivienda?</td>
                 </tr>
                 <tr>
-                    <td>
+                    <td>Si/No
                         <select name="qst_31_01" id="qst_31_01" onchange="enable_31();">
                             <option value="">Seleccioné una...</option>
                             <option {{ entviv.miembroEmigrado == 1 ? 'selected' }} value="1">1. Si</option>
                             <option {{ entviv.miembroEmigrado == 2 ? 'selected' }} value="2">2. No</option>
                         </select>
                     </td>
-                    <td>cuantos</td>
-                    <td>H<input value="{{ entviv.cantHombres|default(0) }}" name="qst_31_02" id="qst_31_02" type="number" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
-                    <td>M<input value="{{ entviv.cantMujeres|default(0) }}" name="qst_31_03" id="qst_31_03" type="number" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
+                    <td>¿Cuantos?</td>
+                    <td>Hombres:<input value="{{ entviv.cantHombres|default(0) }}" name="qst_31_02" id="qst_31_02" type="number" min="0" max="99" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
+                    <td>Mujeres:<input value="{{ entviv.cantMujeres|default(0) }}" name="qst_31_03" id="qst_31_03" type="number" min="0" max="99" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
                 </tr>
             </table>
             <table id="qst_32_33" style="display:{{ entviv.miembroEmigrado == 1 ? 'block':'none'}}">
                 <td colspan="6"><b>#32</b>-¿Donde?</td>
                 <tr>
-                    <td>Paises de C.A<input value="{{ entviv.cantCentroa|default(0) }}" name="qst_32_01" id="qst_32_01" type="number" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
-                    <td>Norte America<input value="{{ entviv.cantNortea|default(0) }}" name="qst_32_02"id="qst_32_02" type="number" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
-                    <td>Sur America<input value="{{ entviv.cantSura|default(0) }}" name="qst_32_03" id="qst_32_03" type="number" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
-                    <td>Europa<input value="{{ entviv.cantEuropa|default(0) }}" name="qst_32_04" id="qst_32_04" type="number" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
-                    <td>Dentro del pais<input value="{{ entviv.cantDentropais|default(0) }}" name="qst_32_05" id="qst_32_05" type="number" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
-                    <td>Otro<input value="{{ entviv.cantOtros|default(0) }}" name="qst_32_06" id="qst_32_06" type="number" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
+                    <td>Paises de C.A<input value="{{ entviv.cantCentroa|default(0) }}" name="qst_32_01" id="qst_32_01" type="number" min="0" max="99" {{ entviv.miembroEmigrado == 1 ? "required"}}></td>
+                    <td>Norte America<input value="{{ entviv.cantNortea|default(0) }}" name="qst_32_02"id="qst_32_02" type="number" min="0" max="99" {{ entviv.miembroEmigrado == 1 ? "required"}}></td>
+                    <td>Sur America<input value="{{ entviv.cantSura|default(0) }}" name="qst_32_03" id="qst_32_03" type="number" min="0" max="99" {{ entviv.miembroEmigrado == 1 ? "required"}}></td>
+                    <td>Europa<input value="{{ entviv.cantEuropa|default(0) }}" name="qst_32_04" id="qst_32_04" type="number" min="0" max="99" {{ entviv.miembroEmigrado == 1 ? "required"}}></td>
+                    <td>Dentro del pais<input value="{{ entviv.cantDentropais|default(0) }}" name="qst_32_05" id="qst_32_05" min="0" max="99" type="number" {{ entviv.miembroEmigrado == 1 ? "required"}}></td>
+                    <td>Otro<input value="{{ entviv.cantOtros|default(0) }}" name="qst_32_06" id="qst_32_06" type="number" min="0" max="99" {{ entviv.miembroEmigrado == 1 ? "required"}}></td>
                 </tr>
-                <td colspan="4"><b>#33</b>-¿Razones?</td>
+                <td colspan="6"><b>#33</b>-¿Razones?</td>
                 <tr>
-                    <td>Economicas<input name="qst_33_01" id="qst_33_01" type="number" value="0" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
-                    <td>Violencia Generalizada<input name="qst_33_02" id="qst_33_02" type="number" value="0" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
-                    <td>Reunion Familiar<input name="qst_33_03" id="qst_33_03" type="number" value="0" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
-                    <td>otro<input name="qst_33_04" id="qst_33_04" type="number" value="0" {{ entviv.miembroEmigrado == 1 ? "required":"disabled"}}></td>
+                    <td>Económicas<input name="qst_33_01" id="qst_33_01" type="number" value="0" min="0" max="99" {{ entviv.miembroEmigrado == 1 ? "required"}}></td>
+                    <td>Violencia Generalizada<input name="qst_33_02" id="qst_33_02" type="number" value="0" min="0" max="99" {{ entviv.miembroEmigrado == 1 ? "required"}}></td>
+                    <td>Reunión Familiar<input name="qst_33_03" id="qst_33_03" type="number" value="0" min="0" max="99" {{ entviv.miembroEmigrado == 1 ? "required"}}></td>
+                    <td>Otro<input name="qst_33_04" id="qst_33_04" type="number" value="0" min="0" max="99" {{ entviv.miembroEmigrado == 1 ? "required"}}></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </table>
-            <table class="datos-1">
-                <td colspan="4"><b>#34</b>-¿Conoce casos de violencia intra familiar en su comunidad ene le ultimo año?</td>
+            <table>
+                <tr><td colspan="4" class="titulo-sec"> -- DATOS DE SEGURIDAD, SERVICIOS PUBLICOS Y SALUD --</td></tr>
+                <tr><td colspan="4"><b>#34</b>-¿Conoce casos de violencia intra familiar en su comunidad en el último año?</td></tr>
                 <tr>
-                    <td>
+                    <td>Si/No
                         <select name="qst_34_01" id="qst_34_01" onchange="enable_34()">
                             <option value="">Seleccioné una...</option>
                             <option {{ entsep.casosViolencia == 1 ? 'selected' }} value="1">1. Si</option>
                             <option {{ entsep.casosViolencia == 2 ? 'selected' }} value="2">2. No</option>
                         </select>
                     </td>
-                    <td>Cuantos<input value="{{ entsep.cantCasosViolencia|default(0) }}"name="qst_34_02" id="qst_34_02" type="number" {{ entsep.casosViolencia == 1 ? "required":"disabled"}}></td>
+                    <td>¿Cuantos?<input value="{{ entsep.cantCasosViolencia|default(0) }}"name="qst_34_02" id="qst_34_02" type="number" max="99" {{ entsep.casosViolencia == 1 ? "required":"disabled"}}></td>
+                    <td></td>
+                    <td></td>
                 </tr>
-
-                <td colspan="4"><b>#35</b>-¿Le ha sucedido algún caso de violencia a Ud. o algun hab. de la vivienda en el ultimo año?</td>
+                <tr><td colspan="4"><b>#35</b>-¿Le ha sucedido algún caso de violencia a usted o algún habitante de la vivienda, en el último año?</td></tr>
                 <tr>
-                    <td>
+                    <td>Si/No
                         <select name="qst_35_01" id="qst_35_01" onchange="enable_35();" required>
                             <option value="">Seleccioné una...</option>
                             <option {{ entsep.victimaViolencia == 1 ? 'selected' }} value="1">1. Si</option>
                             <option {{ entsep.victimaViolencia == 2 ? 'selected' }} value="2">2. No</option>
                         </select>
                     </td>
-                    <td>Cuantos<input value="{{ entsep.cantVictimaViolencia|default(0) }}" name="qst_35_02" id="qst_35_02" type="number" {{ entsep.victimaViolencia == 1 ? "required":"disabled"}}></td>
+                    <td>¿Cuantos?<input value="{{ entsep.cantVictimaViolencia|default(0) }}" name="qst_35_02" id="qst_35_02" type="number" max="99" {{ entsep.victimaViolencia == 1 ? "required":"disabled"}}></td>
+                    <td></td>
+                    <td></td>
                 </tr>
-
-                <td colspan="4"><b>#36</b>-¿Que tan seguras, considera ud. se encuentyran las perosnas que vivien en su vivienda en este barrio o colonia?</td>
+                <td colspan="4"><b>#36</b>-¿Que tan seguras, considera usted que se encuentran las personas que viven en su vivienda en este Barrio o Colonia?</td>
                 <!-- COLORCAR RADIO BUTTON ************************************-->
                 <tr>
                     <td>
@@ -354,34 +412,38 @@
                             <option {{ entsep.consideraSeguro == 2 ? 'selected' }} value="2">2. No estan seguras</option>
                         </select>
                     </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </table>
-            <table class="datos-1" id="qst_37_table" style="display: {{ entsep.consideraSeguro == 1 ? 'block':'none'}}">
+            <table id="qst_37_table" style="display: {{ entsep.consideraSeguro == 2 ? 'block':'none'}}">
                 <tr>
-                    <td><b>#37</b>-¿Si considera que no estan seguras, cual es la razon?</td>
+                    <td colspan="7"><b>#37</b>-¿Si considera que no estan seguras, cual es la razon?</td>
+                </tr>
+                <tr>
                     <td>Robo o hurto</td>
                     <td>Maras o pandillas</td>
                     <td>Venta de dorgas</td>
                     <td>Cantinas</td>
-                    <td>Riñas y dsicuciones</td>
+                    <td>Riñas y discuciones</td>
                     <td>Violaciones</td>
                     <td>Otros</td>
                 </tr>
                 <tr>
-                    <td></td>
-                    <td><input value="{{ entsep.ordenRobo|default(0) }}" name="qst_37_01" id="qst_37_01" type="number" min="0" max="5" {{ entsep.consideraSeguro == 1 ? "required":"disabled"}}></td>
-                    <td><input value="{{ entsep.ordenMaras|default(0) }}" name="qst_37_02" id="qst_37_02" type="number" min="0" max="5" {{ entsep.consideraSeguro == 1 ? "required":"disabled"}}></td>
-                    <td><input value="{{ entsep.ordenDrogas|default(0) }}" name="qst_37_03" id="qst_37_03" type="number" min="0" max="5" {{ entsep.consideraSeguro == 1 ? "required":"disabled"}}></td>
-                    <td><input value="{{ entsep.ordenCantinas|default(0) }}" name="qst_37_04" id="qst_37_04" type="number" min="0" max="5" {{ entsep.consideraSeguro == 1 ? "required":"disabled"}}></td>
-                    <td><input value="{{ entsep.ordenPeleas|default(0) }}" name="qst_37_05" id="qst_37_05" type="number" min="0" max="5" {{ entsep.consideraSeguro == 1 ? "required":"disabled"}}></td>
-                    <td><input value="{{ entsep.ordenViolaciones|default(0) }}" name="qst_37_06" id="qst_37_06" type="number" min="0" max="5" {{ entsep.consideraSeguro == 1 ? "required":"disabled"}}></td>
-                    <td><input name="qst_37_07" id="qst_37_07" value="" type="number" min="0" max="5" {{ entsep.consideraSeguro == 1 ? "required":"disabled"}}></td>
+                    <td><input value="{{ entsep.ordenRobo|default(0) }}" name="qst_37_01" id="qst_37_01" type="number" min="0" max="5" {{ entsep.consideraSeguro == 2 ? "required":"disabled"}}></td>
+                    <td><input value="{{ entsep.ordenMaras|default(0) }}" name="qst_37_02" id="qst_37_02" type="number" min="0" max="5" {{ entsep.consideraSeguro == 2 ? "required":"disabled"}}></td>
+                    <td><input value="{{ entsep.ordenDrogas|default(0) }}" name="qst_37_03" id="qst_37_03" type="number" min="0" max="5" {{ entsep.consideraSeguro == 2 ? "required":"disabled"}}></td>
+                    <td><input value="{{ entsep.ordenCantinas|default(0) }}" name="qst_37_04" id="qst_37_04" type="number" min="0" max="5" {{ entsep.consideraSeguro == 2 ? "required":"disabled"}}></td>
+                    <td><input value="{{ entsep.ordenPeleas|default(0) }}" name="qst_37_05" id="qst_37_05" type="number" min="0" max="5" {{ entsep.consideraSeguro == 2 ? "required":"disabled"}}></td>
+                    <td><input value="{{ entsep.ordenViolaciones|default(0) }}" name="qst_37_06" id="qst_37_06" type="number" min="0" max="5" {{ entsep.consideraSeguro == 2 ? "required":"disabled"}}></td>
+                    <td><input name="qst_37_07" id="qst_37_07" value="" type="number" min="0" max="5" {{ entsep.consideraSeguro == 2 ? "required":"disabled"}}></td>
                 </tr>
             </table>
 
             <!--------38 && 39--------------------------->
             <br>
-            <table class="datos-1">
+            <table>
                 <tr>
                     <td><b>38.</b>¿En la vivienda existen los siguientes servicios publicos?</td>
                     <td>Los reciben<br>1: Si<br>2: No<br>3: NS/NR</td>
@@ -401,31 +463,31 @@
                             {% elseif ser.idServicio == 4 %}
                                 Agua domiciliar por acueducto
                             {% elseif ser.idServicio == 5 %}
-                                Agua llave publica/fuente
+                                Agua llave pública/fuente
                             {% elseif ser.idServicio == 6 %}
                                 Reservorio de agua lluvia
                             {% elseif ser.idServicio == 7 %}
-                                Inodoro con fosa septica 
+                                Inodoro con fosa séptica 
                             {% elseif ser.idServicio == 8 %}
                                 Inodoro con alcantarillado sanitario
                             {% elseif ser.idServicio == 9 %}
                                 Letrina de fosa simple
                             {% elseif ser.idServicio == 10 %}
-                                Letrina de fosa septica
+                                Letrina de fosa séptica
                             {% elseif ser.idServicio == 11 %}
                                 Usa la letrina
                             {% elseif ser.idServicio == 12 %}
-                                Recoleccion de basura
+                                Recolección de basura
                             {% elseif ser.idServicio == 13 %}
                                 Aseo de calles
                             {% elseif ser.idServicio == 14 %}
-                                 Energia electrica domiciliar
+                                 Energia eléctrica domiciliar
                             {% elseif ser.idServicio == 15 %}
                                 Teléfono(Hondutel)
                             {% elseif ser.idServicio == 16 %}
-                                Telefono(Celular movil o fijo)
+                                Telefono(Celular móvil o fijo)
                             {% elseif ser.idServicio == 17 %}
-                                Alumbrado publico
+                                Alumbrado público
                             {% elseif ser.idServicio == 18 %}
                                 Mantenimiento de calles  
                             {% endif %}    
@@ -439,7 +501,7 @@
                             </select>
                         </td>
                         <td>
-                            <select name="qst_38_{{ ser.idServicio }}_02" id="qst_38_{{ ser.idServicio }}_02" {{ ser.reciben == 1 ? "required":"disabled"}}>
+                            <select name="qst_38_{{ ser.idServicio }}_02" id="qst_38_{{ ser.idServicio }}_02" {{ (ser.reciben == 1 and ser.idServicio in [1,2,4,5,6,7,8,9,10,14,17,18]) ? "required":"disabled"}}>
                                 <option value="">Seleccioné una...</option>
                                 <option {{ ser.estado == 1 ? 'selected' }} value="1">1. Bueno</option>
                                 <option {{ ser.estado == 2 ? 'selected' }} value="2">2. Regular</option>
@@ -447,7 +509,7 @@
                             </select>
                         </td>
                         <td>
-                            <input value="{{ ser.cantDias|default(0) }}" name="qst_38_{{ ser.idServicio }}_03" id="qst_38_{{ ser.idServicio }}_03" type="number" min="0" max="7" {{ ser.reciben == 1 ? "required":"disabled"}}>
+                            <input value="{{ ser.cantDias|default(0) }}" name="qst_38_{{ ser.idServicio }}_03" id="qst_38_{{ ser.idServicio }}_03" type="number" min="0" max="7" {{ (ser.reciben == 1 and ser.idServicio in [1,2,3,4,5,12,13]) ? "required":"disabled"}}>
                         </td>
                     </tr>   
                     
@@ -460,15 +522,15 @@
                 <tr>
                     <!-- CAMBIAR COLORES DE TABLA ********************************-->
                     <td rowspan="2"><b>39.</b>Tipo de enfermedad</td>
-                    <td colspan=2> Se manifiesto</td>
-                    <td colspan=3> Asistencia</td>
+                    <td style="text-align: center;" colspan=2> Se manifiesto</td>
+                    <td style="text-align: center;" colspan=3> Asistencia</td>
                 </tr>
                 <tr>
-                    <td>Hombre<br></td>
-                    <td>Mujer</td>
-                    <td>Publica</td>
-                    <td>Privada</td>
-                    <td>Propia</td>
+                    <td style="text-align: center;">Hombre<br></td>
+                    <td style="text-align: center;">Mujer</td>
+                    <td style="text-align: center;">Pública</td>
+                    <td style="text-align: center;">Privada</td>
+                    <td style="text-align: center;">Propia</td>
                 </tr>
                 
                    
@@ -476,7 +538,7 @@
                     <tr>
                         <td><b>{{ enf.idEnfermedad }}.</b> 
                             {% if enf.idEnfermedad == 1  %} 
-                                 Infecciones respiratorias agudas
+                                Infecciones respiratorias agudas
                             {% elseif enf.idEnfermedad == 2 %}
                                 Dengue clásico
                             {% elseif enf.idEnfermedad == 3 %}
@@ -490,7 +552,7 @@
                             {% elseif enf.idEnfermedad == 7 %}
                                 Chincungunya 
                             {% elseif enf.idEnfermedad == 8 %}
-                                Hipertension arterial
+                                Hipertensión arterial
                             {% elseif enf.idEnfermedad == 9 %}
                                 Diábetes
                             {% elseif enf.idEnfermedad == 10 %}
@@ -506,7 +568,7 @@
                             {% elseif enf.idEnfermedad == 15 %}
                                 Tuberculosis
                             {% elseif enf.idEnfermedad == 16 %}
-                                Cancer
+                                Cáncer
                             {% elseif enf.idEnfermedad == 17 %}
                                 Diarreas
                             {% elseif enf.idEnfermedad == 18 %}
@@ -514,23 +576,25 @@
                             {% elseif enf.idEnfermedad == 19 %}
                                 Insuficiencia renal
                             {% elseif enf.idEnfermedad == 20 %}
-                                Discapacidad fisica/mental     
+                                Discapacidad física/mental     
                             {% endif %} 
                         </td>
-                        <td><input value="{{ enf.cantHombres|default(0) }}" name="qst_39_{{ enf.idEnfermedad }}_01" id="qst_39_{{ enf.idEnfermedad }}_01" data-parsley-cantidad="{{ enf.idEnfermedad }}" data-parsley-type="integer" min="0" max="99"></td>
-                        <td><input value="{{ enf.cantMujeres|default(0) }}" name="qst_39_{{ enf.idEnfermedad }}_02" id="qst_39_{{ enf.idEnfermedad }}_02" data-parsley-type="integer" min="0" max="99"></td>
-                        <td><input value="{{ enf.cantPublica|default(0) }}" name="qst_39_{{ enf.idEnfermedad }}_03" id="qst_39_{{ enf.idEnfermedad }}_03" data-parsley-type="integer" min="0" max="99"></td>
-                        <td><input value="{{ enf.cantPrivada|default(0) }}" name="qst_39_{{ enf.idEnfermedad }}_04" id="qst_39_{{ enf.idEnfermedad }}_04" data-parsley-type="integer" min="0" max="99"></td>
-                        <td><input name="qst_39_{{ enf.idEnfermedad|default(0) }}_05" id="qst_39_{{ enf.idEnfermedad }}_05" data-parsley-type="integer" min="0" max="9"></td>
+                        <td><input class="input-int" value="{{ enf.cantHombres|default(0) }}" name="qst_39_{{ enf.idEnfermedad }}_01" id="qst_39_{{ enf.idEnfermedad }}_01" data-parsley-cantidad="{{ enf.idEnfermedad }}" data-parsley-type="integer" min="0" max="99"></td>
+                        <td><input class="input-int" value="{{ enf.cantMujeres|default(0) }}" name="qst_39_{{ enf.idEnfermedad }}_02" id="qst_39_{{ enf.idEnfermedad }}_02" data-parsley-type="integer" min="0" max="99"></td>
+                        <td><input class="input-int" value="{{ enf.cantPublica|default(0) }}" name="qst_39_{{ enf.idEnfermedad }}_03" id="qst_39_{{ enf.idEnfermedad }}_03" data-parsley-type="integer" min="0" max="99"></td>
+                        <td><input class="input-int" value="{{ enf.cantPrivada|default(0) }}" name="qst_39_{{ enf.idEnfermedad }}_04" id="qst_39_{{ enf.idEnfermedad }}_04" data-parsley-type="integer" min="0" max="99"></td>
+                        <td><input class="input-int" name="qst_39_{{ enf.idEnfermedad|default(0) }}_05" id="qst_39_{{ enf.idEnfermedad }}_05" data-parsley-type="integer" min="0" max="99"></td>
                     </tr>
                 {% endfor %}    
                 
             </table>
             <br>
-
-            <table class="datos-1">
+            <table>
+                <tr><td colspan="3" class="titulo-sec"> -- DATOS SEGURIDAD ALIMENTARIA --</td></tr>
+                <tr colspan="3">
+                    <td><b>#40</b>-¿Tiene huerto familiar en su vivienda?</td>
+                </tr>
                 <tr>
-                    <td><b>#40</b>-¿Tiene huerto familar en su vivienda?</td>
                     <td>
                         <select name="qst_40" id="qst_40" required>
                             <option value="">Seleccioné una...</option>
@@ -539,21 +603,29 @@
                
                         </select>
                     </td>
+                    <td></td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td><b>#41</b>-¿Alguien en la vivienda trabajo la tierra por cuenta propia?</td>
-                    <td>
+                    <td colspan="3"><b>#41</b>-¿Alguien en la vivienda trabaja la tierra por cuenta propia?</td>                    
+                </tr>
+                <tr>
+                    <td>Si/No
                         <select name="qst_41_01" id="qst_41_01" required>
                             <option value="">Seleccioné una...</option>
                             <option {{ entsal.trabajoTierra == 1 ? 'selected' }} value="1">1. Si</option>
                             <option {{ entsal.trabajoTierra == 2 ? 'selected' }} value="2">2. No</option>
                         </select>
                     </td>
-                    <td>Cuantos: H<input value="{{ entsal.cantHombres|default(0) }}" name="qst_41_02" id="qst_41_02" type="number" min="0" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td>M<input value="{{ entsal.cantMujeres|default(0) }}" name="qst_41_03" id="qst_41_03" type="number" min="0" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td>Cuantos: Hombres<input value="{{ entsal.cantHombres|default(0) }}" name="qst_41_02" id="qst_41_02" type="number" min="0" max="99" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td>Mujeres<input value="{{ entsal.cantMujeres|default(0) }}" name="qst_41_03" id="qst_41_03" type="number" min="0" max="99" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
                 </tr>
                 <tr>
                     <td><b>#42</b>-Tipo de tenencia de la tierra</td>
+                    <td><b>#43</b>-¿Se producen alimentos por los habs. de la viv.?</td>
+                    <td><b>#44</b>-¿Se producen suficientes alimentos para autoconsumo?</td>                    
+                </tr> 
+                <tr>
                     <td>
                         <select name="qst_42" id="qst_42" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}>
                             <option value="">Seleccioné una...</option>
@@ -568,9 +640,6 @@
                             <option {{ entsal.tipoTenencia == 9 ? 'selected' }} value="9">9. NS/NR</option>
                         </select>
                     </td>
-                </tr>
-                <tr>
-                    <td><b>#43</b>-¿Se producen alimentos por los habs. de la viv.?</td>
                     <td>
                         <select name="qst_43" id="qst_43" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}>
                             <option value="">Seleccioné una...</option>
@@ -579,9 +648,6 @@
                             <option {{ entsal.produceAlimento == 3 ? 'selected' }} value="3">3. NS/NR</option>
                         </select>
                     </td>
-                </tr>
-                <tr>
-                    <td><b>#44</b>-¿Se producen suficientes alimentos para autoconsumo?</td>
                     <td>
                         <select name="qst_44" id="qst_44" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}>
                             <option value="">Seleccioné una...</option>
@@ -593,9 +659,9 @@
                 </tr>
             </table>
             <br>
-            <table class="datos-1">
+            <table>
                 <tr>
-                    <th colspan="5">45. Areas en tareas con sistema de riego</th>
+                    <th colspan="5">#45. Areas en tareas con sistema de riego</th>
                 </tr>
                 <tr>
                     <td></td>
@@ -606,18 +672,18 @@
                 </tr>
                 <tr>
                     <td><b>1:</b> Tareas</td>
-                    <td><input value="{{ entsal.areaGoteo|default(0)  }}" name="qst_45_01" id="qst_45_01" type="number" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><input value="{{ entsal.areaGoteo|default(0)  }}" name="qst_45_02" id="qst_45_02" type="number" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><input value="{{ entsal.areaNinguno|default(0)  }}" name="qst_45_03" id="qst_45_03" type="number" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><input name="qst_45_04" id="qst_45_04" type="number" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input value="{{ entsal.areaGoteo|default(0)  }}" name="qst_45_01" id="qst_45_01" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input value="{{ entsal.areaGoteo|default(0)  }}" name="qst_45_02" id="qst_45_02" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input value="{{ entsal.areaNinguno|default(0)  }}" name="qst_45_03" id="qst_45_03" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input name="qst_45_04" id="qst_45_04" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
                 </tr>
             </table>
-            <table class="datos-1">
+            <table>
                 <tr>
-                    <th colspan="7">46. ¿Que sembró y cuanto produjo durante el año pasado?</th>
+                    <th colspan="7">#46. ¿Que sembró y cuanto produjo durante el año pasado?</th>
                 </tr>
                 <tr>
-                    <td>cultivo</td>
+                    <td>Cultivo =></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -627,100 +693,98 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td><b>1:</b><input name="qst_46_01_01" id="qst_46_01_01" type="number" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><b>2:</b><input name="qst_46_01_02" id="qst_46_01_02" type="number" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><b>3:</b><input name="qst_46_01_03" id="qst_46_01_03" type="number" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><b>4:</b><input name="qst_46_01_04" id="qst_46_01_04" type="number" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><b>5:</b><input name="qst_46_01_05" id="qst_46_01_05" type="number" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><b>6:</b><input name="qst_46_01_06" id="qst_46_01_06" type="number" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><b>1:</b><input name="qst_46_01_01" id="qst_46_01_01" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><b>2:</b><input name="qst_46_01_02" id="qst_46_01_02" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><b>3:</b><input name="qst_46_01_03" id="qst_46_01_03" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><b>4:</b><input name="qst_46_01_04" id="qst_46_01_04" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><b>5:</b><input name="qst_46_01_05" id="qst_46_01_05" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><b>6:</b><input name="qst_46_01_06" id="qst_46_01_06" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
                 </tr>
                 <tr>
                     <td>Quintales</td>
-                    <td><input name="qst_46_02_01" id="qst_46_02_01" type="number" style="margin-left: 1.5em" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><input name="qst_46_02_02" id="qst_46_02_02" type="number" style="margin-left: 1.5em" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><input name="qst_46_02_03" id="qst_46_02_03" type="number" style="margin-left: 1.5em" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><input name="qst_46_02_04" id="qst_46_02_04" type="number" style="margin-left: 1.5em" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><input name="qst_46_02_05" id="qst_46_02_05" type="number" style="margin-left: 1.5em" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><input name="qst_46_02_06" id="qst_46_02_06" type="number" style="margin-left: 1.5em" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input name="qst_46_02_01" id="qst_46_02_01" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input name="qst_46_02_02" id="qst_46_02_02" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input name="qst_46_02_03" id="qst_46_02_03" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input name="qst_46_02_04" id="qst_46_02_04" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input name="qst_46_02_05" id="qst_46_02_05" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input name="qst_46_02_06" id="qst_46_02_06" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
                 </tr>
                 <tr>
                     <td>Tareas</td>
-                    <td><input name="qst_46_03_01" id="qst_46_03_01" type="number" style="margin-left: 1.5em" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><input name="qst_46_03_02" id="qst_46_03_02" type="number" style="margin-left: 1.5em" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><input name="qst_46_03_03" id="qst_46_03_03" type="number" style="margin-left: 1.5em" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><input name="qst_46_03_04" id="qst_46_03_04" type="number" style="margin-left: 1.5em" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><input name="qst_46_03_05" id="qst_46_03_05" type="number" style="margin-left: 1.5em" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
-                    <td><input name="qst_46_03_06" id="qst_46_03_06" type="number" style="margin-left: 1.5em" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input name="qst_46_03_01" id="qst_46_03_01" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input name="qst_46_03_02" id="qst_46_03_02" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input name="qst_46_03_03" id="qst_46_03_03" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input name="qst_46_03_04" id="qst_46_03_04" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input name="qst_46_03_05" id="qst_46_03_05" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
+                    <td><input name="qst_46_03_06" id="qst_46_03_06" type="number" min="0" max="9999" {{ entsal.trabajoTierra == 1 ? "required":"disabled"}}></td>
                 </tr>
             </table>
-            <table class="datos-1">
+            <table>
                 <tr>
-                    <td><b>47.</b>De los alimentos que produce ¿Obtienen excedentes para la venta?</td>
+                    <td colspan="3"><b>#47.</b>De los alimentos que produce ¿Obtienen excedentes para la venta?</td>
+                </tr>
+                <tr>
                     <td>
                         <select name="qst_47" id="qst_47" required>
                             <option value="1">1. Si</option>
                             <option value="2">2. No</option>
                         </select>
                     </td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </table>
-            <table class="datos-1">
+            <table>
                 <tr>
-                    <th colspan="2">48. ¿Que animales domesticos tiene?</th>
+                    <th colspan="3">#48. ¿Que animales domésticos tiene?</th>
                 </tr>
                 <tr>
                     <td><b>1:</b>Aves (gallinas, patos, pavos)</td>
                     <td><input value="{{ entsal.cantAves|default(0) }}" name="qst_48_01" id="qst_48_01" type="number"></td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td><b>2:</b>Bovinos (Bueyes, vacas)</td>
                     <td><input value="{{ entsal.cantBovino|default(0) }}" name="qst_48_02" id="qst_48_02" type="number"></td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td><b>3:</b>Caprino (ovejas, cabras)</td>
                     <td><input value="{{ entsal.cantCaprino|default(0) }}" name="qst_48_03" id="qst_48_03" type="number"></td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td><b>4:</b>Equinos (caballos, mulas, burros)</td>
                     <td><input value="{{ entsal.cantEquino|default(0) }}" name="qst_48_04" id="qst_48_04" type="number"></td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td><b>5:</b>Porcinos (cerdos)</td>
                     <td><input value="{{ entsal.cantPorcino|default(0) }}" name="qst_48_05" id="qst_48_05" type="number"></td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td><b>6:</b>Piscicultura (tilapia, otros)</td>
                     <td><input value="{{ entsal.cantPiscicultura|default(0) }}"name="qst_48_06" id="qst_48_06" type="number"></td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td><b>7:</b>Apicultura (colmenas)</td>
                     <td><input value="{{ entsal.cantApicultura|default(0) }}" name="qst_48_07" id="qst_48_07" type="number"></td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td><b>8:</b>Domesticos (Perros, gatos, etc.)</td>
+                    <td><b>8:</b>Domésticos (Perros, gatos, etc.)</td>
                     <td><input value="{{ entsal.cantDomesticos|default(0) }}" name="qst_48_08" id="qst_48_08" type="number"></td>
+                    <td></td>
                 </tr>
-
             </table>
-        </div>
-
-        <div class="data_in">
-            <!-- CUADRO DE INGRESO -->
-            <h>Cuadro de ingreso</h>
-            <div class="data_in_txtbx">
-                <input type="number" id="no_qst" value="12">
-                <input type="text" id="no_res">
-            </div>
-            <button autocomplete="off" id="snd_btn" onclick="envio()">Continuar</button>
-            <br>
-            <p id="test"></p>
         </div>
 
     </div>
     <br>
-    <a href="reverso.html">Siguiente parte</a>
-   <input type="submit" value="Enviar formulario">
-   <input type="reset" value="Borrar formulario">
+   <input type="submit" value="Actualizar formulario">
+   <input type="button" value="Cancelar">
 </form>
 {% endblock %}
 {% block javascripts %}

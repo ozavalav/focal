@@ -73,7 +73,7 @@
     </style>
 {% endblock %} 
 {% block header -%}
-    Nueva Encuesta AB - parte 2
+    Editar Encuesta AB - parte 2
     <small>
         <i class="ace-icon fa fa-angle-double-right"></i>
         Ingresar la información solicitada
@@ -94,9 +94,9 @@
     </div>
    
     <div class="ingreso">
-<form name="focal_appbundle_datosgeneralesABr" method="post" action="{{ path('datosgenerales_createABr') }}" id="frm_datosgabr"> 
-    <input type="hidden" id="idEnc" name="idEnc" value="{{ idEnc }}"  >
-    <input type="hidden" id="codComunidad" name="codComunidad" value="{{ codComunidad }}"  >
+<form name="focal_appbundle_datosgeneralesABr" method="post" action="{{ path('datosgenerales_updateABr', { 'id': idEnc }) }}" id="frm_datosgabr"> 
+    <input type="hidden" id="idEnc" name="idEnc" value="{{ idEnc }}">
+    <input type="hidden" id="codComunidad" name="codComunidad" value="{{ codComunidad }}">
         <div class="formulario">
             <table>
                 <tr>
@@ -354,11 +354,11 @@
                     
                     <td>
                         <input name="qst_71_1" id="qst_71_1" type="text" data-parsley-group="residente" maxlength="60">
-                        <input name="qst_71_2" id="qst_71_2" type="text" data-parsley-group="residente" maxlength="60">
+                        <input name="qst_71_2" id="qst_71_2" type="text" data-parsley-group="residente">
                     </td>
                     
                     <td>
-                        <select name="qst_72" id="qst_72" required data-parsley-group="residente">
+                        <select name="qst_72" id="qst_72" required data-parsley-group="residente" maxlength="60">
                             <option value="">Seleccioné una...</option>
                             <option value="1">1. Participa</option>
                             <option value="2">2. No Participa</option>
@@ -459,10 +459,261 @@
                     </tr>
                 </thead>
                 <tbody>
-                
+                {% set cantreg = 0 %}
+                {% for hab in entdgf %}
+                    <tr id="fila_{{ loop.index }}">
+                <td><button type="button" id="tblborrar" class="btn btn-default" data-num="{{ loop.index }}" title="Borrar" onclick="borrarFila(this);"><i class="fa fa-trash"></i></button>
+                <button type="button" id="tblmodificar" class="btn btn-default" data-num="{{ loop.index }}" title="Modificar" onclick="editarFila(this);"><i class="fa fa-edit"></i></button></td>
+                <td>{{ loop.index }}</td>
+                <td><input type="text" id="qst_50_{{ loop.index }}" name="qst_50_{{ loop.index }}" value="{{ hab.nombre }}" readonly></td>
+                <td><select id="qst_51_{{ loop.index }}" name="qst_51_{{ loop.index }}" readonly><option value="{{ hab.idParentesco }}">
+                        {% for par in parentescos %}
+                            {% if par.id == hab.idParentesco %}
+                                {{ par.descripcion }}
+                            {% endif %}    
+                        {% endfor %}
+                    </option></select></td>
+                <td><select id="qst_52_{{ loop.index }}" name="qst_52_{{ loop.index }}" readonly><option value="{{ hab.sexo }}">{{ hab.sexo == 1 ? 'H' : 'M'  }}</option></select></td>
+                <td><input id="qst_53_{{ loop.index }}" name="qst_53_{{ loop.index }}" value="{{ hab.edad }}" type="text" readonly></td>
+                <td><select id="qst_54_{{ loop.index }}" name="qst_54_{{ loop.index }}" readonly><option value="{{ hab.idEtnia }}">
+                        {% for etn in etnias %}
+                            {% if etn.id == hab.idEtnia %}
+                                {{ etn.descripcion }}
+                            {% endif %}    
+                        {% endfor %}
+                        </option></select></td>
+                <td><select id="qst_55_{{ loop.index }}" name="qst_55_{{ loop.index }}" readonly><option value="{{ hab.tienePn }}">
+                        {% if hab.tienePn == 1 %}
+                           Si
+                        {% elseif hab.tienePn == 2 %}
+                           No
+                        {%elseif hab.tienePn == 3 %}
+                           NS/NR
+                        {% endif %}
+                    </option></select></td>
+                <td><select id="qst_56_{{ loop.index }}" name="qst_56_{{ loop.index }}" readonly><option value="{{ hab.vacunas }}">
+                        {% if hab.vacunas == 1 %}
+                           Si
+                        {% elseif hab.vacunas == 2 %}
+                           No
+                        {% elseif hab.vacunas == 3 %}
+                           NS/NR
+                        {% endif %}     
+                    </option></select></td>
+                <td><select id="qst_57_{{ loop.index }}" name="qst_57_{{ loop.index }}" readonly><option value="{{ hab.leerEscribir }}">
+                        {% if hab.leerEscribir == 1 %}
+                           Si
+                        {% elseif hab.leerEscribir == 2 %}
+                           No
+                        {% elseif hab.leerEscribir == 3 %}
+                           NS/NR
+                        {% endif %}
+                </option></select></td>
+                <td><select id="qst_59_{{ loop.index }}" name="qst_59_{{ loop.index }}" readonly><option value="{{ hab.estudia }}">
+         {% if hab.estudia == 1 %}
+            Si
+         {% elseif hab.estudia == 2 %}
+            No
+         {% elseif hab.estudia == 3 %}
+            NS/NR
+         {% endif %}
+        </option></select></td>
+                <td><select id="qst_58_{{ loop.index }}" name="qst_58_{{ loop.index }}" readonly><option value="{{ hab.anoCursando }}">
+                        {% if hab.anoCursando == 1 %}
+                           Pre-escolar
+                        {% elseif hab.anoCursando == 2 %}
+                           Grado 1
+                        {% elseif hab.anoCursando == 3 %}
+                           Grado 2
+                        {% elseif hab.anoCursando == 4 %}
+                           Grado 3
+                        {% elseif hab.anoCursando == 5 %}
+                           Grado 4
+                        {% elseif hab.anoCursando == 6 %}
+                           Grado 5
+                        {% elseif hab.anoCursando == 7 %}
+                           Grado 6
+                        {% elseif hab.anoCursando == 8 %}
+                           Grado 7
+                        {% elseif hab.anoCursando == 9 %}
+                           Grado 8
+                        {% elseif hab.anoCursando == 10 %}
+                           Grado 9
+                        {% elseif hab.anoCursando == 11 %}
+                           Diversificado
+                        {% elseif hab.anoCursando == 12 %}
+                           Universitario
+                        {% elseif hab.anoCursando == 13 %}
+                           Ninguno
+                        {% endif %}
+                    </option></select></td>
+<td><input id="qst_60_{{ loop.index }}" name="qst_60_{{ loop.index }}" value="{{ hab.anoEstudio }}" type="text" readonly></td>
+<td><select id="qst_61_{{ loop.index }}" name="qst_61_{{ loop.index }}" readonly><option value="{{ hab.estadoCivil }}">
+    {% if hab.estadoCivil == 1 %}
+        Soltero/a
+     {% elseif hab.estadoCivil == 2 %}
+        Casado/a
+     {% elseif hab.estadoCivil == 3 %}
+        Divorsiado/a
+     {% elseif hab.estadoCivil == 4 %}
+        Union Libre
+     {% elseif hab.estadoCivil == 5 %}
+        Viudo/a
+     {% elseif hab.estadoCivil == 6 %}
+        NS/NR
+     {% endif %}
+    </option></select></td>
+<td><select id="qst_62_{{ loop.index }}" name="qst_62_{{ loop.index }}" readonly><option value="{{ hab.trabaja }}">
+         {% if hab.trabaja == 1 %}
+            Si
+         {% elseif hab.trabaja == 2%}
+            No
+         {% elseif hab.trabaja == 3 %}
+            NS/NR
+         {% endif %}
+        </option></select></td>
+<td><select id="qst_63_{{ loop.index }}" name="qst_63_{{ loop.index }}" readonly><option value="{{ hab.ocupacion }}">
+        {% for ocu in ocupaciones %}
+                            {% if ocu.id == hab.ocupacion %}
+                                {{ ocu.descripcion }}
+                            {% endif %}    
+                        {% endfor %}
+        </option></select></td>
+<td><select id="qst_64_{{ loop.index }}" name="qst_64_{{ loop.index }}" readonly><option value="{{ hab.profesion }}">
+        {% for pro in profesiones %}
+                            {% if pro.id == hab.profesion %}
+                                {{ pro.descripcion }}
+                            {% endif %}    
+                        {% endfor %}
+        </option></select></td>
+<td><input id="qst_65_{{ loop.index }}" name="qst_65_{{ loop.index }}" value="{{ hab.ingresos }}" type="text" readonly></td>
+<td><select id="qst_66_{{ loop.index }}" name="qst_66_{{ loop.index }}" readonly><option value="{{ hab.actividadEco }}">
+        {% if hab.actividadEco == 1 %}
+        Trabajo propio
+     {% elseif hab.actividadEco == 2 %}
+        Trabajo asalariado
+     {% elseif hab.actividadEco == 3 %}
+        Busca trabajo
+     {% elseif hab.actividadEco == 4 %}
+        Trabajo dom.
+     {% elseif hab.actividadEco == 5 %}
+        Trabajo dom. +
+     {% elseif hab.actividadEco == 6 %}
+        Jubilado/Pensionado
+     {% elseif hab.actividadEco == 7 %}
+        Estudia
+     {% elseif hab.actividadEco == 8 %}
+        Incapacitado
+     {% elseif hab.actividadEco == 9 %}
+        Otroa
+     
+     {% endif %}
+        </option></select></td>
+<td><select id="qst_67_{{ loop.index }}" name="qst_67_{{ loop.index }}" readonly><option value="{{ hab.sectorContratado }}">
+        {% if hab.sectorContratado == 1 %}
+            Comercial
+         {% elseif hab.sectorContratado == 2 %}
+            Industrial
+         {% elseif hab.sectorContratado == 3 %}
+            Servicio
+         {% elseif hab.sectorContratado == 4 %}
+            NS/NR
+         {% endif %}
+        </option></select></td>
+<td><select id="qst_68_{{ loop.index }}" name="qst_68_{{ loop.index }}" readonly><option value="{{ hab.sectorDedica }}">
+         {% if hab.sectorDedica == 1 %}
+            Primario
+         {% elseif hab.sectorDedica == 2 %}
+            Secundario
+         {% elseif hab.sectorDedica == 3 %}
+            Terciario
+         {%elseif hab.sectorDedica == 4 %}
+            NS/NR
+         {% endif %}
+        </option></select></td>
+<td><select id="qst_69_{{ loop.index }}" name="qst_69_{{ loop.index }}" readonly><option value="{{ hab.generaEmpleo }}">
+        {% if hab.generaEmpleo == 1 %}
+            0
+         {% elseif hab.generaEmpleo == 2 %}
+            1 a 5
+         {% elseif hab.generaEmpleo == 3 %}
+            6 a 10
+         {% elseif hab.generaEmpleo == 4 %}
+            11 a 15
+         {% elseif hab.generaEmpleo == 5 %}
+            16 a 20
+         {% elseif hab.generaEmpleo == 6 %}
+            21 o mas
+         {% elseif hab.generaEmpleo == 7 %}
+            NS/NR
+         {% endif %}
+        </option></select></td>
+<td><input id="qst_70_{{ loop.index }}" name="qst_70_{{ loop.index }}" value="{{ hab.nombreOrg }}" type="text" readonly></td>
+<td><input id="qst_71_1_{{ loop.index }}" name="qst_71_1_{{ loop.index }}" value="{{ hab.instApoyo1 }}" type="text" readonly></td>
+<td><input id="qst_71_2_{{ loop.index }}" name="qst_71_2_{{ loop.index }}" value="{{ hab.instApoyo2 }}" type="text" readonly></td>
+<td><select id="qst_72_{{ loop.index }}" name="qst_72_{{ loop.index }}" readonly><option value="{{ hab.participaOrg }}">
+         {% if hab.participaOrg == 1 %}
+            Participa
+         {% elseif hab.participaOrg == 2 %}
+            No Participa
+         {% elseif hab.participaOrg == 3 %}
+            NS/NR
+         {% endif %}
+        </option></select></td>
+<td><select id="qst_73_{{ loop.index }}" name="qst_73_{{ loop.index }}" readonly><option value="{{ hab.prestamo }}">
+        {% if hab.prestamo == 1 %}
+            Si
+         {% elseif hab.prestamo == 2 %}
+            No
+         {% elseif hab.prestamo == 3 %}
+            NS/NR
+         {% endif %}
+        </option></select></td>
+<td><select id="qst_74_{{ loop.index }}" name="qst_74_{{ loop.index }}" readonly><option value="{{ hab.remesas }}">
+        {% if hab.remesas == 1 %}
+            No recibe
+         {% elseif hab.remesas == 2 %}
+            0.01 a 1,000.00
+         {% elseif hab.remesas == 3 %}
+            1,000.01 a 2,000.00
+         {% elseif hab.remesas == 4 %}
+            2,000.01 y mas
+         {% elseif hab.remesas == 5 %}
+            NS/NR
+         {% endif %}
+        </option></select></td>
+<td><select id="qst_75_{{ loop.index }}" name="qst_75_{{ loop.index }}" readonly><option value="{{ hab.metodoPlanifica }}">
+         {% if hab.metodoPlanifica == 1 %}
+            No planifica
+         {% elseif hab.metodoPlanifica == 2 %}
+            Ritmo
+         {% elseif hab.metodoPlanifica == 3 %}
+            DIU
+         {% elseif hab.metodoPlanifica == 4 %}
+            Pastilla
+         {% elseif hab.metodoPlanifica == 5 %}
+            Preservativo
+         {% elseif hab.metodoPlanifica == 6 %}
+            Inyección
+         {% elseif hab.metodoPlanifica == 7 %}
+            Operación hombre
+         {% elseif hab.metodoPlanifica == 8 %}
+            Operación mujer
+         {% elseif hab.metodoPlanifica == 9 %}
+            Implante
+         {% elseif hab.metodoPlanifica == 10 %}
+            NS/NR
+         {% endif %}
+        </option></select></td>
+<td style="display:none"><input id="tblest_{{ loop.index }}" type="hidden" name="tblest_{{ loop.index }}" value="3"></td>
+<td style="display:none"><input id="tblidr_{{ loop.index }}" type="hidden" name="tblidr_{{ loop.index }}" value="{{ hab.id }}"></td>
+                </tr>
+        {% set cantreg = cantreg + 1 %}        
+    {% endfor %}
                 </tbody>    
-            </table>  
-            <input type="hidden" id="contres" name="contres" value="0">
+            </table> 
+            
+            <input type="hidden" id="contres" name="contres" value="{{ cantreg }}">
             <input type="hidden" id="selcol" name="selcol" value="0">
         </div>
         <div>
@@ -470,12 +721,12 @@
                <tr><td class="titulo-sec" colspan="3" style="background-color: lightblue;"> -- DATOS DE SALUD --</td></tr> 
                 <tr>
                     <td><b>#76</b>. ¿Cuantas madres solteras hay en la vivienda?</td>
-                    <td><input name="qst_76" id="qst_76" required type="number" min="0" max="99" data-parsley-group="saludin"></td>
+                    <td><input name="qst_76" id="qst_76" value="{{ entddo.cantSolteras|default(0) }}" min="0" max="99" required type="number" data-parsley-group="saludin"></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td><b>#77</b>. ¿Cuantos padres solteros hay en la vivienda?</td>
-                    <td><input name="qst_77" id="qst_77" required type="number" min="0" max="99" data-parsley-group="saludin"></td>
+                    <td><input name="qst_77" id="qst_77" value="{{ entddo.cantSolteros|default(0) }}" min="0" max="99" required type="number" data-parsley-group="saludin"></td>
                     <td></td>
                 </tr>
             </table>
@@ -499,15 +750,15 @@
                                 <td>
                                     <select name="qst_78" id="qst_78" required data-parsley-group="saludin">
                                         <option value="">Seleccioné una...</option>
-                                        <option value="1">1. Si</option>
-                                        <option value="2">2. No</option>
-                                        <option value="3">3. NS/NR</option>
+                                        <option {{ entdsg.embarazos|default(0) == 1 ? 'selected="true"' }} value="1">1. Si</option>
+                                        <option {{ entdsg.embarazos|default(0) == 2 ? 'selected="true"' }} value="2">2. No</option>
+                                        <option {{ entdsg.embarazos|default(0) == 3 ? 'selected="true"' }} value="3">3. NS/NR</option>
                                     </select>
                                 </td>
-                                <td><input name="qst_78_1" id="qst_78_1" required type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
-                                <td><input name="qst_78_2" id="qst_78_2" required type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
-                                <td><input name="qst_78_3" id="qst_78_3" required type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
-                                <td><input name="qst_78_4" id="qst_78_4" required type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_78_1" id="qst_78_1" value="{{ entdsg.cantEmbarazos|default(0) }}" {{ entdsg.embarazos|default(0) == 1 ? 'required' : 'disabled="true"'}} type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_78_2" id="qst_78_2" value="{{ entdsg.edad1|default(0) }}" {{ entdsg.embarazos|default(0) == 1 ? 'required' : 'disabled="true"'}} type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_78_3" id="qst_78_3" value="{{ entdsg.edad2|default(0) }}" {{ entdsg.embarazos|default(0) == 1 ? 'required' : 'disabled="true"'}} type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_78_4" id="qst_78_4" value="{{ entdsg.edad3|default(0) }}" {{ entdsg.embarazos|default(0) == 1 ? 'required' : 'disabled="true"'}} type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
                             </tr>
                         </table>
                     </td>
@@ -528,15 +779,15 @@
                     <td align="center">3</td>
                 </tr>
                 <tr>
-                    <td><input name="qst_79_1_1" id="qst_79_1_1" required type="number" data-parsley-cantidadnac="1" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
-                    <td><input name="qst_79_1_2" id="qst_79_1_2" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
-                    <td><input name="qst_79_1_3" id="qst_79_1_3" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
-                    <td><input name="qst_79_1_4" id="qst_79_1_4" type="number" disabled="true" data-parsley-range="[14, 60]" data-parsley-group="saludin"></td>
-                    <td><input name="qst_79_1_5" id="qst_79_1_5" type="number" disabled="true" data-parsley-range="[14, 60]" data-parsley-group="saludin"></td>
-                    <td><input name="qst_79_1_6" id="qst_79_1_6" type="number" disabled="true" data-parsley-range="[14, 60]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_1_1" id="qst_79_1_1" value="{{ entddo.cantNacimientos|default(0) }}" required type="number" data-parsley-cantidadnac="1" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_1_2" id="qst_79_1_2" value="{{ entddo.cantNacNinos|default(0) }}" type="number" {{ entddo.cantNacimientos|default(0) > 0 ? '' : 'disabled="true"'}} data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_1_3" id="qst_79_1_3" value="{{ entddo.cantNacNinas|default(0) }}" type="number" {{ entddo.cantNacimientos|default(0) > 0 ? '' : 'disabled="true"'}} data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_1_4" id="qst_79_1_4" value="{{ entddo.edadMadre|default(0) == 0 ? '': entddo.edadMadre }}" type="number" {{ entddo.cantNacimientos|default(0) > 0 ? '' : 'disabled="true"'}} data-parsley-range="[8, 60]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_1_5" id="qst_79_1_5" type="number" {{ entddo.cantNacimientos|default(0) > 0 ? '' : 'disabled="true"'}} data-parsley-range="[14, 60]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_1_6" id="qst_79_1_6" type="number" {{ entddo.cantNacimientos|default(0) > 0 ? '' : 'disabled="true"'}} data-parsley-range="[14, 60]" data-parsley-group="saludin"></td>
                 </tr>
                 <tr>
-                    <td><input name="qst_79_2_1" id="qst_79_2_1" required type="number" data-parsley-cantidadnac="2" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                    <td><input name="qst_79_2_1" id="qst_79_2_1" value="0" required type="number" data-parsley-cantidadnac="2" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
                     <td><input name="qst_79_2_2" id="qst_79_2_2" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
                     <td><input name="qst_79_2_3" id="qst_79_2_3" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
                     <td><input name="qst_79_2_4" id="qst_79_2_4" type="number" disabled="true" data-parsley-range="[14, 60]" data-parsley-group="saludin"></td>
@@ -550,18 +801,18 @@
                     <td>
                         <select name="qst_80" id="qst_80" required data-parsley-group="saludin">
                             <option value="">Seleccioné una...</option>
-                            <option value="1">1. Casa</option>
-                            <option value="2">2. Centro de salud</option>
-                            <option value="3">3. Clinica materno infantil</option>
-                            <option value="4">4. Hospital</option>
-                            <option value="5">5. Clinica privada</option>
-                            <option value="6">6. Otro establecimiento de salud</option>
+                            <option {{ entdsg.lugarCasa|default(0) ? 'selected="true"' }} value="1">1. Casa</option>
+                            <option {{ entdsg.lugarCentros|default(0) ? 'selected="true"' }} value="2">2. Centro de salud</option>
+                            <option {{ entdsg.lugarMaterno|default(0) ? 'selected="true"' }} value="3">3. Clinica materno infantil</option>
+                            <option {{ entdsg.lugarHospital|default(0) ? 'selected="true"' }} value="4">4. Hospital</option>
+                            <option {{ entdsg.lugarClinica|default(0)? 'selected="true"' }} value="5">5. Clinica privada</option>
+                            <option {{ entdsg.lugarOtros|default(0) ? 'selected="true"' }} value="6">6. Otro establecimiento de salud</option>
                             <option value="7">7. Otros</option>
                         </select>
                     </td>
                     <td></td>
                     <td></td>
-                </tr>  
+                </tr>
             </table>
             <table>
                 <tr><td colspan="2"><b>#81</b>. ¿Hubo alguna muerte materna durante o despues del parto, en la familia que vive en  la vivienda, el año pasado?</td></tr>
@@ -578,43 +829,43 @@
                                 <td>
                                     <select name="qst_81" id="qst_81" required data-parsley-group="saludin">
                                         <option value="">Seleccioné una...</option>
-                                        <option value="1">1. Si</option>
-                                        <option value="2">2. No</option>
-                                        <option value="3">3. NS/NR</option>
+                                        <option {{ entdsg.muerteMat|default(0) == 1 ? 'selected="true"' }} value="1">1. Si</option>
+                                        <option {{ entdsg.muerteMat|default(0) == 2 ? 'selected="true"' }} value="2">2. No</option>
+                                        <option {{ entdsg.muerteMat|default(0) == 3 ? 'selected="true"' }} value="3">3. NS/NR</option>
                                     </select>
                                 </td>
-                                <td><input name="qst_81_1" id="qst_81_1" required type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_81_1" id="qst_81_1" value="{{ entdsg.cantMuertem|default(0) }}" {{ entdsg.muerteMat|default(0) == 1 ? 'required' : 'disabled="true"'}} type="number" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
                                 <td>
-                                    <select name="qst_81_2" id="qst_81_2" required data-parsley-group="saludin">
+                                    <select name="qst_81_2" id="qst_81_2" {{ entdsg.cantMuertem|default(0) == 1 ? 'required' : 'disabled="true"'}} data-parsley-group="saludin">
                                         <option value="">Seleccioné una...</option>
-                                        <option value="1">1. Durante el parto</option>
-                                        <option value="2">2. En el parto</option>
-                                        <option value="3">3. Despues del parto</option>
+                                        <option {{ entdsg.momentoMuertem|default(0) == 1 ? 'selected="true"' }} value="1">1. Durante el parto</option>
+                                        <option {{ entdsg.momentoMuertem|default(0) == 2 ? 'selected="true"' }} value="2">2. En el parto</option>
+                                        <option {{ entdsg.momentoMuertem|default(0) == 3 ? 'selected="true"' }} value="3">3. Despues del parto</option>
                                     </select>   
                                 </td>
-                                <td><input name="qst_81_3" id="qst_81_3" required type="text" maxlength="60" data-parsley-group="saludin"></td>
+                                <td><input name="qst_81_3" id="qst_81_3" value="{{ entdsg.causaMuertem|default(0) }}" {{ entdsg.cantMuertem|default(0) == 1 ? 'required' : 'disabled="true"'}} type="text" maxlength="60" data-parsley-group="saludin"></td>
                             </tr>
                         </table>
                     </td>
                 </tr>
             </table> 
             <table>
-                <tr><td colspan="5"><b>#82</b>. ¿Murio en la familia un niño(a) menor de 5 años, el año pasado?</td></tr>
+                <tr><td colspan="3"><b>#82</b>. ¿Murio en la familia un niño(a) menor de 5 años, el año pasado?</td></tr>
                 <tr>
                     <td>
                         <label style="font-weight: normal;">Si/No</label>
                         <select name="qst_82" id="qst_82" required data-parsley-group="saludin">
                             <option value="">Seleccioné una...</option>
-                            <option value="1">1. Si</option>
-                            <option value="2">2. No</option>
-                            <option value="3">3. NS/NR</option>
+                            <option {{ entdsg.semurionino|default(0) == 1 ? 'selected="true"' }} value="1">1. Si</option>
+                            <option {{ entdsg.semurionino|default(0) == 2 ? 'selected="true"' }} value="2">2. No</option>
+                            <option {{ entdsg.semurionino|default(0) == 3 ? 'selected="true"' }} value="3">3. NS/NR</option>
                         </select>
                     </td>
                     <td>
                         <label style="font-weight: normal;">¿Cuantos?</label>
-                        <input name="qst_82_1" id="qst_82_1" type="number" disabled="true" data-parsley-cantidadmuertes="1" data-parsley-range="[0, 99]" data-parsley-group="saludin">
+                        <input name="qst_82_1" id="qst_82_1" type="number" {{ entdsg.semurionino|default(0) == 1 ? 'required' : 'disabled="true"'}} data-parsley-cantidadmuertes="1" data-parsley-range="[0, 99]" data-parsley-group="saludin">
                     </td>
-                    <td colspan="3">
+                    <td>
                         <table>
                             <tr>
                                 <td></td>
@@ -630,16 +881,16 @@
                                 <td></td>
                             </tr>    
                             <tr>
-                                <td style="text-align: right">1.</td>
-                                <td><input name="qst_82_2_1" id="qst_82_2_1" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
-                                <td><input name="qst_82_2_2" id="qst_82_2_2" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
-                                <td colspan="2"><input name="qst_82_2_3" id="qst_82_2_3" type="text" maxlength="60"  disabled="true" data-parsley-group="saludin"></td>
+                                <td>1.</td>
+                                <td><input name="qst_82_2_1" id="qst_82_2_1" value="{{ entdsg.cantMuerteNinos|default(0) }}" type="number" {{ entdsg.semurionino|default(0) == 1 ? 'required' : 'disabled="true"'}} data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_82_2_2" id="qst_82_2_2" value="{{ entdsg.cantMuerteNinas|default(0) }}" type="number" {{ entdsg.semurionino|default(0) == 1 ? 'required' : 'disabled="true"'}} data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td colspan="2"><input name="qst_82_2_3" id="qst_82_2_3" value="{{ entdsg.causaMuerte|default(0) }}" type="text" maxlength="60" {{ entdsg.semurionino|default(0) == 1 ? 'required' : 'disabled="true"'}} data-parsley-group="saludin"></td>
                             </tr>
-                            <tr>    
-                                <td style="text-align: right">2.</td>
-                                <td><input name="qst_82_3_1" id="qst_82_3_1" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
-                                <td><input name="qst_82_3_2" id="qst_82_3_2" type="number" disabled="true" data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
-                                <td colspan="2"><input name="qst_82_3_3" id="qst_82_3_3" type="text" maxlength="60" disabled="true" data-parsley-group="saludin"></td>
+                            <tr>
+                                <td>2.</td>
+                                <td><input name="qst_82_3_1" id="qst_82_3_1" type="number" {{ entdsg.semurionino|default(0) == 1 ? 'required' : 'disabled="true"'}} data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td><input name="qst_82_3_2" id="qst_82_3_2" type="number" {{ entdsg.semurionino|default(0) == 1 ? 'required' : 'disabled="true"'}} data-parsley-range="[0, 99]" data-parsley-group="saludin"></td>
+                                <td colspan="2"><input name="qst_82_3_3" id="qst_82_3_3" type="text"maxlength="60" {{ entdsg.semurionino|default(0) == 1 ? 'required' : 'disabled="true"'}} data-parsley-group="saludin"></td>
                             </tr>
                         </table>
                     </td>
@@ -652,10 +903,10 @@
                     <td>
                         <select name="qst_83" id="qst_83" required data-parsley-group="saludin">
                             <option value="">Seleccioné una...</option>
-                            <option value="1">1. Un tiempo</option>
-                            <option value="2">2. Dos tiempos</option>
-                            <option value="3">3. Tres tiempos</option>
-                            <option value="4">4. NS/NR</option>
+                            <option {{ entdfo.ingresoAjusta|default(0) == 1 ? 'selected="true"' }} value="1">1. Un tiempo</option>
+                            <option {{ entdfo.ingresoAjusta|default(0) == 2 ? 'selected="true"' }} value="2">2. Dos tiempos</option>
+                            <option {{ entdfo.ingresoAjusta|default(0) == 3 ? 'selected="true"' }} value="3">3. Tres tiempos</option>
+                            <option {{ entdfo.ingresoAjusta|default(0) == 4 ? 'selected="true"' }} value="4">4. NS/NR</option>
                         </select>
                     </td>
                     <td></td>
@@ -668,15 +919,15 @@
                     <td>
                         <select name="qst_84" id="qst_84" required data-parsley-group="saludin">
                             <option value="">Seleccioné una...</option>
-                            <option value="1">1. menor de 1,000</option>
-                            <option value="2">2.  1,001 -  2,000</option>
-                            <option value="3">3.  2,001 -  4,000</option>
-                            <option value="4">4.  4,001 -  8,000</option>
-                            <option value="5">5.  8,001 - 12,000</option>
-                            <option value="6">6. 12,001 - 20,000</option>
-                            <option value="7">7. 20,001 - 30,000</option>
-                            <option value="8">8. 30,001 - 50,000</option>
-                            <option value="9">9. 50,001 - y mas</option>
+                            <option {{ entdfo.rangoIngresofam|default(0) == 1 ? 'selected="true"' }} value="1">1. menor de 1,000</option>
+                            <option {{ entdfo.rangoIngresofam|default(0) == 2 ? 'selected="true"' }} value="2">2.  1,001 -  2,000</option>
+                            <option {{ entdfo.rangoIngresofam|default(0) == 3 ? 'selected="true"' }} value="3">3.  2,001 -  4,000</option>
+                            <option {{ entdfo.rangoIngresofam|default(0) == 4 ? 'selected="true"' }} value="4">4.  4,001 -  8,000</option>
+                            <option {{ entdfo.rangoIngresofam|default(0) == 5 ? 'selected="true"' }} value="5">5.  8,001 - 12,000</option>
+                            <option {{ entdfo.rangoIngresofam|default(0) == 6 ? 'selected="true"' }} value="6">6. 12,001 - 20,000</option>
+                            <option {{ entdfo.rangoIngresofam|default(0) == 7 ? 'selected="true"' }} value="7">7. 20,001 - 30,000</option>
+                            <option {{ entdfo.rangoIngresofam|default(0) == 8 ? 'selected="true"' }} value="8">8. 30,001 - 50,000</option>
+                            <option {{ entdfo.rangoIngresofam|default(0) == 9 ? 'selected="true"' }} value="9">9. 50,001 - y mas</option>
                         </select>
                     </td>
                     <td></td>
@@ -689,20 +940,55 @@
                 <tr>
                     <td>
                         <div id="tblrangos">
-                        
+                            <table class='table-striped'><tr><td>Rango</td><td>Cant. Hombres</td><td>Cant. Mujeres</td><td>Cant. Hombres Leen</td><td>Cant. Mujeres Leen</td></tr>
+                            {% for rng in entddr %}
+                               <tr><td align='center'>
+                                       {% if rng.rango|default(0) == 1 %}
+                                           1 a 4
+                                       {% elseif rng.rango|default(0) == 2 %}
+                                           5 a 6
+                                       {% elseif rng.rango|default(0) == 3 %}
+                                           7 a 12
+                                       {% elseif rng.rango|default(0) == 4 %}
+                                           13 a 15
+                                       {% elseif rng.rango|default(0) == 5 %}
+                                           16 a 18
+                                       {% elseif rng.rango|default(0) == 6 %}
+                                           19 a 23
+                                       {% elseif rng.rango|default(0) == 7 %}
+                                           24 a 30
+                                       {% elseif rng.rango|default(0) == 8 %}
+                                           31 a 40
+                                       {% elseif rng.rango|default(0) == 9 %}
+                                           41 a 50
+                                       {% elseif rng.rango|default(0) == 10 %}
+                                           51 a 64
+                                       {% elseif rng.rango|default(0) == 11 %}
+                                           65 y mas
+                                       {% endif %}    
+                                   </td>
+                                   <td align='center'>{{ rng.cantHombres|default(0) }}</td>
+                                   <td align='center'>{{ rng.cantMujeres|default(0) }}</td>
+                                   <td align='center'>{{ rng.cantHombresLeen|default(0) }}</td>
+                                   <td align='center'>{{ rng.cantMujeresLeen|default(0) }}</td>
+                               </tr>     
+                            {% endfor %}    
+                            </table>
                         </div>    
                     </td>
                 </tr>
                 <tr><td><b>#86</b>. ¿Cuantas personas son de 5 a 23 años?</td></tr>
-                <tr><td><div id="per5a23"></div></td></tr>
+                <tr><td style="padding-left: 40px;"><div id="per5a23">{{ entdtg.cantPersonas523|default(0) }}</div></td></tr>
                 <tr><td><b>#87</b>. ¿Cuantas personas son de 10 años en adelante?</td></tr>
                 <tr>
-                    <td><div id="perm10"></div></td>
+                    <td style="padding-left: 40px;"><div id="perm10">{{ entdtg.cantPersonasm10|default(0) }}</div></td>
                 </tr>
             </table>
         </div>                
-        <input id="btnSubmit" type="submit" value="Enviar formulario">
+        
+        <input id="btnSubmit" type="submit" value="Actualizar formulario">
         <input type="button" value="Cancelar">      
+        
         <!-- hacer submit al formulario y no validad el grupo -->
     </form>
     </div>
@@ -888,7 +1174,7 @@
 
 /* Suma cantidades dependiendo la edad al rango de edad tambien a leer y escribir */
         function agregarRangos(eda, sex, lye, est ) {
-            if (est == 1) {
+            if (est == 1 || est == 2 || est == 3) {
                 if(eda <= 4) {
                     if(sex == 1) {
                         rango[0].rh = rango[0].rh + 1;
@@ -1122,6 +1408,12 @@
             $("#qst_74_"+idfila).empty().append('<option value="'+$("#qst_74").val()+'">'+$('select[name="qst_74"] option:selected').text()+'</option>');
             $("#qst_75_"+idfila).empty().append('<option value="'+$("#qst_75").val()+'">'+$('select[name="qst_75"] option:selected').text()+'</option>');
             
+            /* Cambio el estado del la fila a "2" para registrar el cambio y actualizar la tabla en la base de datos 
+             * solamente para los registros cargados con estado = 3 provienen de la tabla datos_grupo_familiar */
+            var estact = $("#tblest_"+idfila).val();
+            if (estact == 3 ) { 
+                $("#tblest_"+idfila).val(2);
+            }
             alternarCampos("50-75",1,['71_1','71_2']);
             $("#btnEditar").hide();
             $("#btnAgregar").show();  
@@ -1188,33 +1480,33 @@
                 <td><button type="button" id="tblborrar" class="btn btn-default" data-num="'+con+'" title="Borrar" onclick="borrarFila(this);"><i class="fa fa-trash"></i></button>\n\
                 <button type="button" id="tblmodificar" class="btn btn-default" data-num="'+con+'" title="Modificar" onclick="editarFila(this);"><i class="fa fa-edit"></i></button></td>\n\
                 <td>'+con+'</td>\n\
-                <td><input class="input-res" type="text" id="qst_50_'+con+'" name="qst_50_'+con+'" value="'+tnom+'" readonly></td>\n\
-                <td><select class="input-res" id="qst_51_'+con+'" name="qst_51_'+con+'" readonly><option value="'+tpar+'">'+tpart+'</option></select></td>\n\
-                <td><select class="input-res" id="qst_52_'+con+'" name="qst_52_'+con+'" readonly><option value="'+tsex+'">'+((tsex == 1)?"H":"M")+'</option></select></td>\n\
-                <td><input class="input-res" id="qst_53_'+con+'" name="qst_53_'+con+'" value="'+teda+'" type="text" readonly></td>\n\
-                <td><select class="input-res" id="qst_54_'+con+'" name="qst_54_'+con+'" readonly><option value="'+tetn+'">'+tetnt+'</option></select></td>\n\
-                <td><select class="input-res" id="qst_55_'+con+'" name="qst_55_'+con+'" readonly><option value="'+trnp+'">'+trnpt+'</option></select></td>\n\
-                <td><select class="input-res" id="qst_56_'+con+'" name="qst_56_'+con+'" readonly><option value="'+tvac+'">'+tvact+'</option></select></td>\n\
-<td><select class="input-res" id="qst_57_'+con+'" name="qst_57_'+con+'" readonly><option value="'+tlye+'">'+tlyet+'</option></select></td>\n\
-<td><select class="input-res" id="qst_58_'+con+'" name="qst_58_'+con+'" readonly><option value="'+test+'">'+testt+'</option></select></td>\n\
-<td><select class="input-res" id="qst_59_'+con+'" name="qst_59_'+con+'" readonly><option value="'+tacu+'">'+tacut+'</option></select></td>\n\
-<td><input class="input-res" id="qst_60_'+con+'" name="qst_60_'+con+'" value="'+tned+'" type="text" readonly></td>\n\
-<td><select class="input-res" id="qst_61_'+con+'" name="qst_61_'+con+'" readonly><option value="'+teci+'">'+tecit+'</option></select></td>\n\
-<td><select class="input-res" id="qst_62_'+con+'" name="qst_62_'+con+'" readonly><option value="'+ttra+'">'+ttrat+'</option></select></td>\n\
-<td><select class="input-res" id="qst_63_'+con+'" name="qst_63_'+con+'" readonly><option value="'+tocu+'">'+tocut+'</option></select></td>\n\
-<td><select class="input-res" id="qst_64_'+con+'" name="qst_64_'+con+'" readonly><option value="'+tpro+'">'+tprot+'</option></select></td>\n\
-<td><input class="input-res" id="qst_65_'+con+'" name="qst_65_'+con+'" value="'+ting+'" type="text" readonly></td>\n\
-<td><select class="input-res" id="qst_66_'+con+'" name="qst_66_'+con+'" readonly><option value="'+taec+'">'+taect+'</option></select></td>\n\
-<td><select class="input-res" id="qst_67_'+con+'" name="qst_67_'+con+'" readonly><option value="'+tsco+'">'+tscot+'</option></select></td>\n\
-<td><select class="input-res" id="qst_68_'+con+'" name="qst_68_'+con+'" readonly><option value="'+tsde+'">'+tsdet+'</option></select></td>\n\
-<td><select class="input-res" id="qst_69_'+con+'" name="qst_69_'+con+'" readonly><option value="'+tese+'">'+teset+'</option></select></td>\n\
-<td><input class="input-res" id="qst_70_'+con+'" name="qst_70_'+con+'" value="'+torg+'" type="text" readonly></td>\n\
-<td><input class="input-res" id="qst_71_1_'+con+'" name="qst_71_1_'+con+'" value="'+tin1+'" type="text" readonly></td>\n\
-<td><input class="input-res" id="qst_71_2_'+con+'" name="qst_71_2_'+con+'" value="'+tin2+'" type="text" readonly></td>\n\
-<td><select class="input-res" id="qst_72_'+con+'" name="qst_72_'+con+'" readonly><option value="'+tpor+'">'+tport+'</option></select></td>\n\
-<td><select class="input-res" id="qst_73_'+con+'" name="qst_73_'+con+'" readonly><option value="'+tpre+'">'+tpret+'</option></select></td>\n\
-<td><select class="input-res" id="qst_74_'+con+'" name="qst_74_'+con+'" readonly><option value="'+trem+'">'+tremt+'</option></select></td>\n\
-<td><select class="input-res" id="qst_75_'+con+'" name="qst_75_'+con+'" readonly><option value="'+tmpl+'">'+tmplt+'</option></select></td>\n\
+                <td><input type="text" id="qst_50_'+con+'" name="qst_50_'+con+'" value="'+tnom+'" readonly></td>\n\
+                <td><select id="qst_51_'+con+'" name="qst_51_'+con+'" readonly><option value="'+tpar+'">'+tpart+'</option></select></td>\n\
+                <td><select id="qst_52_'+con+'" name="qst_52_'+con+'" readonly><option value="'+tsex+'">'+((tsex == 1)?"H":"M")+'</option></select></td>\n\
+                <td><input id="qst_53_'+con+'" name="qst_53_'+con+'" value="'+teda+'" type="text" readonly></td>\n\
+                <td><select id="qst_54_'+con+'" name="qst_54_'+con+'" readonly><option value="'+tetn+'">'+tetnt+'</option></select></td>\n\
+                <td><select id="qst_55_'+con+'" name="qst_55_'+con+'" readonly><option value="'+trnp+'">'+trnpt+'</option></select></td>\n\
+                <td><select id="qst_56_'+con+'" name="qst_56_'+con+'" readonly><option value="'+tvac+'">'+tvact+'</option></select></td>\n\
+<td><select id="qst_57_'+con+'" name="qst_57_'+con+'" readonly><option value="'+tlye+'">'+tlyet+'</option></select></td>\n\
+<td><select id="qst_58_'+con+'" name="qst_58_'+con+'" readonly><option value="'+test+'">'+testt+'</option></select></td>\n\
+<td><select id="qst_59_'+con+'" name="qst_59_'+con+'" readonly><option value="'+tacu+'">'+tacut+'</option></select></td>\n\
+<td><input id="qst_60_'+con+'" name="qst_60_'+con+'" value="'+tned+'" type="text" readonly></td>\n\
+<td><select id="qst_61_'+con+'" name="qst_61_'+con+'" readonly><option value="'+teci+'">'+tecit+'</option></select></td>\n\
+<td><select id="qst_62_'+con+'" name="qst_62_'+con+'" readonly><option value="'+ttra+'">'+ttrat+'</option></select></td>\n\
+<td><select id="qst_63_'+con+'" name="qst_63_'+con+'" readonly><option value="'+tocu+'">'+tocut+'</option></select></td>\n\
+<td><select id="qst_64_'+con+'" name="qst_64_'+con+'" readonly><option value="'+tpro+'">'+tprot+'</option></select></td>\n\
+<td><input id="qst_65_'+con+'" name="qst_65_'+con+'" value="'+ting+'" type="text" readonly></td>\n\
+<td><select id="qst_66_'+con+'" name="qst_66_'+con+'" readonly><option value="'+taec+'">'+taect+'</option></select></td>\n\
+<td><select id="qst_67_'+con+'" name="qst_67_'+con+'" readonly><option value="'+tsco+'">'+tscot+'</option></select></td>\n\
+<td><select id="qst_68_'+con+'" name="qst_68_'+con+'" readonly><option value="'+tsde+'">'+tsdet+'</option></select></td>\n\
+<td><select id="qst_69_'+con+'" name="qst_69_'+con+'" readonly><option value="'+tese+'">'+teset+'</option></select></td>\n\
+<td><input id="qst_70_'+con+'" name="qst_70_'+con+'" value="'+torg+'" type="text" readonly></td>\n\
+<td><input id="qst_71_1_'+con+'" name="qst_71_1_'+con+'" value="'+tin1+'" type="text" readonly></td>\n\
+<td><input id="qst_71_2_'+con+'" name="qst_71_2_'+con+'" value="'+tin2+'" type="text" readonly></td>\n\
+<td><select id="qst_72_'+con+'" name="qst_72_'+con+'" readonly><option value="'+tpor+'">'+tport+'</option></select></td>\n\
+<td><select id="qst_73_'+con+'" name="qst_73_'+con+'" readonly><option value="'+tpre+'">'+tpret+'</option></select></td>\n\
+<td><select id="qst_74_'+con+'" name="qst_74_'+con+'" readonly><option value="'+trem+'">'+tremt+'</option></select></td>\n\
+<td><select id="qst_75_'+con+'" name="qst_75_'+con+'" readonly><option value="'+tmpl+'">'+tmplt+'</option></select></td>\n\
 <td style="display:none"><input id="tblest_'+con+'" type="hidden" name="tblest_'+con+'" value="1"></td>\n\
                 </tr>';
             
@@ -1223,7 +1515,9 @@
             alternarCampos("50-75",1,['71_1','71_2']);
             
             /* Suma un nuevo rango al arreglo de rangos para llevar el control de cantidades por rango de edad*/
-            agregarRangos(teda, tsex, tlye, 1);
+            //agregarRangos(teda, tsex, tlye, 1);
+            /*Actualiza la tabla de rangos segun los valores ingresados en el grid de grupo familiar */
+            actualizarRangos();
             /* Pintar la tabla */
             pintarTablaRangos();
         }    
